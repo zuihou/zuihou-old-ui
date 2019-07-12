@@ -6,9 +6,12 @@
 
 <script>
 import commonApi from '@/api/CommonApi.js'
-
 export default {
   name: 'home',
+  data () {
+    return {
+    }
+  },
   mounted () {
     commonApi.test()
   }
