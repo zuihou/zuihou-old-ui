@@ -33,10 +33,9 @@
 </template>
 <script>
 export default {
-  props: {
-    collapse: {
-      type: Boolean,
-      default: true
+  data () {
+    return {
+      collapse: false
     }
   }
 }
