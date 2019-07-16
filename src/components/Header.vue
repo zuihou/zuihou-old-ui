@@ -10,14 +10,29 @@
         <el-divider></el-divider>
         <span>基本信息</span>
         <div class="info" slot="reference">
-          <div class="header-img"></div>
-          <div class="name">啦啦啦</div>
+          <img class="header-img" :src="$store.state.userInfo.photo" @error="photoErr">
+          <div class="name">{{$store.state.userInfo.name}}</div>
         </div>
       </el-popover>
-      <div class="logout"><i class="el-icon-toilet-paper"></i> 退出</div>
+      <div class="logout" @click="logout"><i class="el-icon-toilet-paper"></i> 退出</div>
     </div>
   </div>
 </template>
+<script>
+export default {
+  methods: {
+    photoErr () {
+      this.$store.commit('SET_USER_INFO', {
+        photo: require('./../assets/imgs/common/header.png')
+      })
+    },
+    logout () {
+      this.$store.dispatch('logout')
+    }
+  }
+}
+</script>
+
 <style lang="less" scoped>
 .header-content{
   height: 100%;
@@ -45,7 +60,8 @@
       .header-img{
         height: 30px;
         width: 30px;
-        background: url('~@/assets/imgs/common/header.png') center no-repeat;
+        background-position: center;
+        background-repeat: no-repeat;
         background-size: cover;
         margin-right: 10px;
         border-radius: 50%;

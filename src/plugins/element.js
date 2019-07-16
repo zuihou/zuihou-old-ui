@@ -8,7 +8,10 @@ import {
   Icon,
   Cascader,
   Popover,
-  Divider
+  Divider,
+  Form,
+  FormItem,
+  Input
 } from 'element-ui'
 
 const eleComponnets = [
@@ -19,7 +22,10 @@ const eleComponnets = [
   Icon,
   Cascader,
   Popover,
-  Divider
+  Divider,
+  Form,
+  FormItem,
+  Input
 ]
 eleComponnets.forEach(item => Vue.use(item))
 
