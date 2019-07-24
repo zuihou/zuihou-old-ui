@@ -65,16 +65,7 @@ const httpServer = (opts) => {
     method,
     baseURL: process.env.VUE_APP_API_BASE_URL,
     url: opts.url,
-    timeout: 10000,
-    transformRequest: [data => {
-      if (opts.formData) {
-        const formData = new FormData()
-        Object.entries(data).forEach(item => {
-          formData.append(item[0], item[1])
-        })
-        return formData
-      }
-    }]
+    timeout: 10000
   }
   const dataRequest = ['PUT', 'POST', 'PATCH']
   if (dataRequest.includes(method)) {
@@ -84,6 +75,17 @@ const httpServer = (opts) => {
       ...publicParams,
       ...(opts.data || {})
     }
+  }
+
+  // formData转换
+  if (opts.formData) {
+    httpDefaultOpts.transformRequest = [data => {
+      const formData = new FormData()
+      Object.entries(data).forEach(item => {
+        formData.append(item[0], item[1])
+      })
+      return formData
+    }]
   }
 
   const promise = new Promise((resolve, reject) => {
