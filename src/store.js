@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import commonApi from '@/api/CommonApi.js'
+import userCenterModule from './views/userCenterModule/store'
 
 Vue.use(Vuex)
 const userInfo = {
@@ -66,6 +67,6 @@ export default new Vuex.Store({
     }
   },
   modules: {
-
+    userCenterModule
   }
 })

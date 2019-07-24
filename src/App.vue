@@ -64,6 +64,7 @@ export default {
     .app-content{
       flex-grow: 1;
       overflow-y: auto;
+      padding: 15px;
     }
   }
 }

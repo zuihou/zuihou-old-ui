@@ -11,7 +11,16 @@ import {
   Divider,
   Form,
   FormItem,
-  Input
+  Input,
+  Select,
+  Option,
+  Table,
+  TableColumn,
+  Card,
+  Dialog,
+  Switch,
+  InputNumber,
+  Tree
 } from 'element-ui'
 
 const eleComponnets = [
@@ -25,7 +34,16 @@ const eleComponnets = [
   Divider,
   Form,
   FormItem,
-  Input
+  Input,
+  Select,
+  Option,
+  Table,
+  TableColumn,
+  Card,
+  Dialog,
+  Switch,
+  InputNumber,
+  Tree
 ]
 eleComponnets.forEach(item => Vue.use(item))
 

@@ -19,6 +19,12 @@ const router = new Router({
       meta: {
         withoutLayout: true
       }
+    },
+    // 部门管理-列表
+    {
+      path: '/userCenter/deptManage',
+      name: 'deptManage',
+      component: () => import('./views/userCenterModule/DeptManage.vue')
     }
   ]
 })
