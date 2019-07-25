@@ -25,6 +25,12 @@ const router = new Router({
       path: '/userCenter/deptManage',
       name: 'deptManage',
       component: () => import('./views/userCenterModule/DeptManage.vue')
+    },
+    // 权限管理-菜单管理
+    {
+      path: '/userCenter/menuManage',
+      name: 'menuManage',
+      component: () => import('./views/authModule/MenuManage.vue')
     }
   ]
 })

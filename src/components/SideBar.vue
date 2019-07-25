@@ -10,29 +10,78 @@
     <div class="switch-icon" @click="collapse = !collapse">
       <i :class="`el-icon-s-${collapse ? 'un' : ''}fold`"></i>
     </div>
-    <el-submenu index="userCenter">
-      <template slot="title">
-        <i class="el-icon-user-solid"></i>
-        <span>用户中心</span>
-      </template>
-      <el-menu-item index="deptManage">部门管理</el-menu-item>
-      <el-menu-item index="stationManage">岗位管理</el-menu-item>
-      <el-menu-item index="userManage">用户管理</el-menu-item>
-    </el-submenu>
+    <template v-for="menu in authMenu">
+      <el-submenu :index="menu.href" :key="menu.href" v-if="menu.children && menu.children.length">
+        <template slot="title">
+          <i :class="menu.icon"></i>
+          <span>{{menu.name}}</span>
+        </template>
+        <template v-for="subMenu in menu.children">
+          <cycle-menu :menu="subMenu" :key="subMenu.href"></cycle-menu>
+        </template>
+      </el-submenu>
+      <el-menu-item :index="menu.href" v-else :key="menu.href">
+        <i :class="menu.icon"></i>
+        <span>{{menu.name}}</span>
+      </el-menu-item>
+    </template>
   </el-menu>
 </template>
 <script>
+// import authManageApi from '@/api/AuthManageApi.js'
+import cycleMenu from './CycleMenu.vue'
+const menus = [
+  {
+    title: '用户中心',
+    href: 'userCenter',
+    icon: 'el-icon-user-solid',
+    children: [{
+      title: '部门管理',
+      href: 'deptManage'
+    }, {
+      title: '岗位管理',
+      href: 'stationManage'
+    }, {
+      title: '用户管理',
+      href: 'userManage'
+    }]
+  },
+  {
+    title: '权限管理',
+    href: 'authManage',
+    icon: 'el-icon-lock',
+    children: [{
+      title: '菜单配置',
+      href: 'menuManage'
+    }, {
+      title: '角色管理',
+      href: 'roleManage'
+    }]
+  }
+]
 export default {
+  components: {
+    cycleMenu
+  },
   data () {
     return {
-      collapse: true
+      collapse: true,
+      menus
     }
   },
+  computed: {
+    authMenu () {
+      return this.$store.state.authModule.authMenu
+    }
+  },
+  created () {
+    this.$store.dispatch('authModule/authMenu')
+  },
   methods: {
-    menuSelect (index, indexPath) {
-      if (index && indexPath) {
-        this.$router.push(index)
-      }
+    menuSelect (href) {
+      this.$router.push({
+        name: href
+      })
     }
   }
 }

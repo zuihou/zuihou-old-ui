@@ -23,10 +23,13 @@ axios.interceptors.response.use(
 )
 
 function handleError (error, reject) {
-  if (error.response && error.response.data) {
+  if (error.code === 'ECONNABORTED') {
     Message({
-      message: error.response.data,
-      duration: 3
+      message: '请求超时'
+    })
+  } else if (error.response && error.response.data) {
+    Message({
+      message: error.response.data
     })
   } else if (error.message) {
     Message({
@@ -65,7 +68,7 @@ const httpServer = (opts) => {
     method,
     baseURL: process.env.VUE_APP_API_BASE_URL,
     url: opts.url,
-    timeout: 10000
+    timeout: 20000
   }
   const dataRequest = ['PUT', 'POST', 'PATCH']
   if (dataRequest.includes(method)) {

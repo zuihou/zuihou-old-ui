@@ -52,6 +52,7 @@ export default {
   .app-header{
     height: 60px;
     min-height: 60px;
+    margin-bottom: 2px;
   }
   .app-body{
     flex-grow: 1;

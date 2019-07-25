@@ -2,6 +2,7 @@ import Vue from 'vue'
 import {
   Button,
   Message,
+  MessageBox,
   Menu,
   Submenu,
   MenuItem,
@@ -48,3 +49,7 @@ const eleComponnets = [
 eleComponnets.forEach(item => Vue.use(item))
 
 Vue.prototype.$message = Message
+Vue.prototype.$msgbox = MessageBox
+Vue.prototype.$alert = MessageBox.alert
+Vue.prototype.$confirm = MessageBox.confirm
+Vue.prototype.$prompt = MessageBox.prompt
