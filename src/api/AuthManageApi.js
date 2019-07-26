@@ -3,9 +3,10 @@ import axiosApi from './AxiosApi.js'
 const apiList = {
   // 获取系统所有的菜单
   authMenuTree: '/authority/menu/tree',
-  // 查询当前用户绑定的菜单
-  authMenu: '/authority/menu'
-  // 增删改查某一项菜
+  // 查询当前用户绑定的菜单、增删改查某一项菜单
+  authMenu: '/authority/menu',
+  // 分页查询角色
+  authRolePage: '/authority/role/page'
 }
 export default {
   authMenuTree (data = {}) {
@@ -46,6 +47,13 @@ export default {
     return axiosApi({
       method: 'get',
       url: `${apiList.authMenu}/${id}`
+    })
+  },
+  authRolePage (data) {
+    return axiosApi({
+      method: 'get',
+      url: apiList.authRolePage,
+      data
     })
   }
 }

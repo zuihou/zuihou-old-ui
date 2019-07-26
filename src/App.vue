@@ -61,7 +61,7 @@ export default {
     justify-content: flex-start;
     .app-side-bar{
       height: 100%;
-      overflow-y: auto;
+      // overflow-y: auto;
     }
     .app-content{
       flex-grow: 1;

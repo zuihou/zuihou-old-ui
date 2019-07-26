@@ -32,6 +32,12 @@ const router = new Router({
       name: 'menuManage',
       component: () => import('./views/authModule/MenuManage.vue')
     },
+    // 权限管理-角色管理
+    {
+      path: '/authority/roleManage',
+      name: 'roleManage',
+      component: () => import('./views/authModule/RoleManage.vue')
+    },
     {
       path: '*',
       redirect: 'login'

@@ -30,43 +30,13 @@
 <script>
 // import authManageApi from '@/api/AuthManageApi.js'
 import cycleMenu from './CycleMenu.vue'
-const menus = [
-  {
-    title: '用户中心',
-    href: 'userCenter',
-    icon: 'el-icon-user-solid',
-    children: [{
-      title: '部门管理',
-      href: 'deptManage'
-    }, {
-      title: '岗位管理',
-      href: 'stationManage'
-    }, {
-      title: '用户管理',
-      href: 'userManage'
-    }]
-  },
-  {
-    title: '权限管理',
-    href: 'authManage',
-    icon: 'el-icon-lock',
-    children: [{
-      title: '菜单配置',
-      href: 'menuManage'
-    }, {
-      title: '角色管理',
-      href: 'roleManage'
-    }]
-  }
-]
 export default {
   components: {
     cycleMenu
   },
   data () {
     return {
-      collapse: true,
-      menus
+      collapse: true
     }
   },
   computed: {
