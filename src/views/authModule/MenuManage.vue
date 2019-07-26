@@ -59,8 +59,8 @@
             </el-form-item>
           </div>
           <el-form-item style="text-align: center;">
-            <el-button type="primary" @click="onSubmit">保存</el-button>
-            <el-button @click="opeType = 'detail'">取消</el-button>
+            <el-button type="primary" @click="onSubmit" :loading="loading">保存</el-button>
+            <el-button @click="opeType = 'detail'" :disabled="loading">取消</el-button>
           </el-form-item>
         </el-form>
       </el-card>
@@ -76,6 +76,8 @@ export default {
   },
   data () {
     return {
+      // 提交状态
+      loading: false,
       form: {},
       treeData: [],
       opeType: 'detail',
@@ -99,7 +101,7 @@ export default {
       const res = await authManageApi.authMenuTree()
       if (res.isSuccess) {
         this.treeData = [{
-          name: '根节点',
+          name: '系统菜单',
           id: '0',
           children: res.data
         }]
@@ -108,11 +110,12 @@ export default {
     // 点击非操作项时才会触发
     onNodeClick (data, node) {
       this.resetForm()
+      if (data.id === '0') return
       this.opeType = 'detail'
       this.form = {
         ...data,
         target: (data.target && data.target.code) || 'SELF',
-        parentName: data.name
+        parentName: (node.parent && node.parent.data.name) || '无'
       }
     },
     onAdd (data) {
@@ -130,7 +133,7 @@ export default {
       this.form = {
         ...data,
         target: (data.target && data.target.code) || 'SELF',
-        parentName: data.name
+        parentName: node.parent.data.name
       }
     },
     onDelete (data, node) {
@@ -145,7 +148,7 @@ export default {
               if (res.isSuccess) {
                 vm.$message.success('删除成功')
                 const parent = node.parent
-                const children = parent.children
+                const children = parent.data.children
                 const index = children.findIndex(d => d.id === data.id)
                 children.splice(index, 1)
               }
@@ -172,6 +175,7 @@ export default {
     },
     async onSubmit () {
       const vm = this
+      vm.loading = true
       const { id, code, name, parentId, icon, href, sortvalue, group, isEnable, isPublic, target, describe } = vm.form
       let result = null
       const params = {
@@ -204,7 +208,7 @@ export default {
         })
         if (result.isSuccess) {
           const parent = vm.currentNode.parent
-          const children = parent.children
+          const children = parent.data.children
           const index = children.findIndex(d => d.id === vm.currentData.id)
           children.splice(index, 1, result.data)
           // vm.currentData = result.data
@@ -214,6 +218,7 @@ export default {
         vm.$message.success('保存成功')
         vm.resetForm()
       }
+      vm.loading = false
     }
   }
 }

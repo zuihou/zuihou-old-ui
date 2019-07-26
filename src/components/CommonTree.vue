@@ -11,18 +11,18 @@
       <span class="dept-tree-node" slot-scope="{ data, node }">
         <span style="margin-right: 15px;">{{ data.name }}</span>
         <template v-if="data.id !== '0'">
-          <span class="ope-btn" title="添加" @click="modify('onAdd', data)">
+          <span class="ope-btn" title="添加" @click="modify('onAdd', data, node)">
             <i class="el-icon-plus" />
           </span>
-          <span class="ope-btn" title="修改" @click="modify('onEdit', data)">
+          <span class="ope-btn" title="修改" @click="modify('onEdit', data, node)">
             <i class="el-icon-edit" />
           </span>
           <span class="ope-btn ope-btn-remove" title="删除" @click="modify('onDelete', data, node)" v-if="!data.children">
             <i class="el-icon-delete" />
           </span>
-          <span class="ope-btn ope-btn-disable" title="禁用" @click="modify('onDelete', data, node)" v-if="!data.children">
+          <!-- <span class="ope-btn ope-btn-disable" title="禁用" @click="modify('onDelete', data, node)" v-if="!data.children">
             <i class="el-icon-remove-outline" />
-          </span>
+          </span> -->
         </template>
       </span>
     </el-tree>
@@ -36,6 +36,12 @@ export default {
       required: true,
       default () {
         return []
+      }
+    },
+    opeBtns: {
+      type: Array,
+      default () {
+        return ['add', 'edit', 'remove']
       }
     }
   },

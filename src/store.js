@@ -20,7 +20,9 @@ export default new Vuex.Store({
   namespaced: true,
   state: {
     token: null,
-    userInfo
+    userInfo,
+    // 当前系统的所有枚举值
+    enums: {}
   },
   mutations: {
     // 设置用户信息
@@ -40,6 +42,10 @@ export default new Vuex.Store({
       state.userInfo = userInfo
       localStorage.removeItem('token')
       localStorage.removeItem('userInfo')
+    },
+    // 设置当前系统的枚举值
+    SET_ENUMS (state, data) {
+      state.enums = data
     }
   },
   actions: {
@@ -64,6 +70,13 @@ export default new Vuex.Store({
       return commonApi.annoLogout(data).then(res => {
         commit('REMOVE_LOCALSTORAGE')
         return res
+      })
+    },
+    getDictionaryEnums ({ commit }) {
+      commonApi.dictionaryEnums().then(res => {
+        if (res.isSuccess) {
+          commit('SET_ENUMS', res.data)
+        }
       })
     }
   },

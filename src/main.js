@@ -5,6 +5,7 @@ import store from './store'
 import './plugins/element.js'
 import './utils/rem.js'
 import './filters/index.js'
+import './directives/index.js'
 import 'element-ui/lib/theme-chalk/index.css'
 import '@/assets/css/common.css'
 

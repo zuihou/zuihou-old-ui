@@ -28,9 +28,13 @@ const router = new Router({
     },
     // 权限管理-菜单管理
     {
-      path: '/userCenter/menuManage',
+      path: '/authority/menuManage',
       name: 'menuManage',
       component: () => import('./views/authModule/MenuManage.vue')
+    },
+    {
+      path: '*',
+      redirect: 'login'
     }
   ]
 })

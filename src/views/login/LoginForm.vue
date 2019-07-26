@@ -15,7 +15,7 @@
           prefix-icon="el-icon-key"></el-input>
       </el-form-item>
       <el-form-item size="medium" style="text-align: center;">
-        <el-button type="primary" @click="goLogin">登 录</el-button>
+        <el-button type="primary" @click="goLogin" :loading="loading">登 录</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -24,6 +24,7 @@
 export default {
   data () {
     return {
+      loading: false,
       form: {
         account: '',
         password: ''
@@ -43,10 +44,14 @@ export default {
       const vm = this
       vm.$refs.form.validate(valid => {
         if (valid) {
+          vm.loading = true
           vm.$store.dispatch('getUserInfo', vm.form).then(res => {
             if (res.isSuccess) {
+              vm.$store.dispatch('getDictionaryEnums')
               vm.$router.push('/home')
             }
+          }).finally(() => {
+            vm.loading = false
           })
         }
       })

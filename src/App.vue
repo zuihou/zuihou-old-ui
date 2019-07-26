@@ -34,6 +34,7 @@ export default {
     if (userInfo && token) {
       this.$store.commit('SET_USER_INFO', JSON.parse(userInfo))
       this.$store.commit('SET_TOKEN', token)
+      this.$store.dispatch('getDictionaryEnums')
     } else {
       this.$router.replace('/')
     }

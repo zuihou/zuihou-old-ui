@@ -3,7 +3,10 @@ import axiosApi from './AxiosApi.js'
 const apiList = {
   // 登录
   annoLogin: '/authority/anno/login',
-  annoLogout: '/authority/anno/logout'
+  // 登出
+  annoLogout: '/authority/anno/logout',
+  // 获取当前系统的所有枚举
+  dictionaryEnums: '/gate/dictionary/enums'
 }
 export default {
   annoLogin (data = {}) {
@@ -19,6 +22,12 @@ export default {
       method: 'get',
       url: apiList.annoLogout,
       data
+    })
+  },
+  dictionaryEnums () {
+    return axiosApi({
+      method: 'get',
+      url: apiList.dictionaryEnums
     })
   }
 }

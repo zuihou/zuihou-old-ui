@@ -36,7 +36,7 @@ function handleError (error, reject) {
       message: error.message
     })
   }
-  // reject(error)
+  reject(error)
 }
 
 function handleSuccess (res, resolve) {
