@@ -35,7 +35,7 @@ export default {
     getRolePageList ({ commit }, data) {
       return authManageApi.authRolePage(data).then(res => {
         if (res.isSuccess) {
-          commit('SET_ROLE_PAGE_LIST', res.data || [])
+          commit('SET_ROLE_PAGE_LIST', res.data.records || [])
         }
         return res
       })
