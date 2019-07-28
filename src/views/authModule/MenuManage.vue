@@ -27,7 +27,7 @@
           </div>
           <div class="form-group">
             <el-form-item label="排序" :label-width="formLabelWidth">
-              <el-input-number v-model="form.sortvalue" :min="1" :max="1000" :disabled="isDisabled"></el-input-number>
+              <el-input-number v-model="form.sortValue" :min="1" :max="1000" :disabled="isDisabled"></el-input-number>
             </el-form-item>
             <el-form-item label="分组" :label-width="formLabelWidth">
               <el-input v-model="form.group" :min="1" :max="1000" :disabled="isDisabled"></el-input>
@@ -165,7 +165,7 @@ export default {
         parentId: '',
         icon: '',
         href: '',
-        sortvalue: 0,
+        sortValue: 0,
         group: '',
         isEnable: true,
         isPublic: true,
@@ -176,7 +176,7 @@ export default {
     async onSubmit () {
       const vm = this
       vm.loading = true
-      const { id, code, name, parentId, icon, href, sortvalue, group, isEnable, isPublic, target, describe } = vm.form
+      const { id, code, name, parentId, icon, href, sortValue, group, isEnable, isPublic, target, describe } = vm.form
       let result = null
       const params = {
         code,
@@ -184,7 +184,7 @@ export default {
         parentId,
         icon,
         href,
-        sortvalue,
+        sortValue,
         group,
         isEnable,
         isPublic,

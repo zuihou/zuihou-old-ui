@@ -21,7 +21,7 @@
           </div>
           <div class="form-group">
             <el-form-item label="排序" :label-width="formLabelWidth">
-              <el-input-number v-model="form.sortvalue" :min="1" :max="1000" :disabled="isDisabled"></el-input-number>
+              <el-input-number v-model="form.sortValue" :min="1" :max="1000" :disabled="isDisabled"></el-input-number>
             </el-form-item>
             <el-form-item label="启用" :label-width="formLabelWidth">
               <el-switch
@@ -88,14 +88,14 @@ export default {
         abbreviation: '',
         parentName: '',
         parentId: '',
-        sortvalue: 1,
+        sortValue: 1,
         status: true,
         describe: ''
       }
     },
     async onSubmit () {
       const vm = this
-      const { abbreviation, describe, name, parentId, sortvalue, status } = vm.form
+      const { abbreviation, describe, name, parentId, sortValue, status } = vm.form
       let result = null
       if (vm.opeType === 'add') {
         result = await userCenterApi.authorityOrgPost({
@@ -103,7 +103,7 @@ export default {
           describe,
           name,
           parentId,
-          sortvalue,
+          sortValue,
           status
         })
       } else if (vm.opeType === 'edit') {
@@ -112,7 +112,7 @@ export default {
           describe,
           name,
           parentId,
-          sortvalue,
+          sortValue,
           status
         })
       }
