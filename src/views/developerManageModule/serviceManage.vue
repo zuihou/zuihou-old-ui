@@ -1,0 +1,69 @@
+<template>
+  <el-card>
+    <searchCondition ref="searchCondition" @onSearch="preSearch" @onCreate="openDialog('editDialog', null, 'create')"></searchCondition>
+    <el-table :data="tableData" border style="width: 100%">
+      <el-table-column prop="eurekaCode" label="服务id" width="200"></el-table-column>
+      <el-table-column prop="name" label="服务名称" minWidth="80"></el-table-column>
+      <el-table-column prop="describe" label="服务描述" width="80"></el-table-column>
+      <el-table-column prop="swaggerUrl" label="接口地址" width="100"></el-table-column>
+      <el-table-column prop="updateTime" label="更新时间" width="80"></el-table-column>
+      <el-table-column fixed="right" label="操作" width="200">
+        <template slot-scope="scope">
+          <el-button type="text" size="small" @click="openDialog('editDialog', scope.row, 'edit')">编辑</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <apiViewDialog ref="apiViewDialog" @onSuccess="onSuccess" :type="type"></apiViewDialog>
+  </el-card>
+</template>
+<script>
+import searchCondition from './service/SearchCondition'
+import { mapState } from 'vuex'
+import apiViewDialog from './service/ApiViewDialog'
+export default {
+  components: {
+    searchCondition,
+    apiViewDialog
+  },
+  computed: {
+    ...mapState('developerManageModule', {
+      tableData: state => state.microServicePageListData
+    })
+  },
+  data () {
+    return {
+      type: 'create',
+      pageInfo: {
+        pageNo: 1,
+        pageSize: 10
+      }
+    }
+  },
+  methods: {
+    preSearch (params) {
+      this.pageInfo.pageNo = 1
+      this.doSearch(params)
+    },
+    doSearch (params = {}) {
+      this.$store.dispatch('developerManageModule/getMicroServicePageList', {
+        ...params,
+        ...this.pageInfo
+      })
+    },
+    // 新增或者修改成功
+    onSuccess () {
+      const searchCondition = this.$refs.searchCondition.getCondition()
+      this.doSearch(searchCondition)
+    },
+    // 打开编辑、新增弹窗
+    openDialog (dialogRef, row, type) {
+      if (type) this.type = type
+      if (row) this.$store.commit('SET_CURRENT_ROLE_INFO', row)
+      this.$refs[dialogRef].open()
+    }
+  },
+  created () {
+    this.doSearch()
+  }
+}
+</script>

@@ -39,6 +39,11 @@ const router = new Router({
       component: () => import('./views/authModule/RoleManage.vue')
     },
     {
+      path: '/developerManageModule/serviceManage',
+      name: 'serviceManage',
+      component: () => import('./views/developerManageModule/serviceManage.vue')
+    },
+    {
       path: '*',
       redirect: 'login'
     }

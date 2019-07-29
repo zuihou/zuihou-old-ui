@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import commonApi from '@/api/CommonApi.js'
 import userCenterModule from './views/userCenterModule/store'
 import authModule from './views/authModule/store'
+import developerManageModule from './views/developerManageModule/store'
 
 Vue.use(Vuex)
 const userInfo = {
@@ -82,6 +83,7 @@ export default new Vuex.Store({
   },
   modules: {
     userCenterModule,
-    authModule
+    authModule,
+    developerManageModule
   }
 })
