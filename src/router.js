@@ -44,6 +44,11 @@ const router = new Router({
       component: () => import('./views/developerManageModule/serviceManage.vue')
     },
     {
+      path: '/developerManageModule/apiView',
+      name: 'apiView',
+      component: () => import('./views/developerManageModule/ApiView.vue')
+    },
+    {
       path: '*',
       redirect: 'login'
     }

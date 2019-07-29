@@ -3,6 +3,8 @@ import axiosApi from './AxiosApi.js'
 const apiList = {
   // 获取服务分页数据接口
   microServicePage: '/authority/microService/page',
+  // 查询API资源接口分页数据
+  microServiceApiPage: '/authority/resource/page',
   // 同步服务
   microServiceSync: '/authority/microService/sync',
   // 解析接口
@@ -17,6 +19,13 @@ export default {
       data
     })
   },
+  getMicroServiceApiPageList (data = {}) {
+    return axiosApi({
+      method: 'get',
+      url: apiList.microServiceApiPage,
+      data
+    })
+  },
   microServiceSync (data = {}) {
     return axiosApi({
       method: 'post',
@@ -26,7 +35,7 @@ export default {
   },
   microServiceParse (data = {}) {
     return axiosApi({
-      method: 'post',
+      method: 'get',
       url: apiList.microServiceParse,
       data
     })

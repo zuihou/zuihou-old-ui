@@ -5,25 +5,23 @@
       <el-table-column prop="eurekaCode" label="服务id" width="200"></el-table-column>
       <el-table-column prop="name" label="服务名称" minWidth="80"></el-table-column>
       <el-table-column prop="describe" label="服务描述" width="80"></el-table-column>
-      <el-table-column prop="swaggerUrl" label="接口地址" width="100"></el-table-column>
+      <el-table-column prop="swaggerUrl" label="接口地址" width="200"></el-table-column>
       <el-table-column prop="updateTime" label="更新时间" width="80"></el-table-column>
-      <el-table-column fixed="right" label="操作" width="200">
+      <el-table-column fixed="right" label="操作" width="150">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="openDialog('editDialog', scope.row, 'edit')">编辑</el-button>
+          <el-button type="text" size="small" @click="onParse(scope.row)">解析接口</el-button>
+          <el-button type="text" size="small" @click="openDialog('apiViewDialog', scope.row, 'view')">查看接口</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <apiViewDialog ref="apiViewDialog" @onSuccess="onSuccess" :type="type"></apiViewDialog>
   </el-card>
 </template>
 <script>
 import searchCondition from './service/SearchCondition'
 import { mapState } from 'vuex'
-import apiViewDialog from './service/ApiViewDialog'
 export default {
   components: {
-    searchCondition,
-    apiViewDialog
+    searchCondition
   },
   computed: {
     ...mapState('developerManageModule', {
@@ -44,6 +42,11 @@ export default {
       this.pageInfo.pageNo = 1
       this.doSearch(params)
     },
+    onParse (row) {
+      this.$store.dispatch('developerManageModule/microServiceParse', {
+        'ids[]' : row.id
+      })
+    },
     doSearch (params = {}) {
       this.$store.dispatch('developerManageModule/getMicroServicePageList', {
         ...params,
@@ -55,11 +58,11 @@ export default {
       const searchCondition = this.$refs.searchCondition.getCondition()
       this.doSearch(searchCondition)
     },
-    // 打开编辑、新增弹窗
     openDialog (dialogRef, row, type) {
-      if (type) this.type = type
-      if (row) this.$store.commit('SET_CURRENT_ROLE_INFO', row)
-      this.$refs[dialogRef].open()
+      // 页面跳转
+      // if (type) this.type = type
+      // if (row) this.$store.commit('SET_MICRO_SERVICE_INFO', row)
+      // this.$refs[dialogRef].open()
     }
   },
   created () {
