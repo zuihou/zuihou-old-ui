@@ -8,7 +8,9 @@ const apiList = {
   // 同步服务
   microServiceSync: '/authority/microService/sync',
   // 解析接口
-  microServiceParse: '/authority/microService/parse'
+  microServiceParse: '/authority/microService/parse',
+  // 操作日志分页接口
+  optLogPage: '/authority/optLog/page'
 
 }
 export default {
@@ -37,6 +39,13 @@ export default {
     return axiosApi({
       method: 'get',
       url: apiList.microServiceParse,
+      data
+    })
+  },
+  optLogPageList (data = {}) {
+    return axiosApi({
+      method: 'get',
+      url: apiList.optLogPage,
       data
     })
   }

@@ -3,7 +3,7 @@
     <apiSearchCondition ref="apiSearchCondition" @onSearch="preSearch" @onCreate="openDialog('editDialog', null, 'create')"></apiSearchCondition>
     <el-table :data="tableData" border style="width: 100%">
       <el-table-column prop="code" label="编码" width="200"></el-table-column>
-      <el-table-column prop="name" label="名称" minWidth="80"></el-table-column>
+      <el-table-column prop="name" label="名称" width="80"></el-table-column>
       <el-table-column prop="menuName" label="关联菜单" width="80"></el-table-column>
       <el-table-column prop="tags" label="类标签" width="200"></el-table-column>
       <el-table-column prop="describe" label="接口描述" width="200"></el-table-column>

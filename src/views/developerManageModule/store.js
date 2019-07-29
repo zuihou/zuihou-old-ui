@@ -7,7 +7,8 @@ export default {
     // 服务分页数据
     microServicePageListData: [],
     microServiceApiPageListData: [],
-    microServiceInfo: {}
+    microServiceInfo: {},
+    optLogPageListData: [],
 
   },
   mutations: {
@@ -17,8 +18,8 @@ export default {
     SET_MICRO_SERVICE_API_PAGE_LIST (state, data) {
       state.microServiceApiPageListData = data
     },
-    SET_MICRO_SERVICE_INFO (state, data) {
-      state.microServiceInfo = data
+    SET_OPT_LOG_PAGE_LIST_DATA (state, data) {
+      state.optLogPageListData = data
     }
   },
   actions: {
@@ -61,6 +62,15 @@ export default {
         }
         return res
       })
-    }
+    },
+    // 操作日志
+    getOptLogPageList ({ commit }, data) {
+      return developerManageApi.optLogPageList(data).then(res => {
+        if (res.isSuccess) {
+          commit('SET_OPT_LOG_PAGE_LIST_DATA', res.data.records || [])
+        }
+        return res
+      })
+    },
   }
 }

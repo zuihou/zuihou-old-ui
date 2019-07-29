@@ -49,6 +49,11 @@ const router = new Router({
       component: () => import('./views/developerManageModule/ApiView.vue')
     },
     {
+      path: '/developerManageModule/optLog',
+      name: 'optLog',
+      component: () => import('./views/developerManageModule/OptLog.vue')
+    },
+    {
       path: '*',
       redirect: 'login'
     }
