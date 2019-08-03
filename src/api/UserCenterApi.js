@@ -23,7 +23,13 @@ export default {
       ]
     })
   },
-  authorityOrgPost (data = {}) {
+  authorityOrgPost (data = {}, formTag) {
+    if (formTag) {
+      return {
+        method: 'post',
+        url: apiList.authorityOrg,
+      }
+    }
     return axiosApi({
       method: 'post',
       url: apiList.authorityOrg,

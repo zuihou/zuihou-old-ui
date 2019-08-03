@@ -7,12 +7,17 @@
     </div>
     <div class="edit-area">
       <el-card>
-        <el-form :model="form">
+        <el-form
+          ref="dataForm"
+          :model="form"
+          :rules="validate"
+          :validate-on-rule-change="false"
+          >
           <div class="form-group">
-            <el-form-item label="名称" :label-width="formLabelWidth">
+            <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
               <el-input v-model="form.name" autocomplete="off" :disabled="isDisabled"></el-input>
             </el-form-item>
-            <el-form-item label="简称" :label-width="formLabelWidth">
+            <el-form-item label="简称" :label-width="formLabelWidth" prop="abbreviation">
               <el-input v-model="form.abbreviation" autocomplete="off" :disabled="isDisabled"></el-input>
             </el-form-item>
             <el-form-item label="父节点" :label-width="formLabelWidth">
@@ -30,7 +35,7 @@
                 :disabled="isDisabled">
               </el-switch>
             </el-form-item>
-            <el-form-item label="描述" :label-width="formLabelWidth">
+            <el-form-item label="描述" :label-width="formLabelWidth" prop="describe">
               <el-input type="textarea" v-model="form.describe" autocomplete="off" :disabled="isDisabled"></el-input>
             </el-form-item>
           </div>
@@ -46,6 +51,7 @@
 <script>
 import commonTree from '@/components/CommonTree.vue'
 import userCenterApi from '@/api/UserCenterApi.js'
+import validator from '@/utils/back_validator.js'
 export default {
   components: {
     commonTree
@@ -58,7 +64,8 @@ export default {
         id: '0'
       }],
       opeType: 'detail',
-      formLabelWidth: '80px'
+      formLabelWidth: '80px',
+      validate: {}
     }
   },
   computed: {
@@ -68,9 +75,21 @@ export default {
   },
   created () {
     this.resetForm()
+    this.getValidator()
     // this.$store.dispatch('userCenterModule/getDeptTreeData', {})
   },
   methods: {
+    getValidator() {
+      const vm = this
+      var apiData = userCenterApi.authorityOrgPost({},true)
+      validator(
+      { api: apiData },
+      {
+        vm: vm,
+        validate: vm.validate,
+        formName: "dataForm"
+      })
+    },
     onAdd (data) {
       this.form.parentName = data.name
       this.form.parentId = data.id
