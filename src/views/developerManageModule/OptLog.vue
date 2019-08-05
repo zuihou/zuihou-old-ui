@@ -1,37 +1,43 @@
 <template>
   <el-card>
     <optLogSearchCondition ref="optLogSearchCondition" @onSearch="preSearch"></optLogSearchCondition>
-    <el-table :data="tableData" border style="width: 100%">
+    <el-table :data="tableData.records" border style="width: 100%">
       <el-table-column prop="requestIp" label="操作IP" width="100"></el-table-column>
       <el-table-column prop="description" label="操作描述" minWidth="100"></el-table-column>
       <el-table-column prop="type.desc" label="日志类型" width="80"></el-table-column>
       <el-table-column prop="userName" label="操作人" width="80"></el-table-column>
-      <el-table-column prop="classPath" label="类路径" width=""></el-table-column>
+      <!--      <el-table-column prop="classPath" label="类路径" width=""></el-table-column>-->
       <el-table-column prop="actionMethod" label="请求方法" width=""></el-table-column>
       <el-table-column prop="requestUri" label="请求地址" width=""></el-table-column>
       <el-table-column prop="httpMethod.desc" label="请求类型" width=""></el-table-column>
-      <el-table-column prop="params" label="请求参数" width=""></el-table-column>
-      <el-table-column prop="result" label="返回值" width=""></el-table-column>
-      <el-table-column prop="exDesc" label="异常详情信息" width=""></el-table-column>
+      <!--      <el-table-column prop="params" label="请求参数" width=""></el-table-column>-->
+      <!--      <el-table-column prop="result" label="返回值" width=""></el-table-column>-->
+      <!--      <el-table-column prop="exDesc" label="异常详情信息" width=""></el-table-column>-->
       <el-table-column prop="startTime" label="开始时间" width=""></el-table-column>
       <el-table-column prop="finishTime" label="完成时间" width=""></el-table-column>
       <el-table-column prop="consumingTime" label="消耗时间" width=""></el-table-column>
-      <el-table-column prop="ua" label="浏览器" width=""></el-table-column>
-      <el-table-column prop="updateTime" label="更新时间" width="80"></el-table-column>
+      <!--      <el-table-column prop="ua" label="浏览器" width=""></el-table-column>-->
       <el-table-column fixed="right" label="操作" width="150">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="onParse(scope.row)">解析接口</el-button>
+          <el-button @click="onView(scope.row)" size="small" type="text">详情</el-button>
         </template>
       </el-table-column>
     </el-table>
+
+    <pagination :limit.sync="tableData.size" :page.sync="tableData.current" :total="tableData.total"
+                @pagination="preSearch" v-show="tableData.total>0"/>
   </el-card>
 </template>
 <script>
-import optLogSearchCondition from './service/OptLogSearchCondition'
-import { mapState } from 'vuex'
-export default {
+    import optLogSearchCondition from './service/OptLogSearchCondition'
+    import {mapState} from 'vuex'
+    import Pagination from '@/components/Pagination'
+
+    export default {
   components: {
-    optLogSearchCondition
+      optLogSearchCondition,
+      Pagination
   },
   computed: {
     ...mapState('developerManageModule', {
@@ -49,6 +55,7 @@ export default {
   },
   methods: {
     preSearch (params) {
+    debugger
       this.pageInfo.pageNo = 1
       this.doSearch(params)
     },

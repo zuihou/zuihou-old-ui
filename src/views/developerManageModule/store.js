@@ -1,5 +1,5 @@
 import developerManageApi from '@/api/DeveloperManageApi.js'
-import { Message } from 'element-ui'
+import {Message} from 'element-ui'
 
 export default {
   namespaced: true,
@@ -8,7 +8,7 @@ export default {
     microServicePageListData: [],
     microServiceApiPageListData: [],
     microServiceInfo: {},
-    optLogPageListData: [],
+    optLogPageListData: []
 
   },
   mutations: {
@@ -67,10 +67,10 @@ export default {
     getOptLogPageList ({ commit }, data) {
       return developerManageApi.optLogPageList(data).then(res => {
         if (res.isSuccess) {
-          commit('SET_OPT_LOG_PAGE_LIST_DATA', res.data.records || [])
+          commit('SET_OPT_LOG_PAGE_LIST_DATA', res.data || [])
         }
         return res
       })
-    },
+    }
   }
 }
