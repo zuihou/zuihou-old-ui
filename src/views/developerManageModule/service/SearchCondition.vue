@@ -36,6 +36,9 @@ export default {
     onSearch () {
       this.$emit('onSearch', this.searchCondition)
     },
+    getCondition () {
+      return this.searchCondition
+    },
     onSync () {
       this.$store.dispatch('developerManageModule/microServiceSync', {
       })

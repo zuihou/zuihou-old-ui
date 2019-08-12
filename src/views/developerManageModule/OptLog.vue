@@ -24,12 +24,11 @@
         </template>
       </el-table-column>
     </el-table>
-
     <pagination
-      :limit.sync="tableData.size"
-      :page.sync="tableData.current"
+      :limit.sync="pageInfo.pageSize"
+      :page.sync="pageInfo.pageNo"
       :total="parseInt(tableData.total)"
-      @pagination="preSearch"
+      @pagination="onSuccess"
       v-show="tableData.total > 0" />
   </el-card>
 </template>
@@ -62,16 +61,15 @@ export default {
       this.pageInfo.pageNo = 1
       this.doSearch(params)
     },
-
     doSearch (params = {}) {
       this.$store.dispatch('developerManageModule/getOptLogPageList', {
         ...params,
         ...this.pageInfo
       })
     },
-    // 新增或者修改成功
+    // 回到第一页
     onSuccess () {
-      const searchCondition = this.$refs.searchCondition.getCondition()
+      const searchCondition = this.$refs.optLogSearchCondition.getCondition()
       this.doSearch(searchCondition)
     }
 
