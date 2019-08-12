@@ -12,6 +12,7 @@
           <SideBar></SideBar>
         </div>
         <div class="app-content">
+          <page-tabs></page-tabs>
           <router-view></router-view>
         </div>
       </div>
@@ -22,11 +23,13 @@
 <script>
 import Header from '@/components/Header.vue'
 import SideBar from '@/components/SideBar.vue'
+import PageTabs from '@/components/pageTabs/PageTabs.vue'
 export default {
   name: 'app',
   components: {
     SideBar,
-    Header
+    Header,
+    PageTabs
   },
   created () {
     const userInfo = localStorage.getItem('userInfo')

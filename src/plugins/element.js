@@ -22,7 +22,9 @@ import {
   Switch,
   InputNumber,
   Tree,
-  Pagination
+  Pagination,
+  Tabs,
+  TabPane
 } from 'element-ui'
 
 const eleComponnets = [
@@ -46,7 +48,9 @@ const eleComponnets = [
   Switch,
   InputNumber,
   Tree,
-  Pagination
+  Pagination,
+  Tabs,
+  TabPane
 ]
 eleComponnets.forEach(item => Vue.use(item))
 

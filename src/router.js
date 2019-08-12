@@ -9,7 +9,10 @@ const router = new Router({
     {
       path: '/home',
       name: 'home',
-      component: () => import('@views/homeModule/Home.vue')
+      component: () => import('@views/homeModule/Home.vue'),
+      meta: {
+        title: '首页'
+      }
     },
     {
       path: '/',
@@ -24,34 +27,52 @@ const router = new Router({
     {
       path: '/userCenter/deptManage',
       name: 'deptManage',
-      component: () => import('./views/userCenterModule/DeptManage.vue')
+      component: () => import('./views/userCenterModule/DeptManage.vue'),
+      meta: {
+        title: '部门管理'
+      }
     },
     // 权限管理-菜单管理
     {
       path: '/authority/menuManage',
       name: 'menuManage',
-      component: () => import('./views/authModule/MenuManage.vue')
+      component: () => import('./views/authModule/MenuManage.vue'),
+      meta: {
+        title: '菜单管理'
+      }
     },
     // 权限管理-角色管理
     {
       path: '/authority/roleManage',
       name: 'roleManage',
-      component: () => import('./views/authModule/RoleManage.vue')
+      component: () => import('./views/authModule/RoleManage.vue'),
+      meta: {
+        title: '角色管理'
+      }
     },
     {
       path: '/developerManageModule/serviceManage',
       name: 'serviceManage',
-      component: () => import('./views/developerManageModule/serviceManage.vue')
+      component: () => import('./views/developerManageModule/serviceManage.vue'),
+      meta: {
+        title: '服务管理'
+      }
     },
     {
       path: '/developerManageModule/apiView',
       name: 'apiView',
-      component: () => import('./views/developerManageModule/ApiView.vue')
+      component: () => import('./views/developerManageModule/ApiView.vue'),
+      meta: {
+        title: '接口查询'
+      }
     },
     {
       path: '/developerManageModule/optLog',
       name: 'optLog',
-      component: () => import('./views/developerManageModule/OptLog.vue')
+      component: () => import('./views/developerManageModule/OptLog.vue'),
+      meta: {
+        title: '操作日志'
+      }
     },
     {
       path: '*',
