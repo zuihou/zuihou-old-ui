@@ -48,7 +48,7 @@ export default {
         description: '',
         requestUri: '',
         httpMethod: '',
-        classPath: '',
+        classPath: ''
       }
     }
   },

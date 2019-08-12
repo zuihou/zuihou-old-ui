@@ -26,8 +26,8 @@ export default {
     return {
       loading: false,
       form: {
-          account: 'zuihou',
-          password: 'zuihou'
+        account: 'zuihou',
+        password: 'zuihou'
       },
       rules: {
         account: [

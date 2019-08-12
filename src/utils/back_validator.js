@@ -1,3 +1,4 @@
+/* eslint-disable */
 import api from '@/api/AxiosApi.js'
 /// ///////////////////加载及显示验证信息///////////////////////////
 /**
@@ -13,7 +14,7 @@ var projectPrefixs = ['authority/']
  * @param selectorSetting  元素配置
  * 							formName： 表单的ref名称
  * 							validate： data中的验证集合，对应的prop应该绑定对应属性字段，主要用于表单提交验证
- * 						  vm: 当前页面顶级元素，主要用于错误提示
+ *              vm: 当前页面顶级元素，主要用于错误提示
  * @param cb  回调方法
  * @returns
  */
@@ -26,7 +27,7 @@ function openValidator (ajaxSetting, selectorSetting, cb) {
   if (
     !ajaxSetting.api ||
     !selectorSetting.formName ||
-    selectorSetting.vm['validatorUtilFunc'] ==
+    selectorSetting.vm['validatorUtilFunc'] ===
       ajaxSetting.api.url + ajaxSetting.api.method
   ) {
     return
@@ -97,19 +98,19 @@ function setRangeVali (selectorSetting, key, item) {
   if (!selectorSetting.validate.hasOwnProperty(key)) {
     selectorSetting.validate[key] = []
   }
-  msg = item.fieldType == 'string' ? msg : msgValue
+  msg = item.fieldType === 'string' ? msg : msgValue
 
   setPlaceholder(selectorSetting, msg, key)
   selectorSetting.validate[key].push({
     validator: (rule, value, cb) => {
       if (
-        (item.fieldType == 'int' && Number(value) > item.attrs.max) ||
+        (item.fieldType === 'int' && Number(value) > item.attrs.max) ||
         Number(value) < item.attrs.min
       ) {
         cb(new Error(msgValue))
         return
       } else if (
-        item.fieldType == 'string' &&
+        item.fieldType === 'string' &&
         value &&
         value.length > item.attrs.max
       ) {
@@ -128,7 +129,7 @@ function setRangeVali (selectorSetting, key, item) {
  */
 function setNotNullVali (selectorSetting, key, item) {
   if (!selectorSetting.validate.hasOwnProperty(key)) {
-    selectorSetting.validate[key] = new Array()
+    selectorSetting.validate[key] = []
   }
   setPlaceholder(selectorSetting, item.attrs.message || '不能为空', key)
   selectorSetting.validate[key].push({
@@ -175,10 +176,10 @@ function setRegExVali (selectorSetting, key, item) {
 function setPlaceholder (selectorSetting, msg, key) {
   if (selectorSetting.vm.$refs[formName]) {
     selectorSetting.vm.$refs[formName].fields.forEach(field => {
-      if (field.prop == key) {
+      if (field.prop === key) {
         var inputTag = field.$el.getElementsByTagName('input')
         inputTag =
-          inputTag.length == 0
+          inputTag.length === 0
             ? field.$el.getElementsByTagName('textarea')
             : inputTag
         if (inputTag && inputTag.length > 0) {

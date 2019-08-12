@@ -44,7 +44,7 @@ export default {
     },
     onParse (row) {
       this.$store.dispatch('developerManageModule/microServiceParse', {
-        'ids[]' : row.id
+        'ids[]': row.id
       })
     },
     doSearch (params = {}) {

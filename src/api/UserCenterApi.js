@@ -27,7 +27,7 @@ export default {
     if (formTag) {
       return {
         method: 'post',
-        url: apiList.authorityOrg,
+        url: apiList.authorityOrg
       }
     }
     return axiosApi({

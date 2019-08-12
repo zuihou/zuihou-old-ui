@@ -79,16 +79,16 @@ export default {
     // this.$store.dispatch('userCenterModule/getDeptTreeData', {})
   },
   methods: {
-    getValidator() {
+    getValidator () {
       const vm = this
-      var apiData = userCenterApi.authorityOrgPost({},true)
+      var apiData = userCenterApi.authorityOrgPost({}, true)
       validator(
-      { api: apiData },
-      {
-        vm: vm,
-        validate: vm.validate,
-        formName: "dataForm"
-      })
+        { api: apiData },
+        {
+          vm: vm,
+          validate: vm.validate,
+          formName: 'dataForm'
+        })
     },
     onAdd (data) {
       this.form.parentName = data.name

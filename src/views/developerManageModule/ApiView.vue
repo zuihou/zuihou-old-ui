@@ -52,7 +52,7 @@ export default {
         ...params,
         ...this.pageInfo
       })
-    },
+    }
   },
   created () {
     this.doSearch()

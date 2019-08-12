@@ -1,5 +1,5 @@
 import developerManageApi from '@/api/DeveloperManageApi.js'
-import {Message} from 'element-ui'
+import { Message } from 'element-ui'
 
 export default {
   namespaced: true,
