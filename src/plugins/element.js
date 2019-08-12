@@ -21,7 +21,8 @@ import {
   Dialog,
   Switch,
   InputNumber,
-  Tree
+  Tree,
+  Pagination
 } from 'element-ui'
 
 const eleComponnets = [
@@ -44,7 +45,8 @@ const eleComponnets = [
   Dialog,
   Switch,
   InputNumber,
-  Tree
+  Tree,
+  Pagination
 ]
 eleComponnets.forEach(item => Vue.use(item))
 

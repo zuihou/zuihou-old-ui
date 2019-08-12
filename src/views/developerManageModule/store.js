@@ -8,7 +8,7 @@ export default {
     microServicePageListData: [],
     microServiceApiPageListData: [],
     microServiceInfo: {},
-    optLogPageListData: []
+    optLogPageListData: {}
 
   },
   mutations: {
@@ -67,7 +67,7 @@ export default {
     getOptLogPageList ({ commit }, data) {
       return developerManageApi.optLogPageList(data).then(res => {
         if (res.isSuccess) {
-          commit('SET_OPT_LOG_PAGE_LIST_DATA', res.data || [])
+          commit('SET_OPT_LOG_PAGE_LIST_DATA', res.data || {})
         }
         return res
       })

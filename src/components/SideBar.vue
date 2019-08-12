@@ -10,17 +10,17 @@
     <div class="switch-icon" @click="collapse = !collapse">
       <i :class="`el-icon-s-${collapse ? 'un' : ''}fold`"></i>
     </div>
-    <template v-for="menu in authMenu">
-      <el-submenu :index="menu.href" :key="menu.href" v-if="menu.children && menu.children.length">
+    <template v-for="(menu, idx) in authMenu">
+      <el-submenu :index="menu.href" :key="idx" v-if="menu.children && menu.children.length">
         <template slot="title">
           <i :class="menu.icon"></i>
           <span>{{menu.name}}</span>
         </template>
-        <template v-for="subMenu in menu.children">
-          <cycle-menu :menu="subMenu" :key="subMenu.href"></cycle-menu>
+        <template v-for="(subMenu, index) in menu.children">
+          <cycle-menu :menu="subMenu" :key="index"></cycle-menu>
         </template>
       </el-submenu>
-      <el-menu-item :index="menu.href" v-else :key="menu.href">
+      <el-menu-item :index="menu.href" v-else :key="idx">
         <i :class="menu.icon"></i>
         <span>{{menu.name}}</span>
       </el-menu-item>

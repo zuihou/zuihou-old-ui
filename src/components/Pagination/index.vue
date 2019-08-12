@@ -11,7 +11,6 @@
       @size-change="handleSizeChange"
       v-bind="$attrs"
     />
-    分页控件
   </div>
 </template>
 
@@ -26,11 +25,11 @@ export default {
       type: Number
     },
     page: {// 当前页数   支持 .sync 修饰符
-      type: Number,
+      // type: Number,
       default: 1
     },
     limit: { // 每页显示条目个数，支持 .sync 修饰符
-      type: Number,
+      // type: Number,
       default: 20
     },
     pageSizes: {// 每页显示个数选择器的选项设置
@@ -59,7 +58,7 @@ export default {
   computed: {
     currentPage: {
       get () {
-        return this.page
+        return parseInt(this.page)
       },
       set (val) {
         this.$emit('update:page', val)
@@ -67,7 +66,7 @@ export default {
     },
     pageSize: {
       get () {
-        return this.limit
+        return parseInt(this.limit)
       },
       set (val) {
         this.$emit('update:limit', val)

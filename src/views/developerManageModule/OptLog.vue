@@ -25,8 +25,12 @@
       </el-table-column>
     </el-table>
 
-    <pagination :limit.sync="tableData.size" :page.sync="tableData.current" :total="tableData.total"
-                @pagination="preSearch" v-show="tableData.total>0"/>
+    <pagination
+      :limit.sync="tableData.size"
+      :page.sync="tableData.current"
+      :total="parseInt(tableData.total)"
+      @pagination="preSearch"
+      v-show="tableData.total > 0" />
   </el-card>
 </template>
 <script>
@@ -55,7 +59,6 @@ export default {
   },
   methods: {
     preSearch (params) {
-      debugger
       this.pageInfo.pageNo = 1
       this.doSearch(params)
     },
