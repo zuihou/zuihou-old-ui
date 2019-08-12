@@ -1,6 +1,6 @@
 <template>
   <el-menu
-    default-active="deptManage"
+    :default-active="defaultActive"
     class="side-bar"
     background-color="#545c64"
     text-color="#fff"
@@ -36,7 +36,8 @@ export default {
   },
   data () {
     return {
-      collapse: true
+      collapse: true,
+      defaultActive: 'deptManage'
     }
   },
   computed: {
@@ -52,6 +53,12 @@ export default {
       this.$router.push({
         name: href
       })
+    }
+  },
+  watch: {
+    // 路由变化更新菜单选中项
+    '$route' (val) {
+      this.defaultActive = val.name
     }
   }
 }
