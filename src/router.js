@@ -23,6 +23,24 @@ const router = new Router({
         withoutLayout: true
       }
     },
+    // 字典项管理
+    {
+      path: 'dictManage',
+      name: 'dictManage',
+      component: () => import('./views/dictManage/DictManage.vue'),
+      meta: {
+        title: '数据字典维护'
+      }
+    },
+    // 地域管理
+    {
+      path: 'areaManage',
+      name: 'areaManage',
+      component: () => import('./views/areaManage/AreaManage.vue'),
+      meta: {
+        title: '地域管理'
+      }
+    },
     // 部门管理-列表
     {
       path: '/userCenter/deptManage',
