@@ -10,9 +10,6 @@
       <el-form-item label="描述" :label-width="formLabelWidth">
         <el-input v-model="form.describe" autocomplete="off" ></el-input>
       </el-form-item>
-      <el-form-item label="父节点" :label-width="formLabelWidth">
-        <el-input v-model="form.parentName" disabled></el-input>
-      </el-form-item>
   </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取 消</el-button>
@@ -44,8 +41,7 @@ export default {
         this.opeType = type
         this.resetForm()
         if (type === 'add') {
-          this.form.parentName = row.name
-          this.form.parentId = row.id
+          this.form.parentId = 0
           this.dialogTitle = '新增'
         } else {
           this.form = row
@@ -77,12 +73,8 @@ export default {
       if (vm.opeType === 'add') {
         result = await dictApi.addDict(params)
         if (result.isSuccess) {
-          this.$parent.switchDict('add', result.data)
+          this.$parent.tableData.push(result.data)
           this.visible = false
-          // if (!vm.currentData.children) {
-          //   vm.$set(vm.currentData, 'children', [])
-          // }
-          // vm.currentData.children.push(result.data)
         }
       } else if (vm.opeType === 'edit') {
         result = await dictApi.updatDict({
@@ -90,17 +82,11 @@ export default {
           ...params
         })
         if (result.isSuccess) {
-          this.$parent.switchDict('edit', result.data)
           this.visible = false
-          // const parent = vm.currentNode.parent
-          // const children = parent.data.children
-          // const index = children.findIndex(d => d.id === vm.currentData.id)
-          // children.splice(index, 1, result.data)
-          // vm.currentData = result.data
         }
       }
       if (result.isSuccess) {
-        vm.$message.success('保存成功')
+        vm.$message.success('修改成功')
         vm.resetForm()
       }
       vm.loading = false

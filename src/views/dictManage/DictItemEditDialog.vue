@@ -2,7 +2,7 @@
   <el-dialog :title="dialogTitle" :visible.sync="visible">
     <el-form :model="form">
       <el-form-item label="编码" :label-width="formLabelWidth">
-        <el-input v-model="form.dictionaryCode" autocomplete="off" ></el-input>
+        <el-input v-model="form.code" autocomplete="off" ></el-input>
       </el-form-item>
       <el-form-item label="名称" :label-width="formLabelWidth">
         <el-input v-model="form.name" autocomplete="off" ></el-input>
@@ -10,9 +10,9 @@
       <el-form-item label="描述" :label-width="formLabelWidth">
         <el-input v-model="form.describe" autocomplete="off" ></el-input>
       </el-form-item>
-      <!-- <el-form-item label="父节点" :label-width="formLabelWidth">
+      <el-form-item label="父节点" :label-width="formLabelWidth">
         <el-input v-model="form.parentName" disabled></el-input>
-      </el-form-item> -->
+      </el-form-item>
     <!-- <el-form-item style="text-align: center;">
       <el-button type="primary" @click="onSubmit" :loading="loading">保存</el-button>
       <el-button @click="opeType = 'detail'">取消</el-button>
@@ -48,9 +48,11 @@ export default {
         this.opeType = type
         this.resetForm()
         if (type === 'add') {
+          console.log(row)
           this.form.parentId = row.id
-          this.form.dictionaryId = row.dictionaryId
-          this.form.code = row.code
+          this.form.parentName = row.name
+          this.form.dictionaryId = row.id
+          this.form.dictionaryCode = row.code
           this.dialogTitle = '新增'
         } else {
           this.form = row
@@ -84,13 +86,8 @@ export default {
       if (vm.opeType === 'add') {
         result = await dictApi.addDictItem(params)
         if (result.isSuccess) {
-          // this.$parent.switchDict('add', result.data)
-          this.$parent.getDictItemsPageList(this.form.code)
+          // this.$parent.getDictItemsPageList(this.form.code)
           this.visible = false
-          // if (!vm.currentData.children) {
-          //   vm.$set(vm.currentData, 'children', [])
-          // }
-          // vm.currentData.children.push(result.data)
         }
       } else if (vm.opeType === 'edit') {
         result = await dictApi.updateDictItem({
