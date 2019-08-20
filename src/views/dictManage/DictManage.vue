@@ -49,11 +49,12 @@
     <dict-edit ref="dictEdit"></dict-edit>
     <dict-item-edit ref="dictItemEdit"></dict-item-edit>
     <el-pagination
-      :page-size="20"
-      :pager-count="11"
-      layout="prev, pager, next"
-      :total="1000">
-</el-pagination>
+      v-if="pagination.total > 0"
+      :total="pagination.total"
+      :page.sync="pagination.listQuery.pageNum"
+      :limit.sync="pagination.listQuery.pageSize"
+      @pagination="onSearch(pagination.listQuery,searchValue)">
+    </el-pagination>
   </div>
 </template>
 <script>
@@ -73,8 +74,18 @@ export default {
       opeType: 'detail',
       tableData: [],
       searchCondition: {
-        name: ''
-      }
+      },
+      pagination: {
+        // 分页数据
+        total: 0,
+        listQuery: {
+          pageNo: 1,
+          pageSize: 10
+        }
+      },
+      subTable: [
+
+      ]
     }
   },
   computed: {
@@ -84,13 +95,29 @@ export default {
   },
   created () {
     this.resetForm()
-    this.getAllDict()
+    this.onSearch()
   },
   methods: {
     onSearch () {
-      dictApi.getDictPageList(this.searchCondition).then(res => {
+      let jsonData
+      this.pagination.listQuery = {
+        pageNum: 1,
+        pageSize: 10
+      }
+      if (this.searchCondition) {
+        jsonData = {
+          ...this.searchCondition,
+          ...this.pagination.listQuery
+        }
+      } else {
+        jsonData = {
+          ...this.pagination.listQuery
+        }
+      }
+      dictApi.getDictPageList(jsonData).then(res => {
         if (res.isSuccess) {
           this.tableData = res.data.records
+          this.pagination.total = parseInt(res.data.total)
         }
       })
     },
@@ -98,17 +125,14 @@ export default {
       this.openDialog('dictEdit', {}, 'add')
     },
     onUpdate (data) {
-      this.openDialog('dictEdit', data, 'edit')
+      if (data.dictionaryId) {
+        this.openDialog('dictItemEdit', data, 'edit')
+      } else {
+        this.openDialog('dictEdit', data, 'edit')
+      }
     },
     onAddItem (data) {
       this.openDialog('dictItemEdit', data, 'add')
-    },
-    // 获取所有字典项树结构
-    async getAllDict () {
-      const res = await dictApi.getDictPageList()
-      if (res.isSuccess) {
-        this.tableData = res.data.records
-      }
     },
     resetForm () {
       this.form = {
@@ -163,6 +187,7 @@ export default {
       this.$refs[dialogRef].open(row, type)
     },
     onDelete (data) {
+      this.tree = data
       const vm = this
       vm.$confirm('确定删除此项菜单吗？', {
         title: '删除确认',
@@ -170,48 +195,34 @@ export default {
           if (action === 'confirm') {
             vm.resetForm()
             vm.opeType = 'delete'
-            dictApi.delDict(data.id).then(res => {
-              if (res.isSuccess) {
-                vm.$message.success('删除成功')
-              }
-            })
-          }
-        }
-      })
-    },
-    onDeleteItem (data) {
-      const vm = this
-      vm.$confirm('确定删除此项菜单吗？', {
-        title: '删除确认',
-        callback (action) {
-          if (action === 'confirm') {
-            vm.opeType = 'delete'
-            dictApi.delDictItem(data.id).then(res => {
-              if (res.isSuccess) {
-                vm.$message.success('删除成功')
-                vm.getDictItemsPageList(data.code)
-              }
-            })
+            if (data.dictionaryId) {
+              dictApi.delDictItem(data.id).then(res => {
+                if (res.isSuccess) {
+                  vm.$message.success('删除成功')
+                  vm.load(vm.subTable)
+                }
+              })
+            } else {
+              dictApi.delDict(data.id).then(res => {
+                if (res.isSuccess) {
+                  console.log(vm.tree)
+                  vm.$message.success('删除成功')
+                  vm.onSearch()
+                }
+              })
+            }
           }
         }
       })
     },
     load (tree, treeNode, resolve) {
-      setTimeout(() => {
-        resolve([
-          {
-            id: 31,
-            date: '2016-05-01',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1519 弄'
-          }, {
-            id: 32,
-            date: '2016-05-01',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1519 弄'
-          }
-        ])
-      }, 1000)
+      this.subTable.push(tree, treeNode, resolve)
+      console.log(this.subTable)
+      dictApi.getDictItemsPageList(tree.code).then(res => {
+        if (res.isSuccess) {
+          resolve(res.data.records)
+        }
+      })
     }
   }
 }

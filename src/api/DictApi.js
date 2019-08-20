@@ -46,7 +46,7 @@ export default {
   getDictItemsPageList (code) {
     return axiosApi({
       method: 'get',
-      url: `${apiList.getDictItemsPageList}?code=${code}`
+      url: `${apiList.getDictItemsPageList}?dictionaryCode=${code}`
     })
   },
   updateDictItem (data = {}) {

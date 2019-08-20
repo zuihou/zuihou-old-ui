@@ -1,10 +1,10 @@
 <template>
   <el-dialog :title="dialogTitle" :visible.sync="visible">
-    <el-form :model="form">
-      <el-form-item label="编码" :label-width="formLabelWidth">
+    <el-form :model="form" :rules="formRules" ref="form">
+      <el-form-item prop="code" label="编码" :label-width="formLabelWidth">
         <el-input v-model="form.code" autocomplete="off" ></el-input>
       </el-form-item>
-      <el-form-item label="名称" :label-width="formLabelWidth">
+      <el-form-item prop="name" label="名称" :label-width="formLabelWidth">
         <el-input v-model="form.name" autocomplete="off" ></el-input>
       </el-form-item>
       <el-form-item label="描述" :label-width="formLabelWidth">
@@ -13,10 +13,6 @@
       <el-form-item label="父节点" :label-width="formLabelWidth">
         <el-input v-model="form.parentName" disabled></el-input>
       </el-form-item>
-    <!-- <el-form-item style="text-align: center;">
-      <el-button type="primary" @click="onSubmit" :loading="loading">保存</el-button>
-      <el-button @click="opeType = 'detail'">取消</el-button>
-    </el-form-item> -->
   </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取 消</el-button>
@@ -34,11 +30,21 @@ export default {
       visible: false,
       formLabelWidth: '80px',
       form: {
-
+        name: '',
+        code: ''
       },
       loading: false,
       opeType: 'detail',
-      dialogTitle: ''
+      dialogTitle: '',
+      formRules: {
+        code: [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        name: [
+          { required: true, message: '不能为空', trigger: 'blur' },
+          { min: 3, max: 10, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+        ]
+      }
     }
   },
   methods: {
@@ -48,7 +54,6 @@ export default {
         this.opeType = type
         this.resetForm()
         if (type === 'add') {
-          console.log(row)
           this.form.parentId = row.id
           this.form.parentName = row.name
           this.form.dictionaryId = row.id
@@ -56,6 +61,7 @@ export default {
           this.dialogTitle = '新增'
         } else {
           this.form = row
+          this.form.parentName = row.name
           this.dialogTitle = '修改'
         }
       }
@@ -70,45 +76,49 @@ export default {
       }
     },
     async onSubmit () {
-      const vm = this
-      vm.loading = true
-      const { id, code, dictionaryCode, name, parentId, parentName, describe, dictionaryId } = vm.form
-      let result = null
-      const params = {
-        code,
-        dictionaryCode,
-        name,
-        parentId,
-        parentName,
-        describe,
-        dictionaryId
-      }
-      if (vm.opeType === 'add') {
-        result = await dictApi.addDictItem(params)
-        if (result.isSuccess) {
-          // this.$parent.getDictItemsPageList(this.form.code)
-          this.visible = false
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          const vm = this
+          vm.loading = true
+          const { id, code, dictionaryCode, name, parentId, parentName, describe, dictionaryId } = vm.form
+          const params = {
+            code,
+            dictionaryCode,
+            name,
+            parentId,
+            parentName,
+            describe,
+            dictionaryId
+          }
+          if (vm.opeType === 'add') {
+            dictApi.addDictItem(params).then(res => {
+              if (res.isSuccess) {
+                const _parent = vm.$parent
+                console.log(_parent.tree)
+                console.log(_parent.treeNode)
+                if (_parent.tree) {
+                  _parent.load(_parent.tree, _parent.treeNode, _parent.resolve)
+                }
+                this.visible = false
+                vm.$message.success('保存成功')
+                vm.resetForm()
+              }
+            })
+          } else if (vm.opeType === 'edit') {
+            dictApi.updateDictItem({
+              id,
+              ...params
+            }).then(res => {
+              if (res.isSuccess) {
+                vm.$message.success('修改成功')
+                vm.resetForm()
+                this.visible = false
+              }
+            })
+          }
+          vm.loading = false
         }
-      } else if (vm.opeType === 'edit') {
-        result = await dictApi.updateDictItem({
-          id,
-          ...params
-        })
-        if (result.isSuccess) {
-          // this.$parent.switchDict('edit', result.data)
-          this.visible = false
-          // const parent = vm.currentNode.parent
-          // const children = parent.data.children
-          // const index = children.findIndex(d => d.id === vm.currentData.id)
-          // children.splice(index, 1, result.data)
-          // vm.currentData = result.data
-        }
-      }
-      if (result.isSuccess) {
-        vm.$message.success('保存成功')
-        vm.resetForm()
-      }
-      vm.loading = false
+      })
     }
   }
 }
