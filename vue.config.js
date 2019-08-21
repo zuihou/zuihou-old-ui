@@ -28,6 +28,7 @@ module.exports = {
   crossorigin: 'anonymous',
   // 设置代理
   devServer: {
+    contentBase: './',
     proxy
   },
   // 简单的webpack的配置
