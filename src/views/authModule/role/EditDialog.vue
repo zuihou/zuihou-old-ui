@@ -1,35 +1,42 @@
 <template>
   <el-dialog :title="type | dialogTitle" :visible.sync="visible">
-    <el-form :model="form">
-      <el-form-item label="名称" :label-width="formLabelWidth">
+    <el-form :model="form" ref="roleForm" :rules="rules">
+      <el-form-item label="编码" :label-width="formLabelWidth" prop="code">
+        <el-input v-model="form.code" autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item label="角色名称" :label-width="formLabelWidth" prop="name">
         <el-input v-model="form.name" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="所属部门" :label-width="formLabelWidth">
-        <el-select v-model="form.region" placeholder="请选择活动区域">
-          <el-option label="区域一" value="shanghai"></el-option>
-          <el-option label="区域二" value="beijing"></el-option>
+      <el-form-item label="角色描述" :label-width="formLabelWidth">
+        <el-input v-model="form.describe" autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item label="数据范围" :label-width="formLabelWidth" prop="dsType">
+        <el-select v-model="form.dsType" placeholder="请选择数据范围">
+          <el-option label="全部" value="0"></el-option>
+          <el-option label="本级" value="本级"></el-option>
+          <el-option label="本级及下级" value="本级及下级"></el-option>
+          <el-option label="自定义" value="自定义"></el-option>
+          <el-option label="个人" value="个人"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="排序" :label-width="formLabelWidth">
-        <el-input-number v-model="form.sort" :min="1" :max="1000"></el-input-number>
-      </el-form-item>
-      <el-form-item label="启用" :label-width="formLabelWidth">
-        <el-switch
-          v-model="form.enable"
-          active-color="#13ce66">
-        </el-switch>
-      </el-form-item>
-      <el-form-item label="描述" :label-width="formLabelWidth">
-        <el-input v-model="form.name" autocomplete="off"></el-input>
+      <el-form-item label="部门" :label-width="formLabelWidth" prop="dsType">
+        <el-select v-model="form.dsType" placeholder="请选择数据范围">
+          <el-option label="全部" :value="1"></el-option>
+          <el-option label="本级" :value="2"></el-option>
+          <el-option label="本级及下级" :value="3"></el-option>
+          <el-option label="自定义" :value="4"></el-option>
+          <el-option label="个人" :value="5"></el-option>
+        </el-select>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取 消</el-button>
-      <el-button type="primary" @click="visible = false">确 定</el-button>
+      <el-button type="primary" @click="preSave">确 定</el-button>
     </div>
   </el-dialog>
 </template>
 <script>
+import authManageApi from '@/api/AuthManageApi.js'
 export default {
   props: {
     // 操作类型
@@ -46,7 +53,17 @@ export default {
       visible: false,
       formLabelWidth: '80px',
       form: {
-
+        code: 'chongzitest',
+        name: '虫子测试',
+        describe: '测试新增',
+        dsType: 4,
+        isEnable: true,
+        orgList: [1]
+      },
+      rules: {
+        code: [{ required: true, message: '请填写编码', trigger: 'blur' }],
+        name: [{ required: true, message: '填写名称', trigger: 'blur' }],
+        dsType: [{ required: true, message: '请选择数据范围', trigger: 'change' }]
       }
     }
   },
@@ -56,6 +73,22 @@ export default {
       if (row) {
         this.form = row
       }
+    },
+    preSave () {
+      const vm = this
+      vm.$refs.roleForm.validate(valid => {
+        if (valid) {
+          authManageApi.authRoleAdd(vm.form).then(res => {
+            if (res.isSuccess) {
+              vm.$message.success('新增成功')
+              vm.visible = false
+              vm.$emit('onSuccess')
+            } else {
+              vm.$message.success('新增失败')
+            }
+          })
+        }
+      })
     }
   }
 }

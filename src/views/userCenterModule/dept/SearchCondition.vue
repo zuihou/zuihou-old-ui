@@ -2,7 +2,7 @@
   <div class="search-condition">
     <el-form :inline="true" :model="searchCondition" class="demo-form-inline">
       <el-form-item label="名称">
-        <el-input v-model="searchCondition.name" placeholder="名称"></el-input>
+        <el-input size="small" v-model="searchCondition.name" placeholder="名称"></el-input>
       </el-form-item>
       <el-form-item label="所属机构">
         <el-select v-model="searchCondition.org" placeholder="所属机构" clearable>

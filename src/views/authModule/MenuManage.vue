@@ -239,9 +239,10 @@ export default {
     max-width: 880px;
     padding-left: 10px;
     .form-group{
-      width: 400px;
+      width: 300px;
       display: inline-block;
       vertical-align: top;
+      margin-right: 20px;
     }
   }
 }

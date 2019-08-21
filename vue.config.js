@@ -3,7 +3,7 @@ function resolve (dir) {
   return path.join(__dirname, dir)
 }
 
-const targetUrl = 'http://127.0.0.1:8760'
+const targetUrl = 'http://wzroom.cn'
 const proxyArr = ['/api']
 const proxy = {}
 proxyArr.forEach(item => {

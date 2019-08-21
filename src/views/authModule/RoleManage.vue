@@ -2,17 +2,17 @@
   <el-card>
     <searchCondition ref="searchCondition" @onSearch="preSearch" @onCreate="openDialog('editDialog', null, 'create')"></searchCondition>
     <el-table :data="tableData" border style="width: 100%">
-      <el-table-column prop="code" label="角色编码" width="80"></el-table-column>
+      <el-table-column prop="code" label="角色编码" width="160"></el-table-column>
       <el-table-column prop="name" label="角色名称" width="120"></el-table-column>
       <el-table-column prop="describe" label="角色描述" minWidth="200"></el-table-column>
       <el-table-column prop="isReadonly" label="系统角色" width="80"></el-table-column>
       <el-table-column prop="isEnable" label="状态" width="100"></el-table-column>
       <el-table-column prop="dsType" label="数据范围" width="120"></el-table-column>
       <el-table-column prop="createUser" label="创建人姓名" width="120"></el-table-column>
-      <el-table-column prop="createTime" label="创建时间" width="80"></el-table-column>
+      <el-table-column prop="createTime" label="创建时间" width="160"></el-table-column>
       <el-table-column prop="updateUser" label="更新人姓名" width="120"></el-table-column>
-      <el-table-column prop="updateTime" label="更新时间" width="80"></el-table-column>
-      <el-table-column fixed="right" label="操作" width="200">
+      <el-table-column prop="updateTime" label="更新时间" width="160"></el-table-column>
+      <el-table-column fixed="right" label="操作" width="220">
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="openDialog('editDialog', scope.row, 'edit')">编辑</el-button>
           <el-button type="text" size="small" @click="openDialog('editDialog', scope.row, 'copy')">复制</el-button>

@@ -6,7 +6,9 @@ const apiList = {
   // 查询当前用户绑定的菜单、增删改查某一项菜单
   authMenu: '/authority/menu',
   // 分页查询角色
-  authRolePage: '/authority/role/page'
+  authRolePage: '/authority/role/page',
+  // 新增角色
+  authRoleAdd: '/authority/role'
 }
 export default {
   authMenuTree (data = {}) {
@@ -53,6 +55,13 @@ export default {
     return axiosApi({
       method: 'get',
       url: apiList.authRolePage,
+      data
+    })
+  },
+  authRoleAdd (data) {
+    return axiosApi({
+      method: 'post',
+      url: apiList.authRoleAdd,
       data
     })
   }
