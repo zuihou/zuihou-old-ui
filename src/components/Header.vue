@@ -40,7 +40,7 @@ export default {
   box-sizing: border-box;
   box-shadow: 0 1px 2px #ebebeb;
   .logo{
-    width: 100px;
+    width: 180px;
     height: 100%;
     background: url('~@/assets/imgs/common/logo.png') left center no-repeat;
     background-size: cover;

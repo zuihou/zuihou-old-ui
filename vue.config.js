@@ -3,7 +3,7 @@ function resolve (dir) {
   return path.join(__dirname, dir)
 }
 
-const targetUrl = 'http://wzroom.cn'
+const targetUrl = 'http://127.0.0.1:8760'
 const proxyArr = ['/api']
 const proxy = {}
 proxyArr.forEach(item => {
@@ -29,7 +29,8 @@ module.exports = {
   // 设置代理
   devServer: {
     contentBase: './',
-    proxy
+    proxy,
+    open: true
   },
   // 简单的webpack的配置
   configureWebpack: {
