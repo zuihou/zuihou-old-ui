@@ -7,11 +7,18 @@
       <el-form-item label="地名" prop="name" :label-width="formLabelWidth">
         <el-input v-model="form.name" autocomplete="off" ></el-input>
       </el-form-item>
-      <el-form-item label="全称" :label-width="formLabelWidth">
+      <el-form-item label="全称" prop="fullName" :label-width="formLabelWidth">
         <el-input v-model="form.fullName" autocomplete="off" ></el-input>
       </el-form-item>
-      <el-form-item label="级别" :label-width="formLabelWidth">
-        <el-input v-model="form.level" autocomplete="off" ></el-input>
+      <el-form-item label="级别" prop="level" :label-width="formLabelWidth">
+        <el-select v-model="form.level">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="经度" :label-width="formLabelWidth">
         <el-input v-model="form.longitude" autocomplete="off" ></el-input>
@@ -21,7 +28,7 @@
       </el-form-item>
   </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="visible = false">取 消</el-button>
+      <el-button @click="onCancle">取 消</el-button>
       <el-button type="primary" @click="onSubmit">确 定</el-button>
     </div>
   </el-dialog>
@@ -44,23 +51,53 @@ export default {
       addRow: {},
       formRule: {
         code: [
-          { required: true, message: '不能为空', trigger: 'blur' }
+          { required: true, message: '不能为空', trigger: 'blur' },
+          { min: 3, max: 18, message: '长度在 3 到 18 个字符', trigger: 'blur' }
         ],
         name: [
           { required: true, message: '不能为空', trigger: 'blur' },
-          { min: 3, max: 10, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
+        ],
+        fullName: [
+          { required: true, message: '不能为空', trigger: 'blur' },
+          { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
+        ],
+        level: [
+          { required: true, message: '不能为空', trigger: 'blur' }
         ]
-      }
+      },
+      options: [{
+        value: 0,
+        label: '国家'
+      }, {
+        value: 1,
+        label: '省'
+      }, {
+        value: 2,
+        label: '市'
+      }, {
+        value: 3,
+        label: '区/县'
+      }, {
+        value: 4,
+        label: '镇/乡'
+      }]
     }
   },
   methods: {
+    onCancle () {
+      this.resetForm()
+      this.$refs['form'].clearValidate()
+      this.visible = false
+    },
     open (row, type) {
       this.visible = true
+      this.resetForm()
       if (row) {
         this.opeType = type
-        this.resetForm()
         this.addRow = row
         if (type === 'add') {
+          this.form.parentId = row.id
           this.form.parentCode = row.code
           this.dialogTitle = '新增'
         } else {
@@ -81,45 +118,46 @@ export default {
       }
     },
     async onSubmit () {
+      const vm = this
       this.$refs['form'].validate((valid) => {
-        const vm = this
-        vm.loading = true
-        const { id, code, name, fullName, parentCode, longitude, latitude, level, parentId } = vm.form
-        const params = {
-          id,
-          code,
-          name,
-          fullName,
-          parentCode,
-          longitude,
-          latitude,
-          level,
-          parentId
-        }
-        if (vm.opeType === 'add') {
-          const vm = this
-          if (params.level === 0) {
-            params.parentCode = -1
+        if (valid) {
+          vm.loading = true
+          const { id, code, name, fullName, parentCode, longitude, latitude, level, parentId } = vm.form
+          const params = {
+            id,
+            code,
+            name,
+            fullName,
+            parentCode,
+            longitude,
+            latitude,
+            level,
+            parentId
           }
-          areaApi.addArea(params).then(result => {
-            if (result.isSuccess) {
-              // 需要把当前数据加载到
-              if (params.level === 0) {
-                vm.$parent.tableData.push(result.data)
-              } else {
-                vm.$parent.refreshChild(params.parentId, result.data, vm.addRow)
+          if (vm.opeType === 'add') {
+            if (params.level === 0) {
+              params.parentCode = -1
+            }
+            areaApi.addArea(params).then(result => {
+              if (result.isSuccess) {
+                // 需要把当前数据加载到
+                if (params.level === 0) {
+                  vm.$parent.tableData.push(result.data)
+                } else {
+                  vm.$parent.refreshChild(params.parentCode, result.data, vm.addRow)
+                }
+                this.visible = false
               }
-              this.visible = false
-            }
-          })
-        } else if (vm.opeType === 'edit') {
-          areaApi.updatArea(params).then(result => {
-            if (result.isSuccess) {
-              // 需要把当前数据加载到
-              vm.$parent.tableData.push(result.data)
-              this.visible = false
-            }
-          })
+            })
+          } else if (vm.opeType === 'edit') {
+            areaApi.updatArea(params).then(result => {
+              if (result.isSuccess) {
+                // 需要把当前数据加载到
+                // vm.$parent.tableData.push(result.data)
+                this.visible = false
+              }
+            })
+          }
         }
         vm.loading = false
       })

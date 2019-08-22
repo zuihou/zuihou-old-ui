@@ -44,7 +44,7 @@ export default {
   delArea (id) {
     return axiosApi({
       method: 'delete',
-      url: `${apiList.deArea}/${id}`
+      url: `${apiList.delArea}/${id}`
     })
   }
 }

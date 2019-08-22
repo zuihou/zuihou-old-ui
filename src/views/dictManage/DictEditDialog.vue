@@ -12,7 +12,7 @@
       </el-form-item>
   </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="visible = false">取 消</el-button>
+      <el-button @click="onCancle">取 消</el-button>
       <el-button type="primary" @click="onSubmit">确 定</el-button>
     </div>
   </el-dialog>
@@ -44,6 +44,11 @@ export default {
     }
   },
   methods: {
+    onCancle () {
+      this.resetForm()
+      this.$refs['form'].clearValidate()
+      this.visible = false
+    },
     open (row, type) {
       this.visible = true
       if (row) {
@@ -70,31 +75,33 @@ export default {
     async onSubmit () {
       this.$refs['form'].validate((valid) => {
         const vm = this
-        vm.loading = true
-        const { id, code, name, parentId, parentName, describe } = vm.form
-        const params = {
-          code,
-          name,
-          parentId,
-          parentName,
-          describe
-        }
-        if (vm.opeType === 'add') {
-          dictApi.addDict(params).then(result => {
-            if (result.isSuccess) {
-              this.$parent.tableData.push(result.data)
-              this.visible = false
-            }
-          })
-        } else if (vm.opeType === 'edit') {
-          dictApi.updatDict({
-            id,
-            ...params
-          }).then(result => {
-            if (result.isSuccess) {
-              this.visible = false
-            }
-          })
+        if (valid) {
+          vm.loading = true
+          const { id, code, name, parentId, parentName, describe } = vm.form
+          const params = {
+            code,
+            name,
+            parentId,
+            parentName,
+            describe
+          }
+          if (vm.opeType === 'add') {
+            dictApi.addDict(params).then(result => {
+              if (result.isSuccess) {
+                this.$parent.tableData.push(result.data)
+                this.visible = false
+              }
+            })
+          } else if (vm.opeType === 'edit') {
+            dictApi.updatDict({
+              id,
+              ...params
+            }).then(result => {
+              if (result.isSuccess) {
+                this.visible = false
+              }
+            })
+          }
         }
         vm.loading = false
       })

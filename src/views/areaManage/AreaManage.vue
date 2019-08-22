@@ -12,13 +12,13 @@
     <el-table
       :data="tableData"
       style="width: 100%"
-      row-key="id"
+      row-key="code"
       border
       lazy
       empty-text="暂无数据"
       ref="myTable"
       :load="load"
-      :tree-props="{children: 'children', hasChildren: 'id'}">
+      :tree-props="{children: 'children', hasChildren: 'code'}">
       <el-table-column
         prop="code"
         label="地域编码"
@@ -85,7 +85,8 @@ export default {
       formLabelWidth: '160px',
       searchCondition: {
         name: ''
-      }
+      },
+      editRow: {}
     }
   },
   computed: {
@@ -121,7 +122,6 @@ export default {
         title: '删除确认',
         callback (action) {
           if (action === 'confirm') {
-            console.log(data.id)
             areaApi.delArea(data.id).then(res => {
               if (res.isSuccess) {
                 vm.$message.success('删除成功')
@@ -132,8 +132,7 @@ export default {
                     }
                   })
                 } else {
-                  console.log(data.parentId, data.id)
-                  vm.deleteChild(data.parentId, data.id)
+                  vm.deleteChild(data.parentCode, data.id)
                 }
               }
             })
@@ -153,16 +152,11 @@ export default {
       }
     },
     onAdd (data) {
-      // this.form.parentCode = data.code
-      // this.opeType = 'add'
       this.openDialog('areaEdit', data, 'add')
     },
-    onEdit (data, node) {
-      this.opeType = 'edit'
-      this.form = {
-        ...data,
-        parentName: node.parent.data.name
-      }
+    onUpdate (data) {
+      this.openDialog('areaEdit', data, 'edit')
+      this.editRow = data
     },
     async onSubmit () {
       const vm = this
