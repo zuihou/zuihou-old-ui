@@ -1,6 +1,8 @@
 import axiosApi from './AxiosApi.js'
 
 const apiList = {
+  // 级联获取地域
+  getArea: '/authority/area',
   // 获取地域列表
   getAreaPageList: '/authority/area/page',
   // 新增地域
@@ -11,6 +13,13 @@ const apiList = {
   delArea: '/authority/area'
 }
 export default {
+  getAreaList (data) {
+    return axiosApi({
+      method: 'get',
+      url: apiList.getArea,
+      data
+    })
+  },
   getAreaPageList (data = {}) {
     return axiosApi({
       method: 'get',

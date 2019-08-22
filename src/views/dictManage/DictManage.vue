@@ -16,6 +16,7 @@
       border
       lazy
       empty-text="暂无数据"
+      ref="myTable"
       :load="load"
       :tree-props="{children: 'children', hasChildren: 'id'}">
       <el-table-column
@@ -82,10 +83,7 @@ export default {
           pageNo: 1,
           pageSize: 10
         }
-      },
-      subTable: [
-
-      ]
+      }
     }
   },
   computed: {
@@ -187,7 +185,6 @@ export default {
       this.$refs[dialogRef].open(row, type)
     },
     onDelete (data) {
-      this.tree = data
       const vm = this
       vm.$confirm('确定删除此项菜单吗？', {
         title: '删除确认',
@@ -198,14 +195,13 @@ export default {
             if (data.dictionaryId) {
               dictApi.delDictItem(data.id).then(res => {
                 if (res.isSuccess) {
+                  vm.deleteChild(data.dictionaryId, data.id)
                   vm.$message.success('删除成功')
-                  vm.load(vm.subTable)
                 }
               })
             } else {
               dictApi.delDict(data.id).then(res => {
                 if (res.isSuccess) {
-                  console.log(vm.tree)
                   vm.$message.success('删除成功')
                   vm.onSearch()
                 }
@@ -216,11 +212,24 @@ export default {
       })
     },
     load (tree, treeNode, resolve) {
-      this.subTable.push(tree, treeNode, resolve)
-      console.log(this.subTable)
       dictApi.getDictItemsPageList(tree.code).then(res => {
         if (res.isSuccess) {
           resolve(res.data.records)
+        }
+      })
+    },
+    refreshChild (key, data, row) {
+      const _children = this.$refs['myTable'].store.states.lazyTreeNodeMap[key]
+      if (_children) {
+        _children.push(data)
+      } else {
+        this.$refs['myTable'].store.loadOrToggle(row)
+      }
+    },
+    deleteChild (key, data) {
+      this.$refs['myTable'].store.states.lazyTreeNodeMap[key].forEach((element, index, arr) => {
+        if (element.id === data) {
+          arr.splice(index, 1)
         }
       })
     }

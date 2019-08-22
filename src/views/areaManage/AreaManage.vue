@@ -1,59 +1,91 @@
 <template>
-  <div class="menu-manage">
-    <div class="tree-area">
-      <el-card>
-        <commonTree :treeData="treeData" @nodeClick="onNodeClick" @onAdd="onAdd" @onEdit="onEdit" @onDelete="onDelete"></commonTree>
-      </el-card>
-    </div>
-    <div class="edit-area">
-      <el-card>
-        <div>
-          <el-form :model="form">
-            <el-form-item label="*地区名称" :label-width="formLabelWidth">
-              <el-input v-model="form.name" autocomplete="off" :disabled="isDisabled"></el-input>
-            </el-form-item>
-            <el-form-item label="地区编码" :label-width="formLabelWidth">
-              <el-input v-model="form.code" autocomplete="off" :disabled="isDisabled"></el-input>
-            </el-form-item>
-            <el-form-item label="地域全称" :label-width="formLabelWidth">
-              <el-input v-model="form.fullName" autocomplete="off" :disabled="isDisabled"></el-input>
-            </el-form-item>
-            <el-form-item label="经度" :label-width="formLabelWidth">
-              <el-input v-model="form.longitude" :disabled="isDisabled"></el-input>
-            </el-form-item>
-            <el-form-item label="纬度" :label-width="formLabelWidth">
-              <el-input v-model="form.latitude" :disabled="isDisabled"></el-input>
-            </el-form-item>
-            <el-form-item label="级别" :label-width="formLabelWidth">
-              <el-input v-model="form.level" :disabled="isDisabled"></el-input>
-            </el-form-item>
-          <el-form-item style="text-align: center;">
-            <el-button type="primary" @click="onSubmit" :loading="loading">保存</el-button>
-            <el-button @click="opeType = 'detail'" :disabled="loading">取消</el-button>
-          </el-form-item>
-        </el-form>
-        </div>
-      </el-card>
-    </div>
+  <div class="search-condition">
+    <el-form :inline="true" :model="searchCondition" class="demo-form-inline">
+      <el-form-item label="关键字">
+        <el-input v-model="searchCondition.name" placeholder="名称"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="onSearch">查询</el-button>
+        <el-button type="primary" @click="onCreate">新增</el-button>
+      </el-form-item>
+    </el-form>
+    <el-table
+      :data="tableData"
+      style="width: 100%"
+      row-key="id"
+      border
+      lazy
+      empty-text="暂无数据"
+      ref="myTable"
+      :load="load"
+      :tree-props="{children: 'children', hasChildren: 'id'}">
+      <el-table-column
+        prop="code"
+        label="地域编码"
+        align="center"
+        >
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        label="地域名称"
+        align="center"
+        >
+      </el-table-column>
+      <el-table-column
+        prop="fullName"
+        label="地域全称"
+        align="center"
+      ></el-table-column>
+      <el-table-column
+        prop="level"
+        label="级别"
+        align="center"
+      >
+      </el-table-column>
+      <el-table-column
+        prop="longitude"
+        label="经度"
+        align="center"
+      >
+      </el-table-column>
+      <el-table-column
+        prop="latitude"
+        label="纬度"
+        align="center"
+      >
+      </el-table-column>
+      <el-table-column
+        label="操作"
+        width="300"
+        align="center">
+        <template slot-scope="scope">
+          <el-button type="primary" @click="onAdd(scope.row)" size="small">新增</el-button>
+          <el-button type="primary" @click="onUpdate(scope.row)" size="small">修改</el-button>
+          <el-button type="primary" @click="onDelete(scope.row)" size="small">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <area-edit ref="areaEdit"></area-edit>
   </div>
 </template>
 <script>
-import commonTree from '@/components/CommonTree.vue'
 import areaApi from '@/api/AreaApi.js'
+import areaEdit from './AreaEdit'
 export default {
   components: {
-    commonTree
+    areaEdit
   },
   data () {
     return {
       // 提交状态
       loading: false,
       form: {},
-      treeData: [],
       opeType: 'detail',
+      tableData: [],
       formLabelWidth: '160px',
-      currentData: {},
-      currentNode: {}
+      searchCondition: {
+        name: ''
+      }
     }
   },
   computed: {
@@ -62,76 +94,74 @@ export default {
     }
   },
   created () {
-    this.resetForm()
-    this.getAllArea()
+    this.getAllArea({ 'parentCode': -1 })
   },
   methods: {
-    // 获取所有字典项树结构
-    async getAllArea () {
-      const res = await areaApi.getAreaPageList()
-      if (res.isSuccess) {
-        this.treeData = [{
-          name: '字典项',
-          id: '0',
-          children: res.data.records
-        }]
+    onSearch () {
+      let _search = {}
+      const searchName = this.searchCondition.name
+      if (!searchName) {
+        _search = { 'parentCode': -1 }
+      } else {
+        _search = this.searchCondition
       }
+      const vm = this
+      areaApi.getAreaList(_search).then(res => {
+        if (res.isSuccess) {
+          vm.tableData = res.data
+        }
+      })
     },
-    // 点击非操作项时才会触发
-    onNodeClick (data, node) {
-      this.resetForm()
-      if (data.id === '0') return
-      this.opeType = 'detail'
-      this.form = {
-        ...data
-      }
+    onCreate () {
+      this.openDialog('areaEdit', {}, 'add')
     },
-    onAdd (data) {
-      this.currentData = data
-      this.resetForm()
-      this.form.parentCode = data.code
-      this.opeType = 'add'
-    },
-    onEdit (data, node) {
-      this.currentData = data
-      this.currentNode = node
-      this.resetForm()
-      this.opeType = 'edit'
-      this.form = {
-        ...data,
-        parentName: node.parent.data.name
-      }
-    },
-    onDelete (data, node) {
+    onDelete (data) {
       const vm = this
       vm.$confirm('确定删除此项菜单吗？', {
         title: '删除确认',
         callback (action) {
           if (action === 'confirm') {
-            vm.resetForm()
-            vm.opeType = 'delete'
+            console.log(data.id)
             areaApi.delArea(data.id).then(res => {
               if (res.isSuccess) {
                 vm.$message.success('删除成功')
-                const parent = node.parent
-                const children = parent.data.children
-                const index = children.findIndex(d => d.id === data.id)
-                children.splice(index, 1)
+                if (data.parentCode === -1) {
+                  vm.tableData.forEach((curr, index, arr) => {
+                    if (curr.id === data.id) {
+                      arr.splice(index, 1)
+                    }
+                  })
+                } else {
+                  console.log(data.parentId, data.id)
+                  vm.deleteChild(data.parentId, data.id)
+                }
               }
             })
           }
         }
       })
     },
-    resetForm () {
+    openDialog (dialogRef, row, type) {
+      if (type) this.opeType = type
+      this.$refs[dialogRef].open(row, type)
+    },
+    // 获取所有字典项树结构
+    async getAllArea (parentCode) {
+      const res = await areaApi.getAreaList(parentCode)
+      if (res.isSuccess) {
+        this.tableData = res.data
+      }
+    },
+    onAdd (data) {
+      // this.form.parentCode = data.code
+      // this.opeType = 'add'
+      this.openDialog('areaEdit', data, 'add')
+    },
+    onEdit (data, node) {
+      this.opeType = 'edit'
       this.form = {
-        code: '',
-        name: '',
-        fullName: '',
-        parentCode: '',
-        longitude: '',
-        latitude: '',
-        level: ''
+        ...data,
+        parentName: node.parent.data.name
       }
     },
     async onSubmit () {
@@ -174,6 +204,28 @@ export default {
         vm.resetForm()
       }
       vm.loading = false
+    },
+    load (tree, treeNode, resolve) {
+      areaApi.getAreaList({ 'parentCode': tree.code }).then(res => {
+        if (res.isSuccess) {
+          resolve(res.data)
+        }
+      })
+    },
+    refreshChild (key, data, row) {
+      const _children = this.$refs['myTable'].store.states.lazyTreeNodeMap[key]
+      if (_children) {
+        _children.push(data)
+      } else {
+        this.$refs['myTable'].store.loadOrToggle(row)
+      }
+    },
+    deleteChild (key, data) {
+      this.$refs['myTable'].store.states.lazyTreeNodeMap[key].forEach((element, index, arr) => {
+        if (element.id === data) {
+          arr.splice(index, 1)
+        }
+      })
     }
   }
 }
