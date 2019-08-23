@@ -19,7 +19,6 @@
       <!--      <el-table-column prop="ua" label="浏览器" width=""></el-table-column>-->
       <el-table-column fixed="right" label="操作" width="150">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="onParse(scope.row)">解析接口</el-button>
           <el-button @click="onView(scope.row)" size="small" type="text">详情</el-button>
         </template>
       </el-table-column>
@@ -33,11 +32,11 @@
   </el-card>
 </template>
 <script>
-import optLogSearchCondition from './service/OptLogSearchCondition'
-import { mapState } from 'vuex'
-import Pagination from '@/components/Pagination'
+    import optLogSearchCondition from './service/OptLogSearchCondition'
+    import {mapState} from 'vuex'
+    import Pagination from '@/components/Pagination'
 
-export default {
+    export default {
   components: {
     optLogSearchCondition,
     Pagination

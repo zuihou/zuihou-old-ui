@@ -1,12 +1,12 @@
 import developerManageApi from '@/api/DeveloperManageApi.js'
-import { Message } from 'element-ui'
+import {Message} from 'element-ui'
 
 export default {
   namespaced: true,
   state: {
     // 服务分页数据
-    microServicePageListData: [],
-    microServiceApiPageListData: [],
+    microServicePageListData: {},
+    microServiceApiPageListData: {},
     microServiceInfo: {},
     optLogPageListData: {}
 
@@ -24,10 +24,10 @@ export default {
   },
   actions: {
     // 查询 服务分页数据
-    getMicroServicePageList ({ commit }, data) {
+    getMicroServicePageList({commit}, data) {
       return developerManageApi.getMicroServicePageList(data).then(res => {
         if (res.isSuccess) {
-          commit('SET_MICRO_SERVICE_PAGE_LIST', res.data.records || [])
+          commit('SET_MICRO_SERVICE_PAGE_LIST', res.data || {})
         }
         return res
       })
@@ -36,7 +36,7 @@ export default {
     getMicroServiceApiPageList ({ commit }, data) {
       return developerManageApi.getMicroServiceApiPageList(data).then(res => {
         if (res.isSuccess) {
-          commit('SET_MICRO_SERVICE_API_PAGE_LIST', res.data.records || [])
+          commit('SET_MICRO_SERVICE_API_PAGE_LIST', res.data || {})
         }
         return res
       })

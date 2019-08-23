@@ -1,7 +1,7 @@
 <template>
   <el-card>
     <apiSearchCondition ref="apiSearchCondition" @onSearch="preSearch" @onCreate="openDialog('editDialog', null, 'create')"></apiSearchCondition>
-    <el-table :data="tableData" border style="width: 100%">
+    <el-table :data="tableData.records" border style="width: 100%">
       <el-table-column prop="code" label="编码" width="200"></el-table-column>
       <el-table-column prop="name" label="名称" minWidth="80"></el-table-column>
       <el-table-column prop="menuName" label="关联菜单" width="80"></el-table-column>
@@ -17,15 +17,24 @@
       <el-table-column prop="createTime" label="创建时间" width="190"></el-table-column>
       <el-table-column prop="updateTime" label="更新时间" width="190"></el-table-column>
     </el-table>
+    <pagination
+      :limit.sync="pageInfo.pageSize"
+      :page.sync="pageInfo.pageNo"
+      :total="parseInt(tableData.total)"
+      @pagination="onSuccess"
+      v-show="tableData.total > 0"/>
   </el-card>
 </template>
 
 <script>
-import apiSearchCondition from './service/ApiSearchCondition'
-import { mapState } from 'vuex'
-export default {
+    import apiSearchCondition from './service/ApiSearchCondition'
+    import {mapState} from 'vuex'
+    import Pagination from '@/components/Pagination'
+
+    export default {
   components: {
-    apiSearchCondition
+      apiSearchCondition,
+      Pagination
   },
   computed: {
     ...mapState('developerManageModule', {
@@ -38,7 +47,6 @@ export default {
         pageNo: 1,
         pageSize: 10
       }
-      //, tableData: [{'code': '123', 'deprecated': true}]
     }
   },
   methods: {
@@ -52,7 +60,12 @@ export default {
         ...params,
         ...this.pageInfo
       })
-    }
+    },
+      // 回到第一页
+      onSuccess() {
+          const searchCondition = this.$refs.apiSearchCondition.getCondition()
+          this.doSearch(searchCondition)
+      }
   },
   created () {
     this.doSearch()
