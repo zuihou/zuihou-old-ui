@@ -2,7 +2,7 @@ import axiosApi from './AxiosApi.js'
 
 const apiList = {
   // 获取字典项列表
-  getDictPageList: '/authority/dictionary/tree',
+  getDictPageList: '/authority/dictionary/page',
   // 获取字典项子列表
   getDictItemsPageList: '/authority/dictionaryItem/page',
   // 新增字典项
@@ -46,7 +46,7 @@ export default {
   getDictItemsPageList (code) {
     return axiosApi({
       method: 'get',
-      url: `${apiList.getDictItemsPageList}?code=${code}`
+      url: `${apiList.getDictItemsPageList}?dictionaryCode=${code}`
     })
   },
   updateDictItem (data = {}) {
