@@ -1,16 +1,48 @@
 <template>
-  <el-dialog :title="dialogTitle" :visible.sync="visible">
-    <el-form :model="form" :rules="formRule" ref="form">
-      <el-form-item label="编码" prop="code" :label-width="formLabelWidth">
-        <el-input autocomplete="off" v-model="form.code"></el-input>
+  <el-dialog
+    :title="dialogTitle"
+    :visible.sync="visible"
+  >
+    <el-form
+      :model="form"
+      :rules="formRule"
+      ref="form"
+    >
+      <el-form-item
+        :label-width="formLabelWidth"
+        label="编码"
+        prop="code"
+      >
+        <el-input
+          autocomplete="off"
+          v-model="form.code"
+        ></el-input>
       </el-form-item>
-      <el-form-item label="地名" prop="name" :label-width="formLabelWidth">
-        <el-input autocomplete="off" v-model="form.name"></el-input>
+      <el-form-item
+        :label-width="formLabelWidth"
+        label="地名"
+        prop="name"
+      >
+        <el-input
+          autocomplete="off"
+          v-model="form.name"
+        ></el-input>
       </el-form-item>
-      <el-form-item label="全称" prop="fullName" :label-width="formLabelWidth">
-        <el-input autocomplete="off" v-model="form.fullName"></el-input>
+      <el-form-item
+        :label-width="formLabelWidth"
+        label="全称"
+        prop="fullName"
+      >
+        <el-input
+          autocomplete="off"
+          v-model="form.fullName"
+        ></el-input>
       </el-form-item>
-      <el-form-item label="级别" prop="level" :label-width="formLabelWidth">
+      <el-form-item
+        :label-width="formLabelWidth"
+        label="级别"
+        prop="level"
+      >
         <el-select v-model="form.level">
           <el-option
             v-for="item in options"
@@ -20,16 +52,35 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="经度" :label-width="formLabelWidth">
-        <el-input autocomplete="off" v-model="form.longitude"></el-input>
+      <el-form-item
+        :label-width="formLabelWidth"
+        label="经度"
+      >
+        <el-input
+          autocomplete="off"
+          v-model="form.longitude"
+        ></el-input>
       </el-form-item>
-      <el-form-item label="纬度" :label-width="formLabelWidth">
-        <el-input autocomplete="off" v-model="form.latitude"></el-input>
+      <el-form-item
+        :label-width="formLabelWidth"
+        label="纬度"
+      >
+        <el-input
+          autocomplete="off"
+          v-model="form.latitude"
+        ></el-input>
       </el-form-item>
     </el-form>
-    <div slot="footer" class="dialog-footer">
+    <div
+      class="dialog-footer"
+      slot="footer"
+    >
       <el-button @click="onCancle">取 消</el-button>
-      <el-button type="primary" @click="onSubmit">确 定</el-button>
+      <el-button
+        @click="onSubmit"
+        type="primary"
+      >确 定
+      </el-button>
     </div>
   </el-dialog>
 </template>
