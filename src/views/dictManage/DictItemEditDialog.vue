@@ -52,6 +52,7 @@ export default {
   },
   methods: {
     onCancle () {
+      this.$parent.afterCancle(this.form.dictionaryId ? this.form.dictionaryId : this.form.id, this.form.id)
       this.resetForm()
       this.$refs['form'].clearValidate()
       this.visible = false

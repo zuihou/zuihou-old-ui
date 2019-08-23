@@ -85,8 +85,7 @@ export default {
       formLabelWidth: '160px',
       searchCondition: {
         name: ''
-      },
-      editRow: {}
+      }
     }
   },
   computed: {
@@ -95,14 +94,14 @@ export default {
     }
   },
   created () {
-    this.getAllArea({ 'parentCode': -1 })
+    this.getAllArea({ 'parentCode': '-1' })
   },
   methods: {
     onSearch () {
       let _search = {}
       const searchName = this.searchCondition.name
       if (!searchName) {
-        _search = { 'parentCode': -1 }
+        _search = { 'parentCode': '-1' }
       } else {
         _search = this.searchCondition
       }
@@ -125,7 +124,7 @@ export default {
             areaApi.delArea(data.id).then(res => {
               if (res.isSuccess) {
                 vm.$message.success('删除成功')
-                if (data.parentCode === -1) {
+                if (data.parentCode === '-1') {
                   vm.tableData.forEach((curr, index, arr) => {
                     if (curr.id === data.id) {
                       arr.splice(index, 1)
@@ -156,7 +155,7 @@ export default {
     },
     onUpdate (data) {
       this.openDialog('areaEdit', data, 'edit')
-      this.editRow = data
+      localStorage.setItem(data.id, JSON.stringify(data))
     },
     async onSubmit () {
       const vm = this
@@ -220,6 +219,36 @@ export default {
           arr.splice(index, 1)
         }
       })
+    },
+    afterCancle (key, data) {
+      if (key === '-1') {
+        const _data = this.tableData
+        _data.forEach((element, index) => {
+          if (element.id === data) {
+            const _local = JSON.parse(localStorage.getItem(data))
+            const _old = _data[index]
+            Reflect.ownKeys(_old).forEach((current) => {
+              if (_old[current] !== _local[current]) {
+                _old[current] = _local[current]
+              }
+            })
+            localStorage.removeItem(data)
+          }
+        })
+      } else {
+        this.$refs['myTable'].store.states.lazyTreeNodeMap[key].forEach((element, index, arr) => {
+          if (element.id === data) {
+            const _data = JSON.parse(localStorage.getItem(data))
+            const _old = arr[index]
+            Reflect.ownKeys(_old).forEach((current) => {
+              if (_old[current] !== _data[current]) {
+                _old[current] = _data[current]
+              }
+            })
+            localStorage.removeItem(data)
+          }
+        })
+      }
     }
   }
 }

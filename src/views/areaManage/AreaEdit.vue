@@ -86,6 +86,7 @@ export default {
   },
   methods: {
     onCancle () {
+      this.$parent.afterCancle(this.form.parentCode === -1 ? this.form.code : this.form.parentCode, this.form.id)
       this.resetForm()
       this.$refs['form'].clearValidate()
       this.visible = false
@@ -136,7 +137,7 @@ export default {
           }
           if (vm.opeType === 'add') {
             if (params.level === 0) {
-              params.parentCode = -1
+              params.parentCode = '-1'
             }
             areaApi.addArea(params).then(result => {
               if (result.isSuccess) {

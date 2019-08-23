@@ -123,6 +123,7 @@ export default {
       this.openDialog('dictEdit', {}, 'add')
     },
     onUpdate (data) {
+      localStorage.setItem(data.id, JSON.stringify(data))
       if (data.dictionaryId) {
         this.openDialog('dictItemEdit', data, 'edit')
       } else {
@@ -232,6 +233,36 @@ export default {
           arr.splice(index, 1)
         }
       })
+    },
+    afterCancle (key, data) {
+      if (key === data) {
+        const _data = this.tableData
+        _data.forEach((element, index) => {
+          if (element.id === data) {
+            const _local = JSON.parse(localStorage.getItem(data))
+            const _old = _data[index]
+            Reflect.ownKeys(_old).forEach((current) => {
+              if (_old[current] !== _local[current]) {
+                _old[current] = _local[current]
+              }
+            })
+            localStorage.removeItem(data)
+          }
+        })
+      } else {
+        this.$refs['myTable'].store.states.lazyTreeNodeMap[key].forEach((element, index, arr) => {
+          if (element.id === data) {
+            const _data = JSON.parse(localStorage.getItem(data))
+            const _old = arr[index]
+            Reflect.ownKeys(_old).forEach((current) => {
+              if (_old[current] !== _data[current]) {
+                _old[current] = _data[current]
+              }
+            })
+            localStorage.removeItem(data)
+          }
+        })
+      }
     }
   }
 }
