@@ -40,14 +40,13 @@ export default {
       return this.searchCondition
     },
     onSync () {
-      this.$store.dispatch('developerManageModule/microServiceSync', {
-      })
+        this.$store.dispatch('developerManageModule/microServiceSync', {})
     }
   }
 }
 </script>
 <style lang="less" scoped>
-.search-condition{
+  .search-condition {
   margin-bottom: 10px;
 }
 </style>

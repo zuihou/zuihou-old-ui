@@ -18,28 +18,12 @@
       empty-text="暂无数据"
       ref="myTable"
       :load="load"
-      :tree-props="{children: 'children', hasChildren: 'id'}">
-      <el-table-column
-        prop="code"
-        label="字典编码"
-        align="center"
-        >
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        label="字典项"
-        align="center"
-        >
-      </el-table-column>
-      <el-table-column
-        prop="describe"
-        label="描述"
-        align="center"
-      >
-      </el-table-column>
-      <el-table-column
-        label="操作"
-        align="center">
+      :tree-props="{children: 'children', hasChildren: 'id'}"
+    >
+      <el-table-column align="center" label="字典编码" prop="code"></el-table-column>
+      <el-table-column align="center" label="字典项" prop="name"></el-table-column>
+      <el-table-column align="center" label="描述" prop="describe"></el-table-column>
+      <el-table-column align="center" label="操作">
         <template slot-scope="scope">
           <el-button type="primary" @click="onAddItem(scope.row)" size="small">新增</el-button>
           <el-button type="primary" @click="onUpdate(scope.row)" size="small">修改</el-button>
@@ -54,15 +38,16 @@
       :total="pagination.total"
       :page.sync="pagination.listQuery.pageNum"
       :limit.sync="pagination.listQuery.pageSize"
-      @pagination="onSearch(pagination.listQuery,searchValue)">
-    </el-pagination>
+      @pagination="onSearch(pagination.listQuery,searchValue)"
+    ></el-pagination>
   </div>
 </template>
 <script>
-import dictApi from '@/api/DictApi.js'
-import dictEdit from './DictEditDialog.vue'
-import dictItemEdit from './DictItemEditDialog.vue'
-export default {
+    import dictApi from '@/api/DictApi.js'
+    import dictEdit from './DictEditDialog.vue'
+    import dictItemEdit from './DictItemEditDialog.vue'
+
+    export default {
   components: {
     dictEdit,
     dictItemEdit
@@ -74,8 +59,7 @@ export default {
       form: {},
       opeType: 'detail',
       tableData: [],
-      searchCondition: {
-      },
+        searchCondition: {},
       pagination: {
         // 分页数据
         total: 0,
@@ -228,11 +212,13 @@ export default {
       }
     },
     deleteChild (key, data) {
-      this.$refs['myTable'].store.states.lazyTreeNodeMap[key].forEach((element, index, arr) => {
-        if (element.id === data) {
-          arr.splice(index, 1)
-        }
-      })
+        this.$refs['myTable'].store.states.lazyTreeNodeMap[key].forEach(
+            (element, index, arr) => {
+                if (element.id === data) {
+                    arr.splice(index, 1)
+                }
+            }
+        )
     },
     afterCancle (key, data) {
       if (key === data) {
@@ -241,7 +227,7 @@ export default {
           if (element.id === data) {
             const _local = JSON.parse(localStorage.getItem(data))
             const _old = _data[index]
-            Reflect.ownKeys(_old).forEach((current) => {
+              Reflect.ownKeys(_old).forEach(current => {
               if (_old[current] !== _local[current]) {
                 _old[current] = _local[current]
               }
@@ -250,18 +236,20 @@ export default {
           }
         })
       } else {
-        this.$refs['myTable'].store.states.lazyTreeNodeMap[key].forEach((element, index, arr) => {
-          if (element.id === data) {
-            const _data = JSON.parse(localStorage.getItem(data))
-            const _old = arr[index]
-            Reflect.ownKeys(_old).forEach((current) => {
-              if (_old[current] !== _data[current]) {
-                _old[current] = _data[current]
+          this.$refs['myTable'].store.states.lazyTreeNodeMap[key].forEach(
+              (element, index, arr) => {
+                  if (element.id === data) {
+                      const _data = JSON.parse(localStorage.getItem(data))
+                      const _old = arr[index]
+                      Reflect.ownKeys(_old).forEach(current => {
+                          if (_old[current] !== _data[current]) {
+                              _old[current] = _data[current]
+                          }
+                      })
+                      localStorage.removeItem(data)
+                  }
               }
-            })
-            localStorage.removeItem(data)
-          }
-        })
+          )
       }
     }
   }
@@ -269,16 +257,19 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.menu-manage{
+  .menu-manage {
   height: 100%;
   display: flex;
-  .el-card{
+
+    .el-card {
     min-height: 100%;
   }
-  .tree-area{
+
+    .tree-area {
     min-width: 230px;
   }
-  .edit-area{
+
+    .edit-area {
     //max-width: 880px;
     width: 100%;
     padding-left: 10px;

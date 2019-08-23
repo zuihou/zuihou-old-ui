@@ -42,7 +42,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.search-condition{
+  .search-condition {
   margin-bottom: 10px;
 }
 </style>
