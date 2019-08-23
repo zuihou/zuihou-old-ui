@@ -1,12 +1,27 @@
 <template>
   <div class="search-condition">
-    <el-form :inline="true" :model="searchCondition" class="demo-form-inline">
+    <el-form
+      :inline="true"
+      :model="searchCondition"
+      class="demo-form-inline"
+    >
       <el-form-item label="字典项">
-        <el-input v-model="searchCondition.name" placeholder="名称"></el-input>
+        <el-input
+          placeholder="名称"
+          v-model="searchCondition.name"
+        ></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSearch">查询</el-button>
-        <el-button type="primary" @click="onCreate">新增</el-button>
+        <el-button
+          @click="onSearch"
+          type="primary"
+        >查询
+        </el-button>
+        <el-button
+          @click="onCreate"
+          type="primary"
+        >新增
+        </el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -20,14 +35,44 @@
       :load="load"
       :tree-props="{children: 'children', hasChildren: 'id'}"
     >
-      <el-table-column align="center" label="字典编码" prop="code"></el-table-column>
-      <el-table-column align="center" label="字典项" prop="name"></el-table-column>
-      <el-table-column align="center" label="描述" prop="describe"></el-table-column>
-      <el-table-column align="center" label="操作">
+      <el-table-column
+        align="center"
+        label="字典编码"
+        prop="code"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        label="字典项"
+        prop="name"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        label="描述"
+        prop="describe"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        label="操作"
+      >
         <template slot-scope="scope">
-          <el-button type="primary" @click="onAddItem(scope.row)" size="small">新增</el-button>
-          <el-button type="primary" @click="onUpdate(scope.row)" size="small">修改</el-button>
-          <el-button type="primary" @click="onDelete(scope.row)" size="small">删除</el-button>
+          <el-button
+            @click="onAddItem(scope.row)"
+            size="small"
+            type="primary"
+          >新增
+          </el-button>
+          <el-button
+            @click="onUpdate(scope.row)"
+            size="small"
+            type="primary"
+          >修改
+          </el-button>
+          <el-button
+            @click="onDelete(scope.row)"
+            size="small"
+            type="primary"
+          >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>

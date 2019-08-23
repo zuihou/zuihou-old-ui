@@ -1,22 +1,62 @@
 <template>
-  <el-dialog :title="dialogTitle" :visible.sync="visible">
-    <el-form :model="form" :rules="formRules" ref="form">
-      <el-form-item prop="code" label="编码" :label-width="formLabelWidth">
-        <el-input autocomplete="off" v-model="form.code"></el-input>
+  <el-dialog
+    :title="dialogTitle"
+    :visible.sync="visible"
+  >
+    <el-form
+      :model="form"
+      :rules="formRules"
+      ref="form"
+    >
+      <el-form-item
+        :label-width="formLabelWidth"
+        label="编码"
+        prop="code"
+      >
+        <el-input
+          autocomplete="off"
+          v-model="form.code"
+        ></el-input>
       </el-form-item>
-      <el-form-item prop="name" label="名称" :label-width="formLabelWidth">
-        <el-input autocomplete="off" v-model="form.name"></el-input>
+      <el-form-item
+        :label-width="formLabelWidth"
+        label="名称"
+        prop="name"
+      >
+        <el-input
+          autocomplete="off"
+          v-model="form.name"
+        ></el-input>
       </el-form-item>
-      <el-form-item label="描述" :label-width="formLabelWidth">
-        <el-input autocomplete="off" v-model="form.describe"></el-input>
+      <el-form-item
+        :label-width="formLabelWidth"
+        label="描述"
+      >
+        <el-input
+          autocomplete="off"
+          v-model="form.describe"
+        ></el-input>
       </el-form-item>
-      <el-form-item label="父节点" :label-width="formLabelWidth">
-        <el-input v-model="form.parentName" disabled></el-input>
+      <el-form-item
+        :label-width="formLabelWidth"
+        label="父节点"
+      >
+        <el-input
+          disabled
+          v-model="form.parentName"
+        ></el-input>
       </el-form-item>
     </el-form>
-    <div slot="footer" class="dialog-footer">
+    <div
+      class="dialog-footer"
+      slot="footer"
+    >
       <el-button @click="onCancle">取 消</el-button>
-      <el-button type="primary" @click="onSubmit">确 定</el-button>
+      <el-button
+        @click="onSubmit"
+        type="primary"
+      >确 定
+      </el-button>
     </div>
   </el-dialog>
 </template>
