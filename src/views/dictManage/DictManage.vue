@@ -1,59 +1,89 @@
 <template>
-  <div class="menu-manage">
-    <div class="tree-area">
-      <el-card>
-        <commonTree :treeData="treeData" @nodeClick="onNodeClick" @onAdd="onAdd" @onEdit="onEdit" @onDelete="onDelete"></commonTree>
-      </el-card>
-    </div>
-    <div class="edit-area">
-      <el-table :data="tableData" border style="width: 100%" >
-        <el-table-column type="index" label="序号" align="center"></el-table-column>
-        <el-table-column prop="code" label="编码" align="center"></el-table-column>
-        <el-table-column prop="name" label="名称" align="center"></el-table-column>
-        <el-table-column prop="describe" label="描述" align="center"></el-table-column>
-        <el-table-column prop="createUser" label="创建人" align="center"></el-table-column>
-        <el-table-column prop="createTime" label="创建时间" align="center"></el-table-column>
-        <el-table-column prop="updateUser" label="更新人" align="center"></el-table-column>
-        <el-table-column prop="updateTime" label="更新时间" align="center"></el-table-column>
-        <el-table-column label="操作" align="center">
-          <template slot-scope="scope">
-            <el-button type="text" size="small" @click="openDialog('dictItemEdit', scope.row, 'add')">新增</el-button>
-            <el-button type="text" size="small" @click="openDialog('dictItemEdit', scope.row, 'edit')">编辑</el-button>
-            <el-button type="text" size="small" @click="onDeleteItem(scope.row)">删除</el-button>
-            <!-- <el-button type="text" size="small" @click="openDialog('editDialog', scope.row, 'copy')">复制</el-button> -->
-          </template>
-        </el-table-column>
+  <div class="search-condition">
+    <el-form :inline="true" :model="searchCondition" class="demo-form-inline">
+      <el-form-item label="字典项">
+        <el-input v-model="searchCondition.name" placeholder="名称"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="onSearch">查询</el-button>
+        <el-button type="primary" @click="onCreate">新增</el-button>
+      </el-form-item>
+    </el-form>
+    <el-table
+      :data="tableData"
+      style="width: 100%"
+      row-key="id"
+      border
+      lazy
+      empty-text="暂无数据"
+      ref="myTable"
+      :load="load"
+      :tree-props="{children: 'children', hasChildren: 'id'}">
+      <el-table-column
+        prop="code"
+        label="字典编码"
+        align="center"
+        >
+      </el-table-column>
+      <el-table-column
+        prop="name"
+        label="字典项"
+        align="center"
+        >
+      </el-table-column>
+      <el-table-column
+        prop="describe"
+        label="描述"
+        align="center"
+      >
+      </el-table-column>
+      <el-table-column
+        label="操作"
+        align="center">
+        <template slot-scope="scope">
+          <el-button type="primary" @click="onAddItem(scope.row)" size="small">新增</el-button>
+          <el-button type="primary" @click="onUpdate(scope.row)" size="small">修改</el-button>
+          <el-button type="primary" @click="onDelete(scope.row)" size="small">删除</el-button>
+        </template>
+      </el-table-column>
     </el-table>
-    <dict-edit ref="dictEdit" :type="opeType"></dict-edit>
-    <dict-item-edit ref="dictItemEdit" :type="opeType"></dict-item-edit>
-    <!-- <editDialog ref="editDialog" @onSuccess="onSuccess" :type="type"></editDialog>
-    <userDialog ref="userDialog" @onSuccess="onSuccess" :type="type"></userDialog>
-    <authDialog ref="authDialog" @onSuccess="onSuccess" :type="type"></authDialog> -->
-    </div>
+    <dict-edit ref="dictEdit"></dict-edit>
+    <dict-item-edit ref="dictItemEdit"></dict-item-edit>
+    <el-pagination
+      v-if="pagination.total > 0"
+      :total="pagination.total"
+      :page.sync="pagination.listQuery.pageNum"
+      :limit.sync="pagination.listQuery.pageSize"
+      @pagination="onSearch(pagination.listQuery,searchValue)">
+    </el-pagination>
   </div>
 </template>
 <script>
-import commonTree from '@/components/CommonTree.vue'
 import dictApi from '@/api/DictApi.js'
 import dictEdit from './DictEditDialog.vue'
 import dictItemEdit from './DictItemEditDialog.vue'
 export default {
   components: {
-    commonTree,
     dictEdit,
     dictItemEdit
   },
   data () {
     return {
       // 提交状态
-      // loading: false,
+      loading: false,
       form: {},
-      treeData: [],
       opeType: 'detail',
-      formLabelWidth: '80px',
-      currentData: {},
-      currentNode: {},
-      tableData: []
+      tableData: [],
+      searchCondition: {
+      },
+      pagination: {
+        // 分页数据
+        total: 0,
+        listQuery: {
+          pageNo: 1,
+          pageSize: 10
+        }
+      }
     }
   },
   computed: {
@@ -63,73 +93,45 @@ export default {
   },
   created () {
     this.resetForm()
-    this.getAllDict()
+    this.onSearch()
   },
   methods: {
-    // 获取所有字典项树结构
-    async getAllDict () {
-      const res = await dictApi.getDictPageList()
-      if (res.isSuccess) {
-        this.treeData = [{
-          name: '字典项',
-          id: '0',
-          children: res.data
-        }]
+    onSearch () {
+      let jsonData
+      this.pagination.listQuery = {
+        pageNum: 1,
+        pageSize: 10
       }
-    },
-    // 点击非操作项时才会触发
-    onNodeClick (data, node) {
-      this.resetForm()
-      this.tableData = []
-      if (data.id === '0') return
-      this.getDictItemsPageList(data.code)
-      // this.opeType = 'detail'
-      // this.form = {
-      //   ...data,
-      //   parentName: (node.parent && node.parent.data.name) || '无'
-      // }
-    },
-    onAdd (data) {
-      this.currentData = data
-      // this.resetForm()
-      // this.form.parentName = data.name
-      // this.form.parentId = data.id
-      // this.opeType = 'add'
-      this.openDialog('dictEdit', data, 'add')
-    },
-    onEdit (data, node) {
-      this.currentData = data
-      this.currentNode = node
-      // this.resetForm()
-      // this.opeType = 'edit'
-      // this.form = {
-      //   ...data,
-      //   parentName: node.parent.data.name
-      // }
-      data.parentName = node.parent.data.name
-      data.parentId = node.parent.data.id
-      this.openDialog('dictEdit', data, 'edit')
-    },
-    onDelete (data, node) {
-      const vm = this
-      vm.$confirm('确定删除此项菜单吗？', {
-        title: '删除确认',
-        callback (action) {
-          if (action === 'confirm') {
-            vm.resetForm()
-            vm.opeType = 'delete'
-            dictApi.delDict(data.id).then(res => {
-              if (res.isSuccess) {
-                vm.$message.success('删除成功')
-                const parent = node.parent
-                const children = parent.data.children
-                const index = children.findIndex(d => d.id === data.id)
-                children.splice(index, 1)
-              }
-            })
-          }
+      if (this.searchCondition) {
+        jsonData = {
+          ...this.searchCondition,
+          ...this.pagination.listQuery
+        }
+      } else {
+        jsonData = {
+          ...this.pagination.listQuery
+        }
+      }
+      dictApi.getDictPageList(jsonData).then(res => {
+        if (res.isSuccess) {
+          this.tableData = res.data.records
+          this.pagination.total = parseInt(res.data.total)
         }
       })
+    },
+    onCreate () {
+      this.openDialog('dictEdit', {}, 'add')
+    },
+    onUpdate (data) {
+      localStorage.setItem(data.id, JSON.stringify(data))
+      if (data.dictionaryId) {
+        this.openDialog('dictItemEdit', data, 'edit')
+      } else {
+        this.openDialog('dictEdit', data, 'edit')
+      }
+    },
+    onAddItem (data) {
+      this.openDialog('dictItemEdit', data, 'add')
     },
     resetForm () {
       this.form = {
@@ -155,10 +157,7 @@ export default {
       if (vm.opeType === 'add') {
         result = await dictApi.addDictItem(params)
         if (result.isSuccess) {
-          if (!vm.currentData.children) {
-            vm.$set(vm.currentData, 'children', [])
-          }
-          vm.currentData.children.push(result.data)
+          vm.$message.success('保存成功')
         }
       } else if (vm.opeType === 'edit') {
         result = await dictApi.updatDictItem({
@@ -166,11 +165,7 @@ export default {
           ...params
         })
         if (result.isSuccess) {
-          const parent = vm.currentNode.parent
-          const children = parent.data.children
-          const index = children.findIndex(d => d.id === vm.currentData.id)
-          children.splice(index, 1, result.data)
-          // vm.currentData = result.data
+          vm.$message.success('修改成功')
         }
       }
       if (result.isSuccess) {
@@ -185,40 +180,89 @@ export default {
         this.tableData = result.data.records
       }
     },
-    switchDict (type, data) {
-      if (type === 'add') {
-        if (!this.currentData.children) {
-          this.$set(this.currentData, 'children', [])
-        }
-        this.currentData.children.push(data)
-      } else {
-        const parent = this.currentNode.parent
-        const children = parent.data.children
-        const index = children.findIndex(d => d.id === this.currentData.id)
-        children.splice(index, 1, data)
-      }
-    },
     // 打开编辑、新增弹窗
     openDialog (dialogRef, row, type) {
       if (type) this.opeType = type
       this.$refs[dialogRef].open(row, type)
     },
-    onDeleteItem (data) {
+    onDelete (data) {
       const vm = this
       vm.$confirm('确定删除此项菜单吗？', {
         title: '删除确认',
         callback (action) {
           if (action === 'confirm') {
+            vm.resetForm()
             vm.opeType = 'delete'
-            dictApi.delDictItem(data.id).then(res => {
-              if (res.isSuccess) {
-                vm.$message.success('删除成功')
-                vm.getDictItemsPageList(data.code)
-              }
-            })
+            if (data.dictionaryId) {
+              dictApi.delDictItem(data.id).then(res => {
+                if (res.isSuccess) {
+                  vm.deleteChild(data.dictionaryId, data.id)
+                  vm.$message.success('删除成功')
+                }
+              })
+            } else {
+              dictApi.delDict(data.id).then(res => {
+                if (res.isSuccess) {
+                  vm.$message.success('删除成功')
+                  vm.onSearch()
+                }
+              })
+            }
           }
         }
       })
+    },
+    load (tree, treeNode, resolve) {
+      dictApi.getDictItemsPageList(tree.code).then(res => {
+        if (res.isSuccess) {
+          resolve(res.data.records)
+        }
+      })
+    },
+    refreshChild (key, data, row) {
+      const _children = this.$refs['myTable'].store.states.lazyTreeNodeMap[key]
+      if (_children) {
+        _children.push(data)
+      } else {
+        this.$refs['myTable'].store.loadOrToggle(row)
+      }
+    },
+    deleteChild (key, data) {
+      this.$refs['myTable'].store.states.lazyTreeNodeMap[key].forEach((element, index, arr) => {
+        if (element.id === data) {
+          arr.splice(index, 1)
+        }
+      })
+    },
+    afterCancle (key, data) {
+      if (key === data) {
+        const _data = this.tableData
+        _data.forEach((element, index) => {
+          if (element.id === data) {
+            const _local = JSON.parse(localStorage.getItem(data))
+            const _old = _data[index]
+            Reflect.ownKeys(_old).forEach((current) => {
+              if (_old[current] !== _local[current]) {
+                _old[current] = _local[current]
+              }
+            })
+            localStorage.removeItem(data)
+          }
+        })
+      } else {
+        this.$refs['myTable'].store.states.lazyTreeNodeMap[key].forEach((element, index, arr) => {
+          if (element.id === data) {
+            const _data = JSON.parse(localStorage.getItem(data))
+            const _old = arr[index]
+            Reflect.ownKeys(_old).forEach((current) => {
+              if (_old[current] !== _data[current]) {
+                _old[current] = _data[current]
+              }
+            })
+            localStorage.removeItem(data)
+          }
+        })
+      }
     }
   }
 }
