@@ -52,19 +52,19 @@
   </el-dialog>
 </template>
 <script>
-    import dictApi from '@/api/DictApi.js'
+import dictApi from '@/api/DictApi.js'
 
-    export default {
+export default {
   data () {
     return {
       visible: false,
       formLabelWidth: '80px',
-        form: {},
+      form: {},
       loading: false,
       opeType: 'detail',
       dialogTitle: '',
       formRule: {
-          code: [{required: true, message: '不能为空', trigger: 'blur'}],
+        code: [{ required: true, message: '不能为空', trigger: 'blur' }],
         name: [
           { required: true, message: '不能为空', trigger: 'blur' },
           { min: 3, max: 10, message: '长度在 3 到 5 个字符', trigger: 'blur' }
@@ -74,10 +74,12 @@
   },
   methods: {
     onCancle () {
+      if (this.opeType === 'edit') {
         this.$parent.afterCancle(
-            this.form.dictionaryId ? this.form.dictionaryId : this.form.id,
-            this.form.id
+          this.form.dictionaryId ? this.form.dictionaryId : this.form.id,
+          this.form.id
         )
+      }
       this.resetForm()
       this.$refs['form'].clearValidate()
       this.visible = false
@@ -106,7 +108,7 @@
       }
     },
     async onSubmit () {
-        this.$refs['form'].validate(valid => {
+      this.$refs['form'].validate(valid => {
         const vm = this
         if (valid) {
           vm.loading = true
@@ -126,16 +128,16 @@
               }
             })
           } else if (vm.opeType === 'edit') {
-              dictApi
-                  .updatDict({
-                      id,
-                      ...params
-                  })
-                  .then(result => {
-                      if (result.isSuccess) {
-                          this.visible = false
-                      }
-                  })
+            dictApi
+              .updatDict({
+                id,
+                ...params
+              })
+              .then(result => {
+                if (result.isSuccess) {
+                  this.visible = false
+                }
+              })
           }
         }
         vm.loading = false

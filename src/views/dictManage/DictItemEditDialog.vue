@@ -61,9 +61,9 @@
   </el-dialog>
 </template>
 <script>
-    import dictApi from '@/api/DictApi.js'
+import dictApi from '@/api/DictApi.js'
 
-    export default {
+export default {
   data () {
     return {
       visible: false,
@@ -76,21 +76,23 @@
       opeType: 'detail',
       dialogTitle: '',
       formRules: {
-          code: [{required: true, message: '不能为空', trigger: 'blur'}],
+        code: [{ required: true, message: '不能为空', trigger: 'blur' }],
         name: [
           { required: true, message: '不能为空', trigger: 'blur' },
           { min: 3, max: 10, message: '长度在 3 到 5 个字符', trigger: 'blur' }
         ]
       },
-        addRow: {}
+      addRow: {}
     }
   },
   methods: {
     onCancle () {
+      if (this.opeType === 'edit') {
         this.$parent.afterCancle(
-            this.form.dictionaryId ? this.form.dictionaryId : this.form.id,
-            this.form.id
+          this.form.dictionaryId ? this.form.dictionaryId : this.form.id,
+          this.form.id
         )
+      }
       this.resetForm()
       this.$refs['form'].clearValidate()
       this.visible = false
@@ -123,20 +125,20 @@
       }
     },
     async onSubmit () {
-        this.$refs['form'].validate(valid => {
+      this.$refs['form'].validate(valid => {
         if (valid) {
           const vm = this
           vm.loading = true
-            const {
-                id,
-                code,
-                dictionaryCode,
-                name,
-                parentId,
-                parentName,
-                describe,
-                dictionaryId
-            } = vm.form
+          const {
+            id,
+            code,
+            dictionaryCode,
+            name,
+            parentId,
+            parentName,
+            describe,
+            dictionaryId
+          } = vm.form
           const params = {
             code,
             dictionaryCode,
@@ -149,29 +151,29 @@
           if (vm.opeType === 'add') {
             dictApi.addDictItem(params).then(res => {
               if (res.isSuccess) {
-                  vm.$parent.refreshChild(
-                      res.data.dictionaryId,
-                      res.data,
-                      vm.addRow
-                  )
+                vm.$parent.refreshChild(
+                  res.data.dictionaryId,
+                  res.data,
+                  vm.addRow
+                )
                 this.visible = false
                 vm.$message.success('保存成功')
                 vm.resetForm()
               }
             })
           } else if (vm.opeType === 'edit') {
-              dictApi
-                  .updateDictItem({
-                      id,
-                      ...params
-                  })
-                  .then(res => {
-                      if (res.isSuccess) {
-                          vm.$message.success('修改成功')
-                          vm.resetForm()
-                          this.visible = false
-                      }
-                  })
+            dictApi
+              .updateDictItem({
+                id,
+                ...params
+              })
+              .then(res => {
+                if (res.isSuccess) {
+                  vm.$message.success('修改成功')
+                  vm.resetForm()
+                  this.visible = false
+                }
+              })
           }
           vm.loading = false
         }

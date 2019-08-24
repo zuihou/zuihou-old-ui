@@ -85,14 +85,14 @@
   </el-dialog>
 </template>
 <script>
-    import areaApi from '@/api/AreaApi.js'
+import areaApi from '@/api/AreaApi.js'
 
-    export default {
+export default {
   data () {
     return {
       visible: false,
       formLabelWidth: '80px',
-        form: {},
+      form: {},
       loading: false,
       opeType: 'detail',
       dialogTitle: '',
@@ -110,38 +110,37 @@
           { required: true, message: '不能为空', trigger: 'blur' },
           { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
         ],
-          level: [{required: true, message: '不能为空', trigger: 'blur'}]
+        level: [{ required: true, message: '不能为空', trigger: 'blur' }]
       },
-        options: [
-            {
-                value: 0,
-                label: '国家'
-            },
-            {
-                value: 1,
-                label: '省'
-            },
-            {
-                value: 2,
-                label: '市'
-            },
-            {
-                value: 3,
-                label: '区/县'
-            },
-            {
-                value: 4,
-                label: '镇/乡'
-            }
-        ]
+      options: [
+        {
+          value: 0,
+          label: '国家'
+        },
+        {
+          value: 1,
+          label: '省'
+        },
+        {
+          value: 2,
+          label: '市'
+        },
+        {
+          value: 3,
+          label: '区/县'
+        },
+        {
+          value: 4,
+          label: '镇/乡'
+        }
+      ]
     }
   },
   methods: {
     onCancle () {
-        this.$parent.afterCancle(
-            this.form.parentCode === -1 ? this.form.code : this.form.parentCode,
-            this.form.id
-        )
+      if (this.opeType === 'edit') {
+        this.$parent.afterCancle(this.form.parentCode === -1 ? this.form.code : this.form.parentCode, this.form.id)
+      }
       this.resetForm()
       this.$refs['form'].clearValidate()
       this.visible = false
@@ -175,20 +174,20 @@
     },
     async onSubmit () {
       const vm = this
-        this.$refs['form'].validate(valid => {
+      this.$refs['form'].validate(valid => {
         if (valid) {
           vm.loading = true
-            const {
-                id,
-                code,
-                name,
-                fullName,
-                parentCode,
-                longitude,
-                latitude,
-                level,
-                parentId
-            } = vm.form
+          const {
+            id,
+            code,
+            name,
+            fullName,
+            parentCode,
+            longitude,
+            latitude,
+            level,
+            parentId
+          } = vm.form
           const params = {
             id,
             code,
@@ -210,11 +209,11 @@
                 if (params.level === 0) {
                   vm.$parent.tableData.push(result.data)
                 } else {
-                    vm.$parent.refreshChild(
-                        params.parentCode,
-                        result.data,
-                        vm.addRow
-                    )
+                  vm.$parent.refreshChild(
+                    params.parentCode,
+                    result.data,
+                    vm.addRow
+                  )
                 }
                 this.visible = false
               }
