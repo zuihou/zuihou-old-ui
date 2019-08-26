@@ -17,24 +17,20 @@
       <el-table-column prop="createTime" label="创建时间" width="190"></el-table-column>
       <el-table-column prop="updateTime" label="更新时间" width="190"></el-table-column>
     </el-table>
-    <pagination
-      :limit.sync="pageInfo.pageSize"
-      :page.sync="pageInfo.pageNo"
-      :total="parseInt(tableData.total)"
-      @pagination="onSuccess"
-      v-show="tableData.total > 0"/>
+    <pagination :limit.sync="pageInfo.pageSize" :page.sync="pageInfo.pageNo" :total="parseInt(tableData.total)"
+                @pagination="onSuccess" v-show="tableData.total > 0"/>
   </el-card>
 </template>
 
 <script>
-    import apiSearchCondition from './service/ApiSearchCondition'
-    import {mapState} from 'vuex'
-    import Pagination from '@/components/Pagination'
+import apiSearchCondition from './service/ApiSearchCondition'
+import { mapState } from 'vuex'
+import Pagination from '@/components/Pagination'
 
-    export default {
+export default {
   components: {
-      apiSearchCondition,
-      Pagination
+    apiSearchCondition,
+    Pagination
   },
   computed: {
     ...mapState('developerManageModule', {
@@ -61,11 +57,11 @@
         ...this.pageInfo
       })
     },
-      // 回到第一页
-      onSuccess() {
-          const searchCondition = this.$refs.apiSearchCondition.getCondition()
-          this.doSearch(searchCondition)
-      }
+    // 回到第一页
+    onSuccess () {
+      const searchCondition = this.$refs.apiSearchCondition.getCondition()
+      this.doSearch(searchCondition)
+    }
   },
   created () {
     this.doSearch()

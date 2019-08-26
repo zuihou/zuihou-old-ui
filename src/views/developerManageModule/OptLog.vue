@@ -23,20 +23,16 @@
         </template>
       </el-table-column>
     </el-table>
-    <pagination
-      :limit.sync="pageInfo.pageSize"
-      :page.sync="pageInfo.pageNo"
-      :total="parseInt(tableData.total)"
-      @pagination="onSuccess"
-      v-show="tableData.total > 0" />
+    <pagination :limit.sync="pageInfo.pageSize" :page.sync="pageInfo.pageNo" :total="parseInt(tableData.total)"
+                @pagination="onSuccess" v-show="tableData.total > 0"/>
   </el-card>
 </template>
 <script>
-    import optLogSearchCondition from './service/OptLogSearchCondition'
-    import {mapState} from 'vuex'
-    import Pagination from '@/components/Pagination'
+import optLogSearchCondition from './service/OptLogSearchCondition'
+import { mapState } from 'vuex'
+import Pagination from '@/components/Pagination'
 
-    export default {
+export default {
   components: {
     optLogSearchCondition,
     Pagination
