@@ -1,93 +1,31 @@
 <template>
   <div class="search-condition">
-    <el-form
-      :inline="true"
-      :model="searchCondition"
-      class="demo-form-inline"
-    >
+    <el-form :inline="true" :model="searchCondition" class="demo-form-inline">
       <el-form-item label="关键字">
-        <el-input
-          placeholder="名称"
-          v-model="searchCondition.name"
-        ></el-input>
+        <el-input placeholder="名称" v-model="searchCondition.name"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button
-          @click="onSearch"
-          type="primary"
-        >查询
+        <el-button @click="onSearch" type="primary">查询
         </el-button>
-        <el-button
-          @click="onCreate"
-          type="primary"
-        >新增
+        <el-button @click="onCreate" type="primary">新增
         </el-button>
       </el-form-item>
     </el-form>
-    <el-table
-      :data="tableData"
-      style="width: 100%"
-      row-key="code"
-      border
-      lazy
-      empty-text="暂无数据"
-      ref="myTable"
-      :load="load"
-      :tree-props="{children: 'children', hasChildren: 'code'}"
-    >
-      <el-table-column
-        align="center"
-        label="地域编码"
-        prop="code"
-      ></el-table-column>
-      <el-table-column
-        align="center"
-        label="地域名称"
-        prop="name"
-      ></el-table-column>
-      <el-table-column
-        align="center"
-        label="地域全称"
-        prop="fullName"
-      ></el-table-column>
-      <el-table-column
-        align="center"
-        label="级别"
-        prop="level"
-      ></el-table-column>
-      <el-table-column
-        align="center"
-        label="经度"
-        prop="longitude"
-      ></el-table-column>
-      <el-table-column
-        align="center"
-        label="纬度"
-        prop="latitude"
-      ></el-table-column>
-      <el-table-column
-        align="center"
-        label="操作"
-        width="300"
-      >
+    <el-table :data="tableData" :load="load" :tree-props="{children: 'children', hasChildren: 'code'}" border
+              empty-text="暂无数据" lazy ref="myTable" row-key="code" style="width: 100%">
+      <el-table-column align="center" label="地域编码" prop="code"></el-table-column>
+      <el-table-column align="center" label="地域名称" prop="name"></el-table-column>
+      <el-table-column align="center" label="地域全称" prop="fullName"></el-table-column>
+      <el-table-column align="center" label="级别" prop="level"></el-table-column>
+      <el-table-column align="center" label="经度" prop="longitude"></el-table-column>
+      <el-table-column align="center" label="纬度" prop="latitude"></el-table-column>
+      <el-table-column align="center" label="操作" width="300">
         <template slot-scope="scope">
-          <el-button
-            @click="onAdd(scope.row)"
-            size="small"
-            type="primary"
-          >新增
+          <el-button @click="onAdd(scope.row)" size="small" type="primary">新增
           </el-button>
-          <el-button
-            @click="onUpdate(scope.row)"
-            size="small"
-            type="primary"
-          >修改
+          <el-button @click="onUpdate(scope.row)" size="small" type="primary">修改
           </el-button>
-          <el-button
-            @click="onDelete(scope.row)"
-            size="small"
-            type="primary"
-          >删除
+          <el-button @click="onDelete(scope.row)" size="small" type="primary">删除
           </el-button>
         </template>
       </el-table-column>

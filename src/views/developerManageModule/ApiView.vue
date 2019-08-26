@@ -17,12 +17,8 @@
       <el-table-column prop="createTime" label="创建时间" width="190"></el-table-column>
       <el-table-column prop="updateTime" label="更新时间" width="190"></el-table-column>
     </el-table>
-    <pagination
-      :limit.sync="pageInfo.pageSize"
-      :page.sync="pageInfo.pageNo"
-      :total="parseInt(tableData.total)"
-      @pagination="onSuccess"
-      v-show="tableData.total > 0"/>
+    <pagination :limit.sync="pageInfo.pageSize" :page.sync="pageInfo.pageNo" :total="parseInt(tableData.total)"
+                @pagination="onSuccess" v-show="tableData.total > 0"/>
   </el-card>
 </template>
 
