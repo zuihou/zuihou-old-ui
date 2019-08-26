@@ -34,10 +34,10 @@
   </div>
 </template>
 <script>
-    import areaApi from '@/api/AreaApi.js'
-    import areaEdit from './AreaEdit'
+import areaApi from '@/api/AreaApi.js'
+import areaEdit from './AreaEdit'
 
-    export default {
+export default {
   components: {
     areaEdit
   },
@@ -60,14 +60,14 @@
     }
   },
   created () {
-      this.getAllArea({parentCode: '-1'})
+    this.getAllArea({ parentCode: '-1' })
   },
   methods: {
     onSearch () {
       let _search = {}
       const searchName = this.searchCondition.name
       if (!searchName) {
-          _search = {parentCode: '-1'}
+        _search = { parentCode: '-1' }
       } else {
         _search = this.searchCondition
       }
@@ -126,16 +126,16 @@
     async onSubmit () {
       const vm = this
       vm.loading = true
-        const {
-            id,
-            code,
-            name,
-            fullName,
-            parentCode,
-            longitude,
-            latitude,
-            level
-        } = vm.form
+      const {
+        id,
+        code,
+        name,
+        fullName,
+        parentCode,
+        longitude,
+        latitude,
+        level
+      } = vm.form
       let result = null
       const params = {
         code,
@@ -174,7 +174,7 @@
       vm.loading = false
     },
     load (tree, treeNode, resolve) {
-        areaApi.getAreaList({parentCode: tree.code}).then(res => {
+      areaApi.getAreaList({ parentCode: tree.code }).then(res => {
         if (res.isSuccess) {
           resolve(res.data)
         }
@@ -189,13 +189,13 @@
       }
     },
     deleteChild (key, data) {
-        this.$refs['myTable'].store.states.lazyTreeNodeMap[key].forEach(
-            (element, index, arr) => {
-                if (element.id === data) {
-                    arr.splice(index, 1)
-                }
-            }
-        )
+      this.$refs['myTable'].store.states.lazyTreeNodeMap[key].forEach(
+        (element, index, arr) => {
+          if (element.id === data) {
+            arr.splice(index, 1)
+          }
+        }
+      )
     },
     afterCancle (key, data) {
       if (key === '-1') {
@@ -204,7 +204,7 @@
           if (element.id === data) {
             const _local = JSON.parse(localStorage.getItem(data))
             const _old = _data[index]
-              Reflect.ownKeys(_old).forEach(current => {
+            Reflect.ownKeys(_old).forEach(current => {
               if (_old[current] !== _local[current]) {
                 _old[current] = _local[current]
               }
@@ -213,20 +213,20 @@
           }
         })
       } else {
-          this.$refs['myTable'].store.states.lazyTreeNodeMap[key].forEach(
-              (element, index, arr) => {
-                  if (element.id === data) {
-                      const _data = JSON.parse(localStorage.getItem(data))
-                      const _old = arr[index]
-                      Reflect.ownKeys(_old).forEach(current => {
-                          if (_old[current] !== _data[current]) {
-                              _old[current] = _data[current]
-                          }
-                      })
-                      localStorage.removeItem(data)
-                  }
-              }
-          )
+        this.$refs['myTable'].store.states.lazyTreeNodeMap[key].forEach(
+          (element, index, arr) => {
+            if (element.id === data) {
+              const _data = JSON.parse(localStorage.getItem(data))
+              const _old = arr[index]
+              Reflect.ownKeys(_old).forEach(current => {
+                if (_old[current] !== _data[current]) {
+                  _old[current] = _data[current]
+                }
+              })
+              localStorage.removeItem(data)
+            }
+          }
+        )
       }
     }
   }

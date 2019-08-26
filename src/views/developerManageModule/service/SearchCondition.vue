@@ -42,7 +42,7 @@ export default {
       return this.searchCondition
     },
     onSync () {
-        this.$store.dispatch('developerManageModule/microServiceSync', {})
+      this.$store.dispatch('developerManageModule/microServiceSync', {})
     }
   }
 }

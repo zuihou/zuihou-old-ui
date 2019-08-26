@@ -28,11 +28,11 @@
   </el-card>
 </template>
 <script>
-    import optLogSearchCondition from './service/OptLogSearchCondition'
-    import {mapState} from 'vuex'
-    import Pagination from '@/components/Pagination'
+import optLogSearchCondition from './service/OptLogSearchCondition'
+import { mapState } from 'vuex'
+import Pagination from '@/components/Pagination'
 
-    export default {
+export default {
   components: {
     optLogSearchCondition,
     Pagination

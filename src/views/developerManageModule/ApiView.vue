@@ -23,14 +23,14 @@
 </template>
 
 <script>
-    import apiSearchCondition from './service/ApiSearchCondition'
-    import {mapState} from 'vuex'
-    import Pagination from '@/components/Pagination'
+import apiSearchCondition from './service/ApiSearchCondition'
+import { mapState } from 'vuex'
+import Pagination from '@/components/Pagination'
 
-    export default {
+export default {
   components: {
-      apiSearchCondition,
-      Pagination
+    apiSearchCondition,
+    Pagination
   },
   computed: {
     ...mapState('developerManageModule', {
@@ -57,11 +57,11 @@
         ...this.pageInfo
       })
     },
-      // 回到第一页
-      onSuccess() {
-          const searchCondition = this.$refs.apiSearchCondition.getCondition()
-          this.doSearch(searchCondition)
-      }
+    // 回到第一页
+    onSuccess () {
+      const searchCondition = this.$refs.apiSearchCondition.getCondition()
+      this.doSearch(searchCondition)
+    }
   },
   created () {
     this.doSearch()
