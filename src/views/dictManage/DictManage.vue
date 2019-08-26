@@ -1,101 +1,51 @@
 <template>
   <div class="search-condition">
-    <el-form
-      :inline="true"
-      :model="searchCondition"
-      class="demo-form-inline"
-    >
+    <el-form :inline="true" :model="searchCondition" class="demo-form-inline">
+      <el-form-item label="字典编码">
+        <el-input placeholder="编码" v-model="searchCondition.code"></el-input>
+      </el-form-item>
       <el-form-item label="字典项">
-        <el-input
-          placeholder="名称"
-          v-model="searchCondition.name"
-        ></el-input>
+        <el-input placeholder="名称" v-model="searchCondition.name"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button
-          @click="onSearch"
-          type="primary"
-        >查询
+        <el-button @click="onSearch" type="primary">查询
         </el-button>
-        <el-button
-          @click="onCreate"
-          type="primary"
-        >新增
+        <el-button @click="onCreate" type="primary">新增
         </el-button>
       </el-form-item>
     </el-form>
-    <el-table
-      :data="tableData"
-      style="width: 100%"
-      row-key="id"
-      border
-      lazy
-      empty-text="暂无数据"
-      ref="myTable"
-      :load="load"
-      :tree-props="{children: 'children', hasChildren: 'id'}"
-    >
-      <el-table-column
-        align="center"
-        label="字典编码"
-        prop="code"
-      ></el-table-column>
-      <el-table-column
-        align="center"
-        label="字典项"
-        prop="name"
-      ></el-table-column>
-      <el-table-column
-        align="center"
-        label="描述"
-        prop="describe"
-      ></el-table-column>
-      <el-table-column
-        align="center"
-        label="操作"
-      >
+    <el-table :data="tableData" style="width: 100%" row-key="id" border lazy empty-text="暂无数据" ref="myTable" :load="load" :tree-props="{children: 'children', hasChildren: 'id'}">
+      <el-table-column align="center" label="字典编码" prop="code"></el-table-column>
+      <el-table-column align="center" label="字典项" prop="name"></el-table-column>
+      <el-table-column align="center" label="描述" prop="describe"></el-table-column>
+      <el-table-column align="center" label="操作">
         <template slot-scope="scope">
-          <el-button
-            @click="onAddItem(scope.row)"
-            size="small"
-            type="primary"
-          >新增
+          <el-button @click="onAddItem(scope.row)" size="small" type="primary">新增
           </el-button>
-          <el-button
-            @click="onUpdate(scope.row)"
-            size="small"
-            type="primary"
-          >修改
+          <el-button @click="onUpdate(scope.row)" size="small" type="primary">修改
           </el-button>
-          <el-button
-            @click="onDelete(scope.row)"
-            size="small"
-            type="primary"
-          >删除
+          <el-button @click="onDelete(scope.row)" size="small" type="primary">删除
           </el-button>
         </template>
       </el-table-column>
     </el-table>
     <dict-edit ref="dictEdit"></dict-edit>
     <dict-item-edit ref="dictItemEdit"></dict-item-edit>
-    <el-pagination
-      v-if="pagination.total > 0"
-      :total="pagination.total"
-      :page.sync="pagination.listQuery.pageNum"
-      :limit.sync="pagination.listQuery.pageSize"
-      @pagination="onSearch(pagination.listQuery,searchValue)"
-    ></el-pagination>
+    <Pagination :limit.sync="pagination.listQuery.pageSize" :page.sync="pagination.listQuery.pageNum" :total="pagination.total" @pagination="onSearch(pagination.listQuery,searchValue)" v-show="pagination.total > 0" />
+
   </div>
 </template>
 <script>
-    import dictApi from '@/api/DictApi.js'
-    import dictEdit from './DictEditDialog.vue'
-    import dictItemEdit from './DictItemEditDialog.vue'
+import dictApi from '@/api/DictApi.js'
+import dictEdit from './DictEditDialog.vue'
+import dictItemEdit from './DictItemEditDialog.vue'
+import Pagination from '@/components/Pagination'
 
-    export default {
+export default {
   components: {
     dictEdit,
-    dictItemEdit
+    dictItemEdit,
+    Pagination
   },
   data () {
     return {
@@ -104,7 +54,7 @@
       form: {},
       opeType: 'detail',
       tableData: [],
-        searchCondition: {},
+      searchCondition: {},
       pagination: {
         // 分页数据
         total: 0,
@@ -131,16 +81,11 @@
         pageNum: 1,
         pageSize: 10
       }
-      if (this.searchCondition) {
-        jsonData = {
-          ...this.searchCondition,
-          ...this.pagination.listQuery
-        }
-      } else {
-        jsonData = {
-          ...this.pagination.listQuery
-        }
+      jsonData = {
+        ...this.searchCondition,
+        ...this.pagination.listQuery
       }
+
       dictApi.getDictPageList(jsonData).then(res => {
         if (res.isSuccess) {
           this.tableData = res.data.records
@@ -257,13 +202,13 @@
       }
     },
     deleteChild (key, data) {
-        this.$refs['myTable'].store.states.lazyTreeNodeMap[key].forEach(
-            (element, index, arr) => {
-                if (element.id === data) {
-                    arr.splice(index, 1)
-                }
-            }
-        )
+      this.$refs['myTable'].store.states.lazyTreeNodeMap[key].forEach(
+        (element, index, arr) => {
+          if (element.id === data) {
+            arr.splice(index, 1)
+          }
+        }
+      )
     },
     afterCancle (key, data) {
       if (key === data) {
@@ -272,7 +217,7 @@
           if (element.id === data) {
             const _local = JSON.parse(localStorage.getItem(data))
             const _old = _data[index]
-              Reflect.ownKeys(_old).forEach(current => {
+            Reflect.ownKeys(_old).forEach(current => {
               if (_old[current] !== _local[current]) {
                 _old[current] = _local[current]
               }
@@ -281,20 +226,20 @@
           }
         })
       } else {
-          this.$refs['myTable'].store.states.lazyTreeNodeMap[key].forEach(
-              (element, index, arr) => {
-                  if (element.id === data) {
-                      const _data = JSON.parse(localStorage.getItem(data))
-                      const _old = arr[index]
-                      Reflect.ownKeys(_old).forEach(current => {
-                          if (_old[current] !== _data[current]) {
-                              _old[current] = _data[current]
-                          }
-                      })
-                      localStorage.removeItem(data)
-                  }
-              }
-          )
+        this.$refs['myTable'].store.states.lazyTreeNodeMap[key].forEach(
+          (element, index, arr) => {
+            if (element.id === data) {
+              const _data = JSON.parse(localStorage.getItem(data))
+              const _old = arr[index]
+              Reflect.ownKeys(_old).forEach(current => {
+                if (_old[current] !== _data[current]) {
+                  _old[current] = _data[current]
+                }
+              })
+              localStorage.removeItem(data)
+            }
+          }
+        )
       }
     }
   }
@@ -302,19 +247,19 @@
 </script>
 
 <style lang="less" scoped>
-  .menu-manage {
+.menu-manage {
   height: 100%;
   display: flex;
 
-    .el-card {
+  .el-card {
     min-height: 100%;
   }
 
-    .tree-area {
+  .tree-area {
     min-width: 230px;
   }
 
-    .edit-area {
+  .edit-area {
     //max-width: 880px;
     width: 100%;
     padding-left: 10px;

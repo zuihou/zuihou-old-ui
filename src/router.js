@@ -25,7 +25,7 @@ const router = new Router({
     },
     // 字典项管理
     {
-      path: 'dictManage',
+      path: '/dictManage',
       name: 'dictManage',
       component: () => import('./views/dictManage/DictManage.vue'),
       meta: {
@@ -34,7 +34,7 @@ const router = new Router({
     },
     // 地域管理
     {
-      path: 'areaManage',
+      path: '/areaManage',
       name: 'areaManage',
       component: () => import('./views/areaManage/AreaManage.vue'),
       meta: {
