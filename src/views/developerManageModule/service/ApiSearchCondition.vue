@@ -32,9 +32,9 @@ export default {
     }
   },
   methods: {
-      getCondition() {
-          return this.searchCondition
-      },
+    getCondition () {
+      return this.searchCondition
+    },
     onSearch () {
       this.$emit('onSearch', this.searchCondition)
     }

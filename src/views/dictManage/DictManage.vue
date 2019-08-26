@@ -88,11 +88,11 @@
   </div>
 </template>
 <script>
-    import dictApi from '@/api/DictApi.js'
-    import dictEdit from './DictEditDialog.vue'
-    import dictItemEdit from './DictItemEditDialog.vue'
+import dictApi from '@/api/DictApi.js'
+import dictEdit from './DictEditDialog.vue'
+import dictItemEdit from './DictItemEditDialog.vue'
 
-    export default {
+export default {
   components: {
     dictEdit,
     dictItemEdit
@@ -104,7 +104,7 @@
       form: {},
       opeType: 'detail',
       tableData: [],
-        searchCondition: {},
+      searchCondition: {},
       pagination: {
         // 分页数据
         total: 0,
@@ -257,13 +257,13 @@
       }
     },
     deleteChild (key, data) {
-        this.$refs['myTable'].store.states.lazyTreeNodeMap[key].forEach(
-            (element, index, arr) => {
-                if (element.id === data) {
-                    arr.splice(index, 1)
-                }
-            }
-        )
+      this.$refs['myTable'].store.states.lazyTreeNodeMap[key].forEach(
+        (element, index, arr) => {
+          if (element.id === data) {
+            arr.splice(index, 1)
+          }
+        }
+      )
     },
     afterCancle (key, data) {
       if (key === data) {
@@ -272,7 +272,7 @@
           if (element.id === data) {
             const _local = JSON.parse(localStorage.getItem(data))
             const _old = _data[index]
-              Reflect.ownKeys(_old).forEach(current => {
+            Reflect.ownKeys(_old).forEach(current => {
               if (_old[current] !== _local[current]) {
                 _old[current] = _local[current]
               }
@@ -281,20 +281,20 @@
           }
         })
       } else {
-          this.$refs['myTable'].store.states.lazyTreeNodeMap[key].forEach(
-              (element, index, arr) => {
-                  if (element.id === data) {
-                      const _data = JSON.parse(localStorage.getItem(data))
-                      const _old = arr[index]
-                      Reflect.ownKeys(_old).forEach(current => {
-                          if (_old[current] !== _data[current]) {
-                              _old[current] = _data[current]
-                          }
-                      })
-                      localStorage.removeItem(data)
-                  }
-              }
-          )
+        this.$refs['myTable'].store.states.lazyTreeNodeMap[key].forEach(
+          (element, index, arr) => {
+            if (element.id === data) {
+              const _data = JSON.parse(localStorage.getItem(data))
+              const _old = arr[index]
+              Reflect.ownKeys(_old).forEach(current => {
+                if (_old[current] !== _data[current]) {
+                  _old[current] = _data[current]
+                }
+              })
+              localStorage.removeItem(data)
+            }
+          }
+        )
       }
     }
   }

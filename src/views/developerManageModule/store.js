@@ -1,5 +1,5 @@
 import developerManageApi from '@/api/DeveloperManageApi.js'
-import {Message} from 'element-ui'
+import { Message } from 'element-ui'
 
 export default {
   namespaced: true,
@@ -24,7 +24,7 @@ export default {
   },
   actions: {
     // 查询 服务分页数据
-    getMicroServicePageList({commit}, data) {
+    getMicroServicePageList ({ commit }, data) {
       return developerManageApi.getMicroServicePageList(data).then(res => {
         if (res.isSuccess) {
           commit('SET_MICRO_SERVICE_PAGE_LIST', res.data || {})
