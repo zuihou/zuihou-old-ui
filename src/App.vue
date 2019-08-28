@@ -53,20 +53,20 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   display: flex;
   flex-direction: column;
-  .app-header{
+  .app-header {
     height: 60px;
     min-height: 60px;
     margin-bottom: 2px;
   }
-  .app-body{
+  .app-body {
     flex-grow: 1;
     display: flex;
     justify-content: flex-start;
-    .app-side-bar{
+    .app-side-bar {
       height: 100%;
       // overflow-y: auto;
     }
-    .app-content{
+    .app-content {
       flex-grow: 1;
       overflow-y: auto;
       padding: 15px;
