@@ -15,12 +15,22 @@
       </el-form-item>
     </el-form>
     <el-table :data="tableData" style="width: 100%" row-key="code" border lazy empty-text="暂无数据" ref="myTable" :load="load" :tree-props="{children: 'children', hasChildren: 'code'}">
-      <el-table-column align="center" label="地域编码" prop="code"></el-table-column>
-      <el-table-column align="center" label="地域名称" prop="name"></el-table-column>
+      <el-table-column align="center" label="地域名称" prop="code">
+        <template slot-scope="scope">
+          ({{ scope.row.code }}){{ scope.row.name }}
+        </template>
+      </el-table-column>
+      <!-- <el-table-column align="center" label="地域名称" prop="name"></el-table-column> -->
       <el-table-column align="center" label="地域全称" prop="fullName"></el-table-column>
-      <el-table-column align="center" label="级别" prop="level"></el-table-column>
+      <el-table-column align="center" label="地域类型" prop="level">
+        <template slot-scope="scope">
+          {{ getLevel(scope.row.level) }}
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="经度" prop="longitude"></el-table-column>
       <el-table-column align="center" label="纬度" prop="latitude"></el-table-column>
+      <!-- <el-table-column align="center" label="排序号" prop="sortValue"></el-table-column> -->
+      <el-table-column align="center" label="更新时间" prop="updateTime"></el-table-column>
       <el-table-column align="center" label="操作" width="300">
         <template slot-scope="scope">
           <el-button @click="onAdd(scope.row)" size="small" type="primary">新增
@@ -52,7 +62,11 @@ export default {
       tableData: [],
       formLabelWidth: '160px',
       searchCondition: {
-        name: ''
+        name: '',
+        code: ''
+      },
+      staticParent: {
+        parentCode: '000000000000'
       }
     }
   },
@@ -62,14 +76,24 @@ export default {
     }
   },
   created () {
-    this.getAllArea({ parentCode: '-1' })
+    this.getAllArea(this.staticParent)
   },
   methods: {
+    getLevel (level) {
+      if (level < 0 || level > 4) {
+        return '未知'
+      }
+      if (level === 0) {
+        return '国家'
+      }
+      const _level = { 1: '省', 2: '市', 3: '区/县', 4: '镇/乡' }
+      return _level[level]
+    },
     onSearch () {
       let _search = {}
       const searchName = this.searchCondition.name
       if (!searchName && !this.searchCondition.code) {
-        _search = { parentCode: '-1' }
+        _search = this.staticParent
       } else {
         _search = this.searchCondition
       }
@@ -92,7 +116,7 @@ export default {
             areaApi.delArea(data.id).then(res => {
               if (res.isSuccess) {
                 vm.$message.success('删除成功')
-                if (data.parentCode === '-1') {
+                if (data.parentCode === '000000000000') {
                   vm.tableData.forEach((curr, index, arr) => {
                     if (curr.id === data.id) {
                       arr.splice(index, 1)
@@ -200,7 +224,7 @@ export default {
       )
     },
     afterCancle (key, data) {
-      if (key === '-1') {
+      if (key === '000000000000') {
         const _data = this.tableData
         _data.forEach((element, index) => {
           if (element.id === data) {
@@ -230,6 +254,34 @@ export default {
           }
         )
       }
+    },
+    refreshUpdate (data) {
+      let _tableData = this.$refs['myTable'].store.states.data
+      if (data.parentCode === '000000000000') {
+        _tableData.forEach(function (item, index) {
+          if (item.id === data.id) {
+            let _old = _tableData[index]
+            Reflect.ownKeys(_old).forEach(current => {
+              if (_old[current] !== data[current]) {
+                _old[current] = data[current]
+              }
+            })
+          }
+        })
+      } else {
+        const _children = this.$refs['myTable'].store.states.lazyTreeNodeMap[data.parentCode]
+        _children.forEach(function (item, index) {
+          if (item.id === data.id) {
+            let _old = _children[index]
+            Reflect.ownKeys(_old).forEach(current => {
+              if (_old[current] !== data[current]) {
+                _old[current] = data[current]
+              }
+            })
+          }
+        })
+      }
+      // console.log(this.tableData)
     }
   }
 }

@@ -45,11 +45,11 @@ export default {
       formRule: {
         code: [
           { required: true, message: '不能为空', trigger: 'blur' },
-          { min: 3, max: 18, message: '长度在 3 到 18 个字符', trigger: 'blur' }
+          { min: 2, max: 18, message: '长度在 2 到 18 个字符', trigger: 'blur' }
         ],
         name: [
           { required: true, message: '不能为空', trigger: 'blur' },
-          { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
+          { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
         ],
         fullName: [
           { required: true, message: '不能为空', trigger: 'blur' },
@@ -58,10 +58,10 @@ export default {
         level: [{ required: true, message: '不能为空', trigger: 'blur' }]
       },
       options: [
-        {
-          value: 0,
-          label: '国家'
-        },
+        // {
+        //   value: 0,
+        //   label: '国家'
+        // },
         {
           value: 1,
           label: '省'
@@ -84,7 +84,7 @@ export default {
   methods: {
     onCancle () {
       if (this.opeType === 'edit') {
-        this.$parent.afterCancle(this.form.parentCode === -1 ? this.form.code : this.form.parentCode, this.form.id)
+        this.$parent.afterCancle(this.form.parentCode === '-1' ? this.form.code : this.form.parentCode, this.form.id)
       }
       this.resetForm()
       this.$refs['form'].clearValidate()
@@ -145,13 +145,13 @@ export default {
             parentId
           }
           if (vm.opeType === 'add') {
-            if (params.level === 0) {
-              params.parentCode = '-1'
+            if (params.level === 1) {
+              params.parentCode = '000000000000'
             }
             areaApi.addArea(params).then(result => {
               if (result.isSuccess) {
-                // 需要把当前数据加载到
-                if (params.level === 0) {
+                // 需要把当前数据加载到tableData里
+                if (params.level === 1) {
                   vm.$parent.tableData.push(result.data)
                 } else {
                   vm.$parent.refreshChild(
@@ -160,14 +160,15 @@ export default {
                     vm.addRow
                   )
                 }
+                vm.$message.success('保存成功')
                 this.visible = false
               }
             })
           } else if (vm.opeType === 'edit') {
             areaApi.updatArea(params).then(result => {
               if (result.isSuccess) {
-                // 需要把当前数据加载到
-                // vm.$parent.tableData.push(result.data)
+                vm.$parent.refreshUpdate(result.data)
+                vm.$message.success('修改成功')
                 this.visible = false
               }
             })
