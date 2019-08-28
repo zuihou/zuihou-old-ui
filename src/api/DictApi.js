@@ -30,7 +30,7 @@ export default {
       data
     })
   },
-  updatDict (data = {}) {
+  updateDict (data = {}) {
     return axiosApi({
       method: 'put',
       url: apiList.updatDict,

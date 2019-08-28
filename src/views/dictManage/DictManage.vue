@@ -1,101 +1,58 @@
 <template>
   <div class="search-condition">
-    <el-form
-      :inline="true"
-      :model="searchCondition"
-      class="demo-form-inline"
-    >
+    <el-form :inline="true" :model="searchCondition" class="demo-form-inline">
+      <el-form-item label="字典编码">
+        <el-input placeholder="编码" v-model="searchCondition.code"></el-input>
+      </el-form-item>
       <el-form-item label="字典项">
-        <el-input
-          placeholder="名称"
-          v-model="searchCondition.name"
-        ></el-input>
+        <el-input placeholder="名称" v-model="searchCondition.name"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button
-          @click="onSearch"
-          type="primary"
-        >查询
+        <el-button @click="onSearch" type="primary">查询
         </el-button>
-        <el-button
-          @click="onCreate"
-          type="primary"
-        >新增
+        <el-button @click="onCreate" type="primary">新增
         </el-button>
       </el-form-item>
     </el-form>
-    <el-table
-      :data="tableData"
-      style="width: 100%"
-      row-key="id"
-      border
-      lazy
-      empty-text="暂无数据"
-      ref="myTable"
-      :load="load"
-      :tree-props="{children: 'children', hasChildren: 'id'}"
-    >
-      <el-table-column
-        align="center"
-        label="字典编码"
-        prop="code"
-      ></el-table-column>
-      <el-table-column
-        align="center"
-        label="字典项"
-        prop="name"
-      ></el-table-column>
-      <el-table-column
-        align="center"
-        label="描述"
-        prop="describe"
-      ></el-table-column>
-      <el-table-column
-        align="center"
-        label="操作"
-      >
+    <el-table :data="tableData" style="width: 100%" row-key="id" border lazy empty-text="暂无数据" ref="myTable" :load="load" :tree-props="{children: 'children', hasChildren: 'id'}">
+      <el-table-column align="center" label="字典编码" prop="code"></el-table-column>
+      <el-table-column align="center" label="字典项" prop="name"></el-table-column>
+      <el-table-column align="center" label="描述" prop="describe"></el-table-column>
+      <el-table-column align="center" label="状态" prop="isEnable">
         <template slot-scope="scope">
-          <el-button
-            @click="onAddItem(scope.row)"
-            size="small"
-            type="primary"
-          >新增
+          <el-switch v-model="scope.row.isEnable" active-color="#13ce66" inactive-color="#ff4949" @change="switchPower(scope.row)">
+          </el-switch>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="创建时间" prop="createTime"></el-table-column>
+      <el-table-column align="center" label="操作">
+        <template slot-scope="scope">
+          <el-button @click="onAddItem(scope.row)" size="small" type="primary">新增
           </el-button>
-          <el-button
-            @click="onUpdate(scope.row)"
-            size="small"
-            type="primary"
-          >修改
+          <el-button @click="onUpdate(scope.row)" size="small" type="primary">修改
           </el-button>
-          <el-button
-            @click="onDelete(scope.row)"
-            size="small"
-            type="primary"
-          >删除
+          <el-button @click="onDelete(scope.row)" size="small" type="primary">删除
           </el-button>
         </template>
       </el-table-column>
     </el-table>
     <dict-edit ref="dictEdit"></dict-edit>
     <dict-item-edit ref="dictItemEdit"></dict-item-edit>
-    <el-pagination
-      v-if="pagination.total > 0"
-      :total="pagination.total"
-      :page.sync="pagination.listQuery.pageNum"
-      :limit.sync="pagination.listQuery.pageSize"
-      @pagination="onSearch(pagination.listQuery,searchValue)"
-    ></el-pagination>
+    <Pagination :limit.sync="pagination.listQuery.pageSize" :page.sync="pagination.listQuery.pageNum" :total="pagination.total" @pagination="onSearch(pagination.listQuery,searchValue)" v-show="pagination.total > 0" />
+
   </div>
 </template>
 <script>
 import dictApi from '@/api/DictApi.js'
 import dictEdit from './DictEditDialog.vue'
 import dictItemEdit from './DictItemEditDialog.vue'
+import Pagination from '@/components/Pagination'
 
 export default {
   components: {
     dictEdit,
-    dictItemEdit
+    dictItemEdit,
+    Pagination
   },
   data () {
     return {
@@ -131,16 +88,11 @@ export default {
         pageNum: 1,
         pageSize: 10
       }
-      if (this.searchCondition) {
-        jsonData = {
-          ...this.searchCondition,
-          ...this.pagination.listQuery
-        }
-      } else {
-        jsonData = {
-          ...this.pagination.listQuery
-        }
+      jsonData = {
+        ...this.searchCondition,
+        ...this.pagination.listQuery
       }
+
       dictApi.getDictPageList(jsonData).then(res => {
         if (res.isSuccess) {
           this.tableData = res.data.records
@@ -296,25 +248,58 @@ export default {
           }
         )
       }
+    },
+    switchPower (data) {
+      const vm = this
+      data.updateTime = new Date()
+      if (data.dictionaryId) {
+        dictApi.updateDictItem(data).then(res => {
+          if (res.isSuccess) {
+            vm.tableData.forEach(function (index, item) {
+              if (item.id === data.dictionaryId) {
+                vm.tableData[index].forEach(function (idx, child) {
+                  if (child.id === data.id) {
+                    vm.tableData[index][idx] = res.data
+                  }
+                })
+              }
+            })
+            vm.$message.success('修改成功')
+          }
+        })
+      } else {
+        dictApi.updateDict(data).then(res => {
+          if (res.isSuccess) {
+            vm.tableData.forEach(function (index, item) {
+              if (item.id === data.id) {
+                vm.tableData[index] = res.data
+              }
+            })
+            vm.$message.success('修改成功')
+          } else {
+            vm.$message.console.error('修改失败')
+          }
+        })
+      }
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-  .menu-manage {
+.menu-manage {
   height: 100%;
   display: flex;
 
-    .el-card {
+  .el-card {
     min-height: 100%;
   }
 
-    .tree-area {
+  .tree-area {
     min-width: 230px;
   }
 
-    .edit-area {
+  .edit-area {
     //max-width: 880px;
     width: 100%;
     padding-left: 10px;
