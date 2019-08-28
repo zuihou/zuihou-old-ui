@@ -18,6 +18,13 @@
       <el-table-column align="center" label="字典编码" prop="code"></el-table-column>
       <el-table-column align="center" label="字典项" prop="name"></el-table-column>
       <el-table-column align="center" label="描述" prop="describe"></el-table-column>
+      <el-table-column align="center" label="状态" prop="isEnable">
+        <template slot-scope="scope">
+          <el-switch v-model="scope.row.isEnable" active-color="#13ce66" inactive-color="#ff4949" @change="switchPower(scope.row)">
+          </el-switch>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="创建时间" prop="createTime"></el-table-column>
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
           <el-button @click="onAddItem(scope.row)" size="small" type="primary">新增
@@ -240,6 +247,39 @@ export default {
             }
           }
         )
+      }
+    },
+    switchPower (data) {
+      const vm = this
+      data.updateTime = new Date()
+      if (data.dictionaryId) {
+        dictApi.updateDictItem(data).then(res => {
+          if (res.isSuccess) {
+            vm.tableData.forEach(function (index, item) {
+              if (item.id === data.dictionaryId) {
+                vm.tableData[index].forEach(function (idx, child) {
+                  if (child.id === data.id) {
+                    vm.tableData[index][idx] = res.data
+                  }
+                })
+              }
+            })
+            vm.$message.success('修改成功')
+          }
+        })
+      } else {
+        dictApi.updateDict(data).then(res => {
+          if (res.isSuccess) {
+            vm.tableData.forEach(function (index, item) {
+              if (item.id === data.id) {
+                vm.tableData[index] = res.data
+              }
+            })
+            vm.$message.success('修改成功')
+          } else {
+            vm.$message.console.error('修改失败')
+          }
+        })
       }
     }
   }

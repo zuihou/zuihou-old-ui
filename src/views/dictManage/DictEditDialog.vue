@@ -95,11 +95,10 @@ export default {
               }
             })
           } else if (vm.opeType === 'edit') {
-            dictApi
-              .updatDict({
-                id,
-                ...params
-              })
+            dictApi.updateDict({
+              id,
+              ...params
+            })
               .then(result => {
                 if (result.isSuccess) {
                   this.visible = false

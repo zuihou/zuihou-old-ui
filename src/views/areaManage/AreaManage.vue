@@ -1,8 +1,11 @@
 <template>
   <div class="search-condition">
     <el-form :inline="true" :model="searchCondition" class="demo-form-inline">
-      <el-form-item label="关键字">
-        <el-input placeholder="名称" v-model="searchCondition.name"></el-input>
+      <el-form-item label="地域编码">
+        <el-input placeholder="地域编码" v-model="searchCondition.code"></el-input>
+      </el-form-item>
+      <el-form-item label="地域名称">
+        <el-input placeholder="地域名称" v-model="searchCondition.name"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="onSearch" type="primary">查询
@@ -65,7 +68,7 @@ export default {
     onSearch () {
       let _search = {}
       const searchName = this.searchCondition.name
-      if (!searchName) {
+      if (!searchName && !this.searchCondition.code) {
         _search = { parentCode: '-1' }
       } else {
         _search = this.searchCondition
