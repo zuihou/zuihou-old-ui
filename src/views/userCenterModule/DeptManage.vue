@@ -1,18 +1,12 @@
 <template>
   <div class="dept-manage">
     <div class="tree-area">
-      <el-card>
-        <commonTree :treeData="treeData" @onAdd="onAdd" @onEdit="onEdit" @onDelete="onDelete"></commonTree>
-      </el-card>
+      <el-tree :data="treeData" ref="departTree" :props="defaultProps" :render-content="renderContent" node-key="id" @click="onview(data)" @node-drag-start="handleDragStart" @node-drag-enter="handleDragEnter" @node-drag-leave="handleDragLeave" @node-drag-over="handleDragOver" @node-drag-end="handleDragEnd" @node-drop="handleDrop" draggable :allow-drop="allowDrop" :allow-drag="allowDrag">
+      </el-tree>
     </div>
     <div class="edit-area">
       <el-card>
-        <el-form
-          ref="dataForm"
-          :model="form"
-          :rules="validate"
-          :validate-on-rule-change="false"
-          >
+        <el-form ref="dataForm" :model="form" :rules="validate" :validate-on-rule-change="false">
           <div class="form-group">
             <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
               <el-input v-model="form.name" autocomplete="off" :disabled="isDisabled"></el-input>
@@ -29,10 +23,7 @@
               <el-input-number v-model="form.sortValue" :min="1" :max="1000" :disabled="isDisabled"></el-input-number>
             </el-form-item>
             <el-form-item label="启用" :label-width="formLabelWidth">
-              <el-switch
-                v-model="form.status"
-                active-color="#13ce66"
-                :disabled="isDisabled">
+              <el-switch v-model="form.status" active-color="#13ce66" :disabled="isDisabled">
               </el-switch>
             </el-form-item>
             <el-form-item label="描述" :label-width="formLabelWidth" prop="describe">
@@ -49,23 +40,27 @@
   </div>
 </template>
 <script>
-import commonTree from '@/components/CommonTree.vue'
 import userCenterApi from '@/api/UserCenterApi.js'
 import validator from '@/utils/back_validator.js'
 export default {
   components: {
-    commonTree
+
   },
   data () {
     return {
       form: {},
       treeData: [{
-        name: '根节点',
+        name: '根组织',
         id: '0'
       }],
       opeType: 'detail',
       formLabelWidth: '80px',
-      validate: {}
+      validate: {},
+      defaultProps: {
+        children: 'children',
+        label: 'name'
+      },
+      isact: ''
     }
   },
   computed: {
@@ -76,7 +71,7 @@ export default {
   created () {
     this.resetForm()
     this.getValidator()
-    // this.$store.dispatch('userCenterModule/getDeptTreeData', {})
+    this.getAllDepart()
   },
   methods: {
     getValidator () {
@@ -90,16 +85,42 @@ export default {
           formName: 'dataForm'
         })
     },
-    onAdd (data) {
-      this.form.parentName = data.name
-      this.form.parentId = data.id
-      this.opeType = 'add'
+    getAllDepart (data) {
+      userCenterApi.getAllDepart().then(res => {
+        if (res.isSuccess) {
+          this.treeData = res.data
+          // this.$set(this.treeData, 'children', res.data);
+          // console.log(this.treeData)
+        }
+      })
     },
-    onEdit (data) {
-      this.opeType = 'edit'
+    handleDragStart (node, ev) {
+      console.log('drag start', node)
     },
-    onDelete (data) {
-      this.opeType = 'delete'
+    handleDragEnter (draggingNode, dropNode, ev) {
+      console.log('tree drag enter: ', dropNode.label)
+    },
+    handleDragLeave (draggingNode, dropNode, ev) {
+      console.log('tree drag leave: ', dropNode.label)
+    },
+    handleDragOver (draggingNode, dropNode, ev) {
+      console.log('tree drag over: ', dropNode.label)
+    },
+    handleDragEnd (draggingNode, dropNode, dropType, ev) {
+      console.log('tree drag end: ', dropNode && dropNode.label, dropType)
+    },
+    handleDrop (draggingNode, dropNode, dropType, ev) {
+      console.log('tree drop: ', dropNode.label, dropType)
+    },
+    allowDrop (draggingNode, dropNode, type) {
+      if (dropNode.data.label === '二级 3-1') {
+        return type !== 'inner'
+      } else {
+        return true
+      }
+    },
+    allowDrag (draggingNode) {
+      return draggingNode.data.label.indexOf('三级 3-2-2') === -1
     },
     resetForm () {
       this.form = {
@@ -114,7 +135,7 @@ export default {
     },
     async onSubmit () {
       const vm = this
-      const { abbreviation, describe, name, parentId, sortValue, status } = vm.form
+      const { id, abbreviation, describe, name, parentId, sortValue, status } = vm.form
       let result = null
       if (vm.opeType === 'add') {
         result = await userCenterApi.authorityOrgPost({
@@ -127,6 +148,7 @@ export default {
         })
       } else if (vm.opeType === 'edit') {
         result = await userCenterApi.authorityOrgPut({
+          id,
           abbreviation,
           describe,
           name,
@@ -137,29 +159,72 @@ export default {
       }
       if (result.isSuccess) {
         vm.$message.success('保存成功')
+        const _data = result.data
+        let _node = vm.$refs['departTree'].getNode(_data.id)
+        let _pnode = vm.$refs['departTree'].getNode(_data.parentId)
+        vm.$set(_pnode, 'children', _node)
         vm.resetForm()
       }
+    },
+    mouseenteract (data) {
+      this.isact = data
+    },
+    mouseleaveact (data) {
+      this.isact = ''
+    },
+    renderContent (h, { node, data, store }) {
+      return (
+        <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; padding-right: 8px;" on-mouseenter={() => this.mouseenteract(data)} b on-mouseleave={() => this.mouseleaveact(data)}>
+          <span>
+            <span>{node.label}</span>
+          </span>
+          {
+            this.isact === data ? <span> <el-button type="text" icon="el-icon-plus" on-click={() => this.append(data)}></el-button> <el-button type="text" icon="el-icon-edit" on-click={() => this.onEdit(data)}></el-button> <el-button type="text" icon="el-icon-delete" on-click={() => this.remove(node, data)}></el-button>     </span> : <span></span>
+          }
+
+        </span>
+      )
+    },
+    append (data) {
+      this.opeType = 'add'
+      if (data.id) {
+        this.form.parentName = data.name
+        this.form.parentId = data.id
+      }
+    },
+    onEdit (data) {
+      this.opeType = 'edit'
+      if (data) {
+        this.form = data
+        this.form.parentName = this.$refs['departTree'].getNode(data.parentId).data.name
+      }
+    },
+    remove (node, data) {
+      const parent = node.parent
+      const children = parent.data.children || parent.data
+      const index = children.findIndex(d => d.id === data.id)
+      children.splice(index, 1)
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-.dept-manage{
+.dept-manage {
   height: 100%;
   display: flex;
-  .el-card{
-    min-height: 100%;
+  .el-card {
+    min-height: 400px;
   }
-  .tree-area{
+  .tree-area {
     min-width: 300px;
   }
-  .edit-area{
+  .edit-area {
     flex-grow: 1;
     max-width: 880px;
     padding-left: 10px;
-    .form-group{
-      width: 400px;
+    .form-group {
+      width: 100%;
       display: inline-block;
       vertical-align: top;
     }

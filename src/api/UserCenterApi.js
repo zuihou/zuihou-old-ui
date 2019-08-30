@@ -5,6 +5,8 @@ const apiList = {
   getDeptPageList: '/aaa/',
   // 添加/删除/修改部门
   authorityOrg: '/authority/org',
+  // 获取全部组织
+  getAllDepart: '/authority/org/tree',
   // 查询部门分页列表
   authorityOrgPage: '/authority/org/page'
 }
@@ -15,12 +17,10 @@ export default {
       url: apiList.getDeptPageList,
       data
     }).then(() => {
-      return [
-        {
-          id: 'dididi',
-          item: '111'
-        }
-      ]
+      return [{
+        id: 'dididi',
+        item: '111'
+      }]
     })
   },
   authorityOrgPost (data = {}, formTag) {
@@ -54,6 +54,13 @@ export default {
     return axiosApi({
       method: 'get',
       url: apiList.authorityOrgPage,
+      data
+    })
+  },
+  getAllDepart (data = {}) {
+    return axiosApi({
+      method: 'get',
+      url: apiList.getAllDepart,
       data
     })
   }
