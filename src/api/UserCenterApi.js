@@ -8,7 +8,9 @@ const apiList = {
   // 获取全部组织
   getAllDepart: '/authority/org/tree',
   // 查询部门分页列表
-  authorityOrgPage: '/authority/org/page'
+  authorityOrgPage: '/authority/org/page',
+  delDepart: '/authority/org',
+  updateDepart: '/authority/org'
 }
 export default {
   getDeptPageList (data = {}) {
@@ -61,6 +63,19 @@ export default {
     return axiosApi({
       method: 'get',
       url: apiList.getAllDepart,
+      data
+    })
+  },
+  delDepart (id) {
+    return axiosApi({
+      method: 'delete',
+      url: `${apiList.delDepart}/${id}`
+    })
+  },
+  updateDepart (data = {}) {
+    return axiosApi({
+      method: 'put',
+      url: apiList.updateDepart,
       data
     })
   }

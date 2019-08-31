@@ -1,7 +1,7 @@
 <template>
   <div class="dept-manage">
     <div class="tree-area">
-      <el-tree :data="treeData" ref="departTree" :props="defaultProps" :render-content="renderContent" node-key="id" @click="onview(data)" @node-drag-start="handleDragStart" @node-drag-enter="handleDragEnter" @node-drag-leave="handleDragLeave" @node-drag-over="handleDragOver" @node-drag-end="handleDragEnd" @node-drop="handleDrop" draggable :allow-drop="allowDrop" :allow-drag="allowDrag">
+      <el-tree :data="treeData" ref="departTree" :props="defaultProps" :expand-on-click-node="false" :render-content="renderContent" node-key="id" @node-drop="handleDrop" draggable :allow-drop="allowDrop" :allow-drag="allowDrag">
       </el-tree>
     </div>
     <div class="edit-area">
@@ -51,7 +51,8 @@ export default {
       form: {},
       treeData: [{
         name: '根组织',
-        id: '0'
+        id: '0',
+        children: []
       }],
       opeType: 'detail',
       formLabelWidth: '80px',
@@ -86,41 +87,48 @@ export default {
         })
     },
     getAllDepart (data) {
+      const vm = this
       userCenterApi.getAllDepart().then(res => {
         if (res.isSuccess) {
-          this.treeData = res.data
-          // this.$set(this.treeData, 'children', res.data);
-          // console.log(this.treeData)
+          const _data = res.data
+          if (_data) {
+            _data.forEach(function (item, index) {
+              vm.treeData[0].children.push(item)
+            })
+          }
         }
       })
     },
-    handleDragStart (node, ev) {
-      console.log('drag start', node)
-    },
-    handleDragEnter (draggingNode, dropNode, ev) {
-      console.log('tree drag enter: ', dropNode.label)
-    },
-    handleDragLeave (draggingNode, dropNode, ev) {
-      console.log('tree drag leave: ', dropNode.label)
-    },
-    handleDragOver (draggingNode, dropNode, ev) {
-      console.log('tree drag over: ', dropNode.label)
-    },
-    handleDragEnd (draggingNode, dropNode, dropType, ev) {
-      console.log('tree drag end: ', dropNode && dropNode.label, dropType)
-    },
     handleDrop (draggingNode, dropNode, dropType, ev) {
-      console.log('tree drop: ', dropNode.label, dropType)
-    },
-    allowDrop (draggingNode, dropNode, type) {
-      if (dropNode.data.label === '二级 3-1') {
-        return type !== 'inner'
+      const vm = this
+      let flag = true
+      if (dropType === 'inner') {
+        draggingNode.data.parentId = dropNode.data.id
+      } else if (dropType === 'after') {
+        draggingNode.data.parentId = dropNode.data.parentId
+        draggingNode.data.sortValue = dropNode.data.sortValue - 1
+      } else if (dropType === 'before') {
+        draggingNode.data.parentId = dropNode.data.parentId
+        draggingNode.data.sortValue = dropNode.data.sortValue + 1
       } else {
-        return true
+        flag = false
+      }
+
+      if (flag) {
+        userCenterApi.updateDepart(draggingNode.data).then(res => {
+          if (res.isSuccess) {
+            vm.$message.success('拖动成功')
+          }
+        })
+      } else {
+        vm.$message.success('拖动失败')
       }
     },
+    allowDrop (draggingNode, dropNode, type) {
+      return dropNode.data.id !== '0'
+    },
     allowDrag (draggingNode) {
-      return draggingNode.data.label.indexOf('三级 3-2-2') === -1
+      return draggingNode.data.id !== '0'
     },
     resetForm () {
       this.form = {
@@ -160,10 +168,15 @@ export default {
       if (result.isSuccess) {
         vm.$message.success('保存成功')
         const _data = result.data
-        let _node = vm.$refs['departTree'].getNode(_data.id)
-        let _pnode = vm.$refs['departTree'].getNode(_data.parentId)
-        vm.$set(_pnode, 'children', _node)
+        if (vm.opeType === 'add') {
+          let _pnode = vm.$refs['departTree'].getNode(_data.parentId).data
+          if (!_pnode.children) {
+            vm.$set(_pnode, 'children', [])
+          }
+          _pnode.children.push(_data)
+        }
         vm.resetForm()
+        this.opeType = 'detail'
       }
     },
     mouseenteract (data) {
@@ -179,13 +192,13 @@ export default {
             <span>{node.label}</span>
           </span>
           {
-            this.isact === data ? <span> <el-button type="text" icon="el-icon-plus" on-click={() => this.append(data)}></el-button> <el-button type="text" icon="el-icon-edit" on-click={() => this.onEdit(data)}></el-button> <el-button type="text" icon="el-icon-delete" on-click={() => this.remove(node, data)}></el-button>     </span> : <span></span>
+            this.isact === data ? <span> <el-button type="text" icon="el-icon-plus" on-click={() => this.append(data)}></el-button> <el-button type="text" icon="el-icon-edit" on-click={() => this.onEdit(data)}></el-button> <el-button type="text" icon="el-icon-delete" on-click={() => this.remove(node, data)}></el-button></span> : <span></span>
           }
-
         </span>
       )
     },
     append (data) {
+      this.resetForm()
       this.opeType = 'add'
       if (data.id) {
         this.form.parentName = data.name
@@ -200,6 +213,19 @@ export default {
       }
     },
     remove (node, data) {
+      if (data.children.length) {
+        this.$message.warning('该节点有子数据，不能删除。')
+        return
+      } else if (data.id === 0) {
+        this.$message.warning('根组织不能删除')
+        return
+      }
+      const vm = this
+      userCenterApi.delDepart(data.id).then(res => {
+        if (res.isSuccess) {
+          vm.$message.success('删除成功')
+        }
+      })
       const parent = node.parent
       const children = parent.data.children || parent.data
       const index = children.findIndex(d => d.id === data.id)
