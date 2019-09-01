@@ -5,26 +5,30 @@
         <el-input placeholder="操作IP" v-model="searchCondition.requestIp"></el-input>
       </el-form-item>
       <el-form-item label="操作人">
-        <el-input placeholder="操作人" v-model="searchCondition.userName"></el-input>
+        <el-input clearable placeholder="操作人" v-model="searchCondition.userName"></el-input>
       </el-form-item>
       <el-form-item label="日志类型">
         <el-select placeholder="日志类型" v-model="searchCondition.type">
-          <el-option :key="key" :label="val" :value="key" v-for="(val, key) in enums.LogType"></el-option>
+          <el-option label="全部" value=""/>
+          <el-option :key="key" :label="val" :value="key" clearable
+                     v-for="(val, key) in enums.LogType"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="操作描述">
-        <el-input placeholder="操作描述" v-model="searchCondition.description"></el-input>
+        <el-input clearable placeholder="操作描述" v-model="searchCondition.description"></el-input>
       </el-form-item>
       <el-form-item label="请求地址">
-        <el-input placeholder="请求地址" v-model="searchCondition.requestUri"></el-input>
+        <el-input clearable placeholder="请求地址" v-model="searchCondition.requestUri"></el-input>
       </el-form-item>
       <el-form-item label="请求类型">
-        <el-select placeholder="请求类型" v-model="searchCondition.httpMethod">
-          <el-option :key="key" :label="val" :value="key" v-for="(val, key) in enums.HttpMethod"></el-option>
+        <el-select clearable placeholder="请求类型" v-model="searchCondition.httpMethod">
+          <el-option label="全部" value=""/>
+          <el-option :key="key" :label="val" :value="key" v-for="(val, key) in enums.HttpMethod">
+          </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="类路径">
-        <el-input placeholder="类路径" v-model="searchCondition.classPath"></el-input>
+        <el-input clearable placeholder="类路径" v-model="searchCondition.classPath"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="onSearch" type="primary">查询
