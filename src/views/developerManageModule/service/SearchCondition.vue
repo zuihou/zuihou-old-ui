@@ -2,16 +2,16 @@
   <div class="search-condition">
     <el-form :inline="true" :model="searchCondition" class="demo-form-inline">
       <el-form-item label="服务ID">
-        <el-input placeholder="服务ID" v-model="searchCondition.eurekaCode"></el-input>
+        <el-input clearable placeholder="服务ID" v-model="searchCondition.eurekaCode"></el-input>
       </el-form-item>
       <el-form-item label="名称">
-        <el-input placeholder="名称" v-model="searchCondition.name"></el-input>
+        <el-input clearable placeholder="名称" v-model="searchCondition.name"></el-input>
       </el-form-item>
       <el-form-item label="描述">
-        <el-input placeholder="描述" v-model="searchCondition.describe"></el-input>
+        <el-input clearable placeholder="描述" v-model="searchCondition.describe"></el-input>
       </el-form-item>
       <el-form-item label="接口地址">
-        <el-input placeholder="接口地址" v-model="searchCondition.swaggerUrl"></el-input>
+        <el-input clearable placeholder="接口地址" v-model="searchCondition.swaggerUrl"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="onSearch" type="primary">查询

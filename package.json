@@ -17,6 +17,10 @@
     "vuex": "^3.0.1"
   },
   "devDependencies": {
+    "js-cookie": "2.2.0",
+    "jsonlint": "1.6.3",
+    "jszip": "3.2.1",
+    "normalize.css": "7.0.0",
     "@vue/cli-plugin-babel": "^3.9.0",
     "@vue/cli-plugin-eslint": "^3.9.0",
     "@vue/cli-service": "^3.9.0",

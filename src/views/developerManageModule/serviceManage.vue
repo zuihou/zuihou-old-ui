@@ -1,6 +1,7 @@
 <template>
   <el-card>
-    <searchCondition ref="searchCondition" @onSearch="preSearch" @onCreate="openDialog('editDialog', null, 'create')"></searchCondition>
+    <searchCondition @onCreate="openDialog('editDialog', null, 'create')" @onSearch="preSearch"
+                     ref="searchCondition"></searchCondition>
     <el-table :data="tableData.records" border style="width: 100%">
       <el-table-column prop="eurekaCode" label="服务id" width="250"></el-table-column>
       <el-table-column prop="name" label="服务名称" minWidth="80"></el-table-column>
@@ -11,23 +12,23 @@
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="onParse(scope.row)">解析接口</el-button>
           <router-link :to="'/developerManageModule/apiView'">
-            <el-button icon="el-icon-edit" size="small" type="text">
+            <el-button size="small" type="text">
               查看接口
             </el-button>
           </router-link>
         </template>
       </el-table-column>
     </el-table>
-    <pagination :limit.sync="pageInfo.pageSize" :page.sync="pageInfo.pageNo" :total="parseInt(tableData.total)"
-                @pagination="onSuccess" v-show="tableData.total > 0"/>
+    <pagination :limit.sync="pageInfo.pageSize" :page.sync="pageInfo.pageNo"
+                :total="parseInt(tableData.total)" @pagination="onSuccess" v-show="tableData.total > 0"/>
   </el-card>
 </template>
 <script>
-import searchCondition from './service/SearchCondition'
-import { mapState } from 'vuex'
-import Pagination from '@/components/Pagination'
+    import searchCondition from './service/SearchCondition'
+    import {mapState} from 'vuex'
+    import Pagination from '@/components/Pagination'
 
-export default {
+    export default {
   components: {
     searchCondition,
     Pagination
