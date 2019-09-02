@@ -1,17 +1,20 @@
 const path = require("path")
+const config = require("./src/config")
+
 function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
-//const targetUrl = "http://42.202.130.216:10000"
-
 let targetUrl = ""
+let publicPath = ""
 switch (process.env.NODE_ENV) {
   case "development":
-    targetUrl = "http://127.0.0.1:8760"
+    targetUrl = config.apiUrl.dev
+    publicPath = config.publicPath.dev //这里是本地的请求url
     break
   case "production":
-    targetUrl = "http://42.202.130.216:10000"
+    targetUrl = config.apiUrl.pro
+    publicPath = config.publicPath.pro //生产环境url
     break
 }
 
@@ -26,7 +29,7 @@ proxyArr.forEach(item => {
 
 module.exports = {
   // 配置部署的路径，默认‘/’，表示根域名下，这里必须以‘/’结束，否则会出现打包失败(具体体现在绝对路径打包时会出错)
-  publicPath: "./",
+  publicPath: publicPath,
   // 静态资源放置文件夹
   assetsDir: "assets",
   // true: 控制台显示warning，不影响编译
