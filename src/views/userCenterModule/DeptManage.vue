@@ -56,7 +56,16 @@ export default {
       }],
       opeType: 'detail',
       formLabelWidth: '80px',
-      validate: {},
+      validate: {
+        name: [
+          { required: true, message: '不能为空', trigger: 'blur' },
+          { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
+        ],
+        abbreviation: [
+          { required: true, message: '不能为空', trigger: 'blur' },
+          { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
+        ]
+      },
       defaultProps: {
         children: 'children',
         label: 'name'
@@ -71,7 +80,7 @@ export default {
   },
   created () {
     this.resetForm()
-    this.getValidator()
+    // this.getValidator()
     this.getAllDepart()
   },
   methods: {
@@ -85,6 +94,7 @@ export default {
           validate: vm.validate,
           formName: 'dataForm'
         })
+      console.log(this.validate)
     },
     getAllDepart (data) {
       const vm = this
@@ -142,6 +152,11 @@ export default {
       }
     },
     async onSubmit () {
+      this.$refs['dataForm'].validate(valid => {
+        if (!valid) {
+          return false
+        }
+      })
       const vm = this
       const { id, abbreviation, describe, name, parentId, sortValue, status } = vm.form
       let result = null
@@ -164,6 +179,8 @@ export default {
           sortValue,
           status
         })
+      } else {
+        return
       }
       if (result.isSuccess) {
         vm.$message.success('保存成功')
@@ -213,7 +230,7 @@ export default {
       }
     },
     remove (node, data) {
-      if (data.children.length) {
+      if (data.children && data.children.length) {
         this.$message.warning('该节点有子数据，不能删除。')
         return
       } else if (data.id === 0) {
