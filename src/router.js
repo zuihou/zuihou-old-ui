@@ -23,24 +23,6 @@ const router = new Router({
         withoutLayout: true
       }
     },
-    // 字典项管理
-    {
-      path: "/dictManage",
-      name: "dictManage",
-      component: () => import("./views/dictManage/DictManage.vue"),
-      meta: {
-        title: "数据字典维护"
-      }
-    },
-    // 地域管理
-    {
-      path: "/areaManage",
-      name: "areaManage",
-      component: () => import("./views/areaManage/AreaManage.vue"),
-      meta: {
-        title: "地域管理"
-      }
-    },
     // 部门管理-列表
     {
       path: "/userCenter/deptManage",
@@ -48,6 +30,15 @@ const router = new Router({
       component: () => import("./views/userCenterModule/DeptManage.vue"),
       meta: {
         title: "部门管理"
+      }
+    },
+    // 岗位-列表
+    {
+      path: "/userCenter/stationManage",
+      name: "stationManage",
+      component: () => import("./views/userCenterModule/StationManage.vue"),
+      meta: {
+        title: "岗位管理"
       }
     },
     // 权限管理-菜单管理
@@ -66,6 +57,24 @@ const router = new Router({
       component: () => import("./views/authModule/RoleManage.vue"),
       meta: {
         title: "角色管理"
+      }
+    },
+    // 字典项管理
+    {
+      path: "/dictManage",
+      name: "dictManage",
+      component: () => import("./views/dictManage/DictManage.vue"),
+      meta: {
+        title: "数据字典维护"
+      }
+    },
+    // 地域管理
+    {
+      path: "/areaManage",
+      name: "areaManage",
+      component: () => import("./views/areaManage/AreaManage.vue"),
+      meta: {
+        title: "地域管理"
       }
     },
     //服务管理
@@ -106,14 +115,14 @@ const router = new Router({
       }
     },
     //发布消息
-    // {
-    //   path: "/msgsCenter/sendMsgs",
-    //   name: "sendMsgs",
-    //   component: () => import("./views/msgsCenterModule/sendMsgs.vue"),
-    //   meta: {
-    //     title: "发布消息"
-    //   }
-    // },
+    {
+      path: "/msgsCenter/sendMsgs",
+      name: "sendMsgs",
+      component: () => import("./views/msgsCenterModule/sendMsgs.vue"),
+      meta: {
+        title: "发布消息"
+      }
+    },
     {
       path: "*",
       redirect: "login"
