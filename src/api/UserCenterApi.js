@@ -10,7 +10,8 @@ const apiList = {
   // 查询部门分页列表
   authorityOrgPage: '/authority/org/page',
   delDepart: '/authority/org',
-  updateDepart: '/authority/org'
+  updateDepart: '/authority/org',
+  userPage: '/authority/user/page'
 }
 export default {
   getDeptPageList (data = {}) {
@@ -56,6 +57,13 @@ export default {
     return axiosApi({
       method: 'get',
       url: apiList.authorityOrgPage,
+      data
+    })
+  },
+  userPage (data = {}) {
+    return axiosApi({
+      method: 'get',
+      url: apiList.userPage,
       data
     })
   },

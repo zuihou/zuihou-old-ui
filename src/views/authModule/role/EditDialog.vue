@@ -84,7 +84,7 @@ export default {
               vm.visible = false
               vm.$emit('onSuccess')
             } else {
-              vm.$message.success('新增失败')
+              vm.$message.error('新增失败')
             }
           })
         }
