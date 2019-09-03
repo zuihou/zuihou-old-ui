@@ -23,11 +23,11 @@
 </template>
 
 <script>
-    import apiSearchCondition from './service/ApiSearchCondition'
-    import {mapState} from 'vuex'
-    import Pagination from '@/components/Pagination'
+import apiSearchCondition from './service/ApiSearchCondition'
+import { mapState } from 'vuex'
+import Pagination from '@/components/Pagination'
 
-    export default {
+export default {
   components: {
     apiSearchCondition,
     Pagination

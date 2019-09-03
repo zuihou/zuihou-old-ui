@@ -47,39 +47,39 @@
   </div>
 </template>
 <script>
-    export default {
-        computed: {
-            enums() {
-                return this.$store.state.enums
-            }
-        },
-        data() {
-            return {
-                rangeDate: [],
-                searchCondition: {
-                    title: '',
-                    content: '',
-                    isRead: null,
-                    bizType: null,
-                    msgsCenterType: null,
-                    startCreateTime: null,
-                    endCreateTime: null
-                }
-            }
-        },
-        methods: {
-            getCondition() {
-                return this.searchCondition
-            },
-            onSearch() {
-                if (this.rangeDate.length > 0) {
-                    this.searchCondition.startCreateTime = this.rangeDate[0]
-                    this.searchCondition.endCreateTime = this.rangeDate[1]
-                }
-                this.$emit('onSearch', this.searchCondition)
-            }
-        }
+export default {
+  computed: {
+    enums () {
+      return this.$store.state.enums
     }
+  },
+  data () {
+    return {
+      rangeDate: [],
+      searchCondition: {
+        title: '',
+        content: '',
+        isRead: null,
+        bizType: null,
+        msgsCenterType: null,
+        startCreateTime: null,
+        endCreateTime: null
+      }
+    }
+  },
+  methods: {
+    getCondition () {
+      return this.searchCondition
+    },
+    onSearch () {
+      if (this.rangeDate.length > 0) {
+        this.searchCondition.startCreateTime = this.rangeDate[0]
+        this.searchCondition.endCreateTime = this.rangeDate[1]
+      }
+      this.$emit('onSearch', this.searchCondition)
+    }
+  }
+}
 </script>
 <style lang="less" scoped>
   .search-condition {

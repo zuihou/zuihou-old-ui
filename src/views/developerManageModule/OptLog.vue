@@ -122,7 +122,7 @@ export default {
   },
   methods: {
     handleSelectionChange (val) {
-      this.multipleSelection = val;
+      this.multipleSelection = val
     },
     preSearch (params) {
       this.pageInfo.pageNo = 1
@@ -144,10 +144,10 @@ export default {
     },
     uaForamt (row, column) {
       let ua = readUserAgent(row.ua)
-      return ua.terminal + "  |  " + ua.browser
+      return ua.terminal + '  |  ' + ua.browser
     },
     consumingTimeForamt (row, column) {
-      return row.consumingTime + " ms"
+      return row.consumingTime + ' ms'
     },
     openDrawer (data) {
       this.currentRow = data
@@ -159,12 +159,11 @@ export default {
     },
     badgeResultStatus () {
       let status = this.currentRow.result ? JSON.parse(this.currentRow.result).code : ''
-      let type = status == '0' ? 'success' : 'fail'
+      let type = status === '0' ? 'success' : 'fail'
       let str = '<el-badge is-dot class="item" type="' + type + '"></el-badge>'
       str += status
       return str
     }
-
 
   },
   created () {

@@ -16,7 +16,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.login{
+.login {
   height: 100%;
   display: flex;
   justify-content: center;

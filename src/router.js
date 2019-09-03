@@ -1,23 +1,23 @@
-import Vue from "vue"
-import Router from "vue-router"
-import Login from "./views/login/Login.vue"
+import Vue from 'vue'
+import Router from 'vue-router'
+import Login from './views/login/Login.vue'
 
 Vue.use(Router)
 
 const router = new Router({
   routes: [
     {
-      path: "/home",
-      name: "home",
-      component: () => import("@views/homeModule/Home.vue"),
+      path: '/home',
+      name: 'home',
+      component: () => import('@views/homeModule/Home.vue'),
       meta: {
-        title: "首页"
+        title: '首页'
       }
     },
     {
-      path: "/",
-      alias: "/login",
-      name: "login",
+      path: '/',
+      alias: '/login',
+      name: 'login',
       component: Login,
       meta: {
         withoutLayout: true
@@ -25,107 +25,107 @@ const router = new Router({
     },
     // 部门管理-列表
     {
-      path: "/userCenter/deptManage",
-      name: "deptManage",
-      component: () => import("./views/userCenterModule/DeptManage.vue"),
+      path: '/userCenter/deptManage',
+      name: 'deptManage',
+      component: () => import('./views/userCenterModule/DeptManage.vue'),
       meta: {
-        title: "部门管理"
+        title: '部门管理'
       }
     },
     // 岗位-列表
     {
-      path: "/userCenter/stationManage",
-      name: "stationManage",
-      component: () => import("./views/userCenterModule/StationManage.vue"),
+      path: '/userCenter/stationManage',
+      name: 'stationManage',
+      component: () => import('./views/userCenterModule/StationManage.vue'),
       meta: {
-        title: "岗位管理"
+        title: '岗位管理'
       }
     },
     // 权限管理-菜单管理
     {
-      path: "/authority/menuManage",
-      name: "menuManage",
-      component: () => import("./views/authModule/MenuManage.vue"),
+      path: '/authority/menuManage',
+      name: 'menuManage',
+      component: () => import('./views/authModule/MenuManage.vue'),
       meta: {
-        title: "菜单管理"
+        title: '菜单管理'
       }
     },
     // 权限管理-角色管理
     {
-      path: "/authority/roleManage",
-      name: "roleManage",
-      component: () => import("./views/authModule/RoleManage.vue"),
+      path: '/authority/roleManage',
+      name: 'roleManage',
+      component: () => import('./views/authModule/RoleManage.vue'),
       meta: {
-        title: "角色管理"
+        title: '角色管理'
       }
     },
     // 字典项管理
     {
-      path: "/dictManage",
-      name: "dictManage",
-      component: () => import("./views/dictManage/DictManage.vue"),
+      path: '/dictManage',
+      name: 'dictManage',
+      component: () => import('./views/dictManage/DictManage.vue'),
       meta: {
-        title: "数据字典维护"
+        title: '数据字典维护'
       }
     },
     // 地域管理
     {
-      path: "/areaManage",
-      name: "areaManage",
-      component: () => import("./views/areaManage/AreaManage.vue"),
+      path: '/areaManage',
+      name: 'areaManage',
+      component: () => import('./views/areaManage/AreaManage.vue'),
       meta: {
-        title: "地域管理"
+        title: '地域管理'
       }
     },
-    //服务管理
+    // 服务管理
     {
-      path: "/developerManageModule/serviceManage",
-      name: "serviceManage",
+      path: '/developerManageModule/serviceManage',
+      name: 'serviceManage',
       component: () =>
-        import("./views/developerManageModule/serviceManage.vue"),
+        import('./views/developerManageModule/serviceManage.vue'),
       meta: {
-        title: "服务管理"
+        title: '服务管理'
       }
     },
-    //接口查询
+    // 接口查询
     {
-      path: "/developerManageModule/apiView",
-      name: "apiView",
-      component: () => import("./views/developerManageModule/ApiView.vue"),
+      path: '/developerManageModule/apiView',
+      name: 'apiView',
+      component: () => import('./views/developerManageModule/ApiView.vue'),
       meta: {
-        title: "接口查询"
+        title: '接口查询'
       }
     },
-    //操作日志
+    // 操作日志
     {
-      path: "/developerManageModule/optLog",
-      name: "optLog",
-      component: () => import("./views/developerManageModule/OptLog.vue"),
+      path: '/developerManageModule/optLog',
+      name: 'optLog',
+      component: () => import('./views/developerManageModule/OptLog.vue'),
       meta: {
-        title: "操作日志"
+        title: '操作日志'
       }
     },
-    //我的消息
+    // 我的消息
     {
-      path: "/msgsCenter/myMsgs",
-      name: "myMsgs",
-      component: () => import("./views/msgsCenterModule/myMsgs.vue"),
+      path: '/msgsCenter/myMsgs',
+      name: 'myMsgs',
+      component: () => import('./views/msgsCenterModule/myMsgs.vue'),
       meta: {
-        title: "我的消息"
+        title: '我的消息'
       }
     },
-    //发布消息
+    // 发布消息
     {
-      path: "/msgsCenter/sendMsgs",
-      name: "sendMsgs",
-      component: () => import("./views/msgsCenterModule/sendMsgs.vue"),
+      path: '/msgsCenter/sendMsgs',
+      name: 'sendMsgs',
+      component: () => import('./views/msgsCenterModule/sendMsgs.vue'),
       meta: {
-        title: "发布消息"
+        title: '发布消息'
       }
     },
     {
-      path: "*",
-      redirect: "login"
+      path: '*',
+      redirect: 'login'
     }
   ]
 })

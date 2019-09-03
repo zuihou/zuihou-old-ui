@@ -20,28 +20,28 @@ module.exports = {
    */
   publicPath: {
     //  本地环境发布目录
-    dev: "/",
+    dev: '/',
     //  生产环境发布目录
-    pro: "/"
+    pro: '/'
   },
   /**
    *  api请求基础路径
    */
   apiUrl: {
     //  本地环境接口请求地址
-    dev: "http://127.0.0.1:8760",
+    dev: 'http://42.202.130.216:10000',
     //  生产环境接口请求地址
-    pro: "http://42.202.130.216:10000"
+    pro: 'http://42.202.130.216:10000'
   },
   /**
    * 默认打开的首页的路由name值，默认为home
    */
-  homeName: "home",
+  homeName: 'home',
   /**
    * 需要加载的插件
    */
   plugin: {
-    "error-store": {
+    'error-store': {
       showInHeader: false, // 设为false后不会在顶部显示错误日志徽标
       developmentOff: false // 设为true后在开发环境不会收集错误信息，方便开发中排查错误
     }

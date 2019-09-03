@@ -24,76 +24,76 @@
       </el-table-column>
     </el-table>
     <pagination :limit.sync="pageInfo.pageSize" :page.sync="pageInfo.pageNo"
-                :total="parseInt(tableData.total)" @pagination="onSuccess" v-show="tableData.total > 0"/>
+      :total="parseInt(tableData.total)" @pagination="onSuccess" v-show="tableData.total > 0" />
   </el-card>
 </template>
 <script>
-    import searchCondition from './service/SearchCondition'
-    import {mapState} from 'vuex'
-    import Pagination from '@/components/Pagination'
-    import msgsCenterApi from '@/api/MsgsCenterApi.js'
+import searchCondition from './service/SearchCondition'
+import { mapState } from 'vuex'
+import Pagination from '@/components/Pagination'
+import msgsCenterApi from '@/api/MsgsCenterApi.js'
 
-    export default {
-        components: {
-            searchCondition,
-            Pagination
-        },
-        computed: {
-            ...mapState('msgsCenterModule', {
-                tableData: state => state.myMsgsPageData
-            })
-        },
-        data() {
-            return {
-                type: 'create',
-                pageInfo: {
-                    pageNo: 1,
-                    pageSize: 10
-                }
-            }
-        },
-        methods: {
-            preSearch(params) {
-                this.pageInfo.pageNo = 1
-                this.doSearch(params)
-            },
-            onView(row) {
-                const vm = this
-                if (!row.isRead) {
-                    msgsCenterApi.markMsgs({msgCenterIds: [row.id, 123]}).then(res => {
-                        if (res.isSuccess) {
-                            this.onHref(row)
-                        }
-                    })
-                } else {
-                    this.onHref(row)
-                }
-            },
-            onHref(row) {
-                if (row.handlerUrl) {
-                    let url = row.handlerUrl;
-                    if (url.indexOf('?') > 0) {
-                        url += '?'
-                    }
-                    url += row.handlerParams;
-                    // 这里需要根据情况，跳转到外部链接， 或者内部链接
-                    window.location.href = url;
-                }
-            },
-            doSearch(params = {}) {
-                this.$store.dispatch('msgsCenterModule/getMyMsgsPageList', {
-                    ...params,
-                    ...this.pageInfo
-                })
-            },
-            // 新增或者修改成功
-            onSuccess() {
-                const searchCondition = this.$refs.searchCondition.getCondition()
-                this.doSearch(searchCondition)
-            }
-        },
-        created() {
-            this.doSearch()
-        }
+export default {
+  components: {
+    searchCondition,
+    Pagination
+  },
+  computed: {
+    ...mapState('msgsCenterModule', {
+      tableData: state => state.myMsgsPageData
+    })
+  },
+  data () {
+    return {
+      type: 'create',
+      pageInfo: {
+        pageNo: 1,
+        pageSize: 10
+      }
     }
+  },
+  methods: {
+    preSearch (params) {
+      this.pageInfo.pageNo = 1
+      this.doSearch(params)
+    },
+    onView (row) {
+      const vm = this
+      if (!row.isRead) {
+        msgsCenterApi.markMsgs({ msgCenterIds: [row.id, 123] }).then(res => {
+          if (res.isSuccess) {
+            vm.onHref(row)
+          }
+        })
+      } else {
+        vm.onHref(row)
+      }
+    },
+    onHref (row) {
+      if (row.handlerUrl) {
+        let url = row.handlerUrl
+        if (url.indexOf('?') > 0) {
+          url += '?'
+        }
+        url += row.handlerParams
+        // 这里需要根据情况，跳转到外部链接， 或者内部链接
+        window.location.href = url
+      }
+    },
+    doSearch (params = {}) {
+      this.$store.dispatch('msgsCenterModule/getMyMsgsPageList', {
+        ...params,
+        ...this.pageInfo
+      })
+    },
+    // 新增或者修改成功
+    onSuccess () {
+      const searchCondition = this.$refs.searchCondition.getCondition()
+      this.doSearch(searchCondition)
+    }
+  },
+  created () {
+    this.doSearch()
+  }
+}
 </script>

@@ -24,11 +24,11 @@
   </el-card>
 </template>
 <script>
-    import searchCondition from './service/SearchCondition'
-    import {mapState} from 'vuex'
-    import Pagination from '@/components/Pagination'
+import searchCondition from './service/SearchCondition'
+import { mapState } from 'vuex'
+import Pagination from '@/components/Pagination'
 
-    export default {
+export default {
   components: {
     searchCondition,
     Pagination

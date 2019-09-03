@@ -35,7 +35,6 @@
   </div>
 </template>
 
-
 <script>
 import Warning from './service/Warning'
 import Mdinput from '@/components/Mdinput'
@@ -58,7 +57,7 @@ export default {
           { required: true, message: '不能为空', trigger: 'blur' },
           { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
         ]
-      },
+      }
     }
   },
   methods: {
