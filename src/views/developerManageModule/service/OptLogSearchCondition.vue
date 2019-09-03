@@ -9,9 +9,9 @@
       </el-form-item>
       <el-form-item label="日志类型">
         <el-select placeholder="日志类型" v-model="searchCondition.type">
-          <el-option label="全部" value=""/>
+          <el-option label="全部" value="" />
           <el-option :key="key" :label="val" :value="key" clearable
-                     v-for="(val, key) in enums.LogType"></el-option>
+            v-for="(val, key) in enums.LogType"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="操作描述">
@@ -22,7 +22,7 @@
       </el-form-item>
       <el-form-item label="请求类型">
         <el-select clearable placeholder="请求类型" v-model="searchCondition.httpMethod">
-          <el-option label="全部" value=""/>
+          <el-option label="全部" value="" />
           <el-option :key="key" :label="val" :value="key" v-for="(val, key) in enums.HttpMethod">
           </el-option>
         </el-select>
@@ -71,7 +71,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-  .search-condition {
+.search-condition {
   margin-bottom: 10px;
 }
 </style>

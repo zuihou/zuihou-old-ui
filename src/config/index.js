@@ -31,7 +31,7 @@ module.exports = {
     //  本地环境接口请求地址
     dev: "http://127.0.0.1:8760",
     //  生产环境接口请求地址
-    pro: "http://api.openc.top"
+    pro: "http://42.202.130.216:10000"
   },
   /**
    * 默认打开的首页的路由name值，默认为home
