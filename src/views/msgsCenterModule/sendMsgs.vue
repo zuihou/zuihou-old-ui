@@ -1,18 +1,15 @@
 <template>
   <div class="createPost-container">
     <el-form ref="postForm" :model="postForm" :rules="validate" class="form-container">
-
       <div class="createPost-main-container">
         <el-row>
           <Warning />
-
           <el-col :span="24">
             <el-form-item style="margin-bottom: 40px;" prop="title">
-              <Mdinput v-model="postForm.title" :maxlength="100" name="name" required>
+              <md-input v-model="postForm.title" :maxlength="100" name="name" required>
                 标题
-              </Mdinput>
+              </md-input>
             </el-form-item>
-
             <div class="postInfo-container">
               <el-row>
                 <el-col :span="8">
@@ -24,12 +21,10 @@
                     </el-select>
                   </el-form-item>
                 </el-col>
-
               </el-row>
             </div>
           </el-col>
         </el-row>
-
       </div>
     </el-form>
   </div>
@@ -37,13 +32,9 @@
 
 <script>
 import Warning from './service/Warning'
-import Mdinput from '@/components/Mdinput'
 export default {
   components: {
-    Warning, Mdinput
-  },
-  computed: {
-
+    Warning
   },
   data () {
     return {
