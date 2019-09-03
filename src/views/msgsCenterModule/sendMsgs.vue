@@ -6,9 +6,9 @@
           <Warning />
           <el-col :span="24">
             <el-form-item style="margin-bottom: 40px;" prop="title">
-              <md-input v-model="postForm.title" :maxlength="100" name="name" required>
+              <Mdinput v-model="postForm.title" :maxlength="100" name="name" required>
                 标题
-              </md-input>
+              </Mdinput>
             </el-form-item>
             <div class="postInfo-container">
               <el-row>

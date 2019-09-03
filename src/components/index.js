@@ -1,4 +1,4 @@
 import Vue from 'vue'
-import MdInput from './MdInput/'
+import MdInput from './Mdinput/'
 
-Vue.component('MdInput', MdInput)
+Vue.component('Mdinput', MdInput)
