@@ -104,7 +104,7 @@
             </div>
 
             <el-form-item prop="content" style="margin-bottom: 30px;">
-              <Tinymce ref="editor" v-model="form.content" :height="400" />
+              <Tinymce ref="editor" v-model="form.msgsCenterInfoDTO.content" :height="400" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -154,12 +154,12 @@ export default {
       },
       validate: {
         title: [
-          { required: true, message: '不能为空', trigger: 'blur' },
-          { min: 2, max: 20, message: '长度在 2 到 50 个字符', trigger: 'blur' }
+          { required: true, message: '标题不能为空', trigger: 'blur' },
+          { min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'blur' }
         ],
-        abbreviation: [
-          { required: true, message: '不能为空', trigger: 'blur' },
-          { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
+        content: [
+          { required: true, message: '正文不能为空', trigger: 'blur' },
+          { min: 1, max: 65535, message: '长度在 1 到 65535 个字符', trigger: 'blur' }
         ]
       }
     }
@@ -168,7 +168,6 @@ export default {
     async onSubmit () {
       const vm = this
       vm.loading = true
-
       vm.$refs.msgsForm.validate(valid => {
         if (valid) {
           msgsCenterApi.sendMsgs(vm.form).then(res => {
@@ -182,11 +181,9 @@ export default {
           })
         }
       })
-
-
     },
     queryUserMethod (keyword) {
-      let vm = this;
+      let vm = this
       let data = {
         name: keyword,
         pageNo: 1,
@@ -203,7 +200,7 @@ export default {
       })
     },
     queryRoleMethod (keyword) {
-      let vm = this;
+      let vm = this
       let data = {
         name: keyword,
         pageNo: 1,
