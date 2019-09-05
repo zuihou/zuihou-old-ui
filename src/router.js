@@ -123,6 +123,24 @@ const router = new Router({
         title: '发布消息'
       }
     },
+    // 文件列表
+    {
+      path: '/fileCenter/file',
+      name: 'file',
+      component: () => import('./views/fileCenterModule/index.vue'),
+      meta: {
+        title: '文件列表'
+      }
+    },
+    // 附件列表
+    {
+      path: '/fileCenter/attachment',
+      name: 'attachment',
+      component: () => import('./views/fileCenterModule/index.vue'),
+      meta: {
+        title: '文件列表'
+      }
+    },
     {
       path: '*',
       redirect: 'login'

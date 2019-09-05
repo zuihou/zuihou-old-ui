@@ -9,6 +9,7 @@ module.exports = {
    *              用来在菜单中显示文字
    */
   useI18n: false,
+  proxyPrefix: '/api',
   /**
    * 项目部署基础
    * 默认情况下，我们假设你的应用将被部署在域的根目录下,
@@ -20,18 +21,18 @@ module.exports = {
    */
   publicPath: {
     //  本地环境发布目录
-    dev: './',
+    development: './',
     //  生产环境发布目录
-    pro: './'
+    production: './'
   },
   /**
    *  api请求基础路径
    */
   apiUrl: {
     //  本地环境接口请求地址
-    dev: 'http://127.0.0.1:8760',
+    development: 'http://127.0.0.1:8760',
     //  生产环境接口请求地址
-    pro: 'http://42.202.130.216:10000'
+    production: 'http://42.202.130.216:10000'
   },
   /**
    * 默认打开的首页的路由name值，默认为home

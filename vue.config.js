@@ -1,23 +1,25 @@
 const path = require('path')
 const config = require('./src/config')
 
-function resolve(dir) {
+function resolve (dir) {
   return path.join(__dirname, dir)
 }
 
-let targetUrl = ''
-let publicPath = ''
-switch (process.env.NODE_ENV) {
-  case 'development':
-    targetUrl = config.apiUrl.dev
-    //targetUrl = config.apiUrl.pro
-    publicPath = config.publicPath.dev // 这里是本地的请求url
-    break
-  case 'production':
-    targetUrl = config.apiUrl.pro
-    publicPath = config.publicPath.pro // 生产环境url
-    break
-}
+// let targetUrl = config.apiUrl['production']
+let targetUrl = config.apiUrl[process.env.NODE_ENV]
+let publicPath = config.publicPath[process.env.NODE_ENV]
+
+// switch (process.env.NODE_ENV) {
+//   case 'development':
+//     targetUrl = config.apiUrl.dev
+//     targetUrl = config.apiUrl.pro
+//     publicPath = config.publicPath.dev // 这里是本地的请求url
+//     break
+//   case 'production':
+//     targetUrl = config.apiUrl.pro
+//     publicPath = config.publicPath.pro // 生产环境url
+//     break
+// }
 
 const proxyArr = ['/api']
 const proxy = {}
