@@ -101,7 +101,7 @@ export default {
       const vm = this
       let ids = []
       if (row) {
-        if (row.dataType.code === "DIR") {
+        if (row.dataType.code === 'DIR') {
           vm.$message.warning('不允许下载文件夹')
           return
         }
@@ -112,7 +112,7 @@ export default {
           return
         }
 
-        let dir = vm.multipleSelection.find(item => item.dataType.code === "DIR")
+        let dir = vm.multipleSelection.find(item => item.dataType.code === 'DIR')
         if (dir) {
           vm.$message.warning('不允许下载文件夹')
           return
