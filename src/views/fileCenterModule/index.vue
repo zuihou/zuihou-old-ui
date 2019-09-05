@@ -11,6 +11,7 @@
     <searchCondition
       @onSearch='preSearch'
       @onBatchDel='onBatchDel'
+      @onBatchDownload='onBatchDownload'
       @onCreate='openDialog("folderDialog", null, "create")'
       ref='searchCondition'
     ></searchCondition>
@@ -93,16 +94,30 @@ export default {
       this.pageInfo.pageNo = 1
       this.doSearch(params)
     },
+    onBatchDownload () {
+      this.onDownload()
+    },
     onDownload (row) {
       const vm = this
       let ids = []
       if (row) {
+        if (row.dataType.code === "DIR") {
+          vm.$message.warning('不允许下载文件夹')
+          return
+        }
         ids = [row.id]
       } else {
         if (vm.multipleSelection.length <= 0) {
-          vm.$message.info('请先选择文件!')
+          vm.$message.warning('请先选择文件!')
           return
         }
+
+        let dir = vm.multipleSelection.find(item => item.dataType.code === "DIR")
+        if (dir) {
+          vm.$message.warning('不允许下载文件夹')
+          return
+        }
+
         ids = vm.multipleSelection.map(item => item.id)
       }
 

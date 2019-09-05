@@ -1,6 +1,6 @@
 <template>
   <div class='search-condition'>
-<!--    <bigUpload ref='bigUpload' :folderId='folderId' v-on:page='onSearch'></bigUpload>-->
+    <!--    <bigUpload ref='bigUpload' :folderId='folderId' v-on:page='onSearch'></bigUpload>-->
     <el-form :inline='true' :model='searchCondition' class='demo-form-inline'>
       <el-form-item label='文件类型'>
         <el-select
@@ -67,7 +67,12 @@
         <el-button @click='onCreate' class='filter-item' icon='el-icon-plus' type='primary'>新增文件夹</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button @click='onSearch' class='filter-item' icon='el-icon-download' type='primary'>批量下载</el-button>
+        <el-button
+          @click='onBatchDownload'
+          class='filter-item'
+          icon='el-icon-download'
+          type='primary'
+        >批量下载</el-button>
       </el-form-item>
       <el-form-item>
         <el-button @click='onBatchDel' class='filter-item' icon='el-icon-delete' type='primary'>批量删除</el-button>
@@ -124,6 +129,9 @@ export default {
     },
     onBatchDel () {
       this.$emit('onBatchDel')
+    },
+    onBatchDownload () {
+      this.$emit('onBatchDownload')
     },
     beforeFileUpload (file) {
       const isLt2M = file.size / 1024 / 1024 < 50

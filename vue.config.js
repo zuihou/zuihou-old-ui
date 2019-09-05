@@ -5,8 +5,8 @@ function resolve (dir) {
   return path.join(__dirname, dir)
 }
 
-// let targetUrl = config.apiUrl['production']
-let targetUrl = config.apiUrl[process.env.NODE_ENV]
+let targetUrl = config.apiUrl['production']
+// let targetUrl = config.apiUrl[process.env.NODE_ENV]
 let publicPath = config.publicPath[process.env.NODE_ENV]
 
 // switch (process.env.NODE_ENV) {
