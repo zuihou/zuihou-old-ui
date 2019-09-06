@@ -58,7 +58,7 @@ export default {
     handleSuccess (response, file) {
       const uid = file.uid
       const objKeyArr = Object.keys(this.listObj)
-      for (let i = 0, len = objKeyArr.length;i < len;i++) {
+      for (let i = 0, len = objKeyArr.length; i < len; i++) {
         if (this.listObj[objKeyArr[i]].uid === uid) {
           this.listObj[objKeyArr[i]].url = response.files.file
           this.listObj[objKeyArr[i]].hasSuccess = true
@@ -69,7 +69,7 @@ export default {
     handleRemove (file) {
       const uid = file.uid
       const objKeyArr = Object.keys(this.listObj)
-      for (let i = 0, len = objKeyArr.length;i < len;i++) {
+      for (let i = 0, len = objKeyArr.length; i < len; i++) {
         if (this.listObj[objKeyArr[i]].uid === uid) {
           delete this.listObj[objKeyArr[i]]
           return

@@ -5,6 +5,7 @@ import userCenterModule from './views/userCenterModule/store'
 import authModule from './views/authModule/store'
 import developerManageModule from './views/developerManageModule/store'
 import msgsCenterModule from './views/msgsCenterModule/store'
+import fileCenterModule from './views/fileCenterModule/store'
 
 Vue.use(Vuex)
 const userInfo = {
@@ -52,21 +53,24 @@ export default new Vuex.Store({
   },
   actions: {
     getUserInfo ({ commit }, data) {
-      return commonApi.annoLogin(data).then(res => {
-        if (res.isSuccess) {
-          localStorage.setItem('token', res.data.token.token)
-          localStorage.setItem('userInfo', JSON.stringify(res.data.user))
-          commit('SET_USER_INFO', res.data.user)
-          commit('SET_TOKEN', res.data.token.token)
-        } else {
+      return commonApi
+        .annoLogin(data)
+        .then(res => {
+          if (res.isSuccess) {
+            localStorage.setItem('token', res.data.token.token)
+            localStorage.setItem('userInfo', JSON.stringify(res.data.user))
+            commit('SET_USER_INFO', res.data.user)
+            commit('SET_TOKEN', res.data.token.token)
+          } else {
+            commit('REMOVE_LOCALSTORAGE')
+          }
+          return res
+        })
+        .catch(err => {
+          // eslint-disable-next-line
+          console.log(err)
           commit('REMOVE_LOCALSTORAGE')
-        }
-        return res
-      }).catch(err => {
-        // eslint-disable-next-line
-        console.log(err)
-        commit('REMOVE_LOCALSTORAGE')
-      })
+        })
     },
     logout ({ commit }, data) {
       return commonApi.annoLogout(data).then(res => {
@@ -86,6 +90,7 @@ export default new Vuex.Store({
     userCenterModule,
     authModule,
     developerManageModule,
-    msgsCenterModule
+    msgsCenterModule,
+    fileCenterModule
   }
 })

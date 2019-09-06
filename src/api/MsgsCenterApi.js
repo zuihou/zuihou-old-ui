@@ -8,21 +8,21 @@ const apiList = {
   sendMsgs: '/msgs/msgsCenterInfo'
 }
 export default {
-  getMyMsgsPageList(data) {
+  getMyMsgsPageList (data) {
     return axiosApi({
       method: 'get',
       url: apiList.getMyMsgsPageList,
       data
     })
   },
-  markMsgs(data) {
+  markMsgs (data) {
     return axiosApi({
       method: 'get',
       url: apiList.markMsgs,
       data
     })
   },
-  sendMsgs(data) {
+  sendMsgs (data) {
     return axiosApi({
       method: 'post',
       url: apiList.sendMsgs,
