@@ -1,38 +1,45 @@
 <template>
   <el-card>
-    <searchCondition ref="searchCondition" @onSearch="preSearch" @onCreate="openDialog('create')"></searchCondition>
-    <el-table :data="tableData" border style="width: 100%">
-      <el-table-column prop="item" label="名称" width="80"></el-table-column>
-      <el-table-column prop="item" label="所属机构" width="120"></el-table-column>
-      <el-table-column prop="item" label="描述" minWidth="200"></el-table-column>
-      <el-table-column prop="item" label="状态" width="80"></el-table-column>
-      <el-table-column prop="item" label="创建时间" width="100"></el-table-column>
-      <el-table-column prop="item" label="最后修改人" width="120"></el-table-column>
-      <el-table-column prop="item" label="更新时间" width="120"></el-table-column>
-      <el-table-column fixed="right" label="操作" width="120">
-        <template slot-scope="scope">
-          <el-button type="text" size="small" @click="openDialog('edit', scope.row)">编辑</el-button>
-          <el-button type="text" size="small" @click="openDialog('copy', scope.row)">复制</el-button>
-          <el-button @click="openDialog('detail', scope.row)" type="text" size="small">查看</el-button>
+    <searchCondition ref='searchCondition' @onSearch='preSearch' @onCreate='openDialog("create")'></searchCondition>
+    <el-table :data='tableData' border style='width: 100%'>
+      <el-table-column prop='name' label='名称' width='120'></el-table-column>
+      <el-table-column prop='orgId' label='所属机构' width='200'></el-table-column>
+      <el-table-column prop='describe' label='描述' minWidth='200'></el-table-column>
+      <el-table-column prop='status' label='状态' width='80'>
+        <template slot-scope='scope'>{{ scope.status === 1 ? '开启' : '关闭' }}</template>
+      </el-table-column>
+      <el-table-column prop='updateTime' label='更新时间' width='180'></el-table-column>
+      <el-table-column fixed='right' label='操作' width='120'>
+        <template slot-scope='scope'>
+          <el-button type='text' size='small' @click='openDialog("edit", scope.row)'>编辑</el-button>
+          <!-- <el-button type="text" size="small" @click="openDialog('copy', scope.row)">复制</el-button> -->
+          <el-button @click='openDialog("detail", scope.row)' type='text' size='small'>查看</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <editDialog ref="editDialog" @onSuccess="onSuccess" :type="type"></editDialog>
+    <Pagination
+      :limit.sync='pageInfo.pageSize'
+      :page.sync='pageInfo.pageNo'
+      :total='pageTotal'
+      @pagination='doSearch({})'
+      v-show='pageTotal > 0'
+    />
+    <editDialog ref='editDialog' :onSuccess='onSuccess'></editDialog>
   </el-card>
 </template>
 <script>
 import searchCondition from './dept/SearchCondition'
-import { mapState } from 'vuex'
+// import { mapState } from 'vuex'
 import editDialog from './dept/EditDialog'
+import userCenterApi from '@/api/UserCenterApi.js'
+import Pagination from '@/components/Pagination'
 export default {
   components: {
     searchCondition,
-    editDialog
+    editDialog,
+    Pagination
   },
   computed: {
-    ...mapState('userCenterModule', {
-      tableData: state => state.deptPageList
-    })
   },
   data () {
     return {
@@ -40,7 +47,9 @@ export default {
       pageInfo: {
         pageNo: 1,
         pageSize: 10
-      }
+      },
+      pageTotal: 0,
+      tableData: []
     }
   },
   methods: {
@@ -48,25 +57,30 @@ export default {
       this.pageInfo.pageNo = 1
       this.doSearch(params)
     },
-    doSearch (params = {}) {
-      this.$store.dispatch('userCenterModule/getDeptPageList', {
-        ...params,
-        ...this.pageInfo
+    doSearch (params) {
+      userCenterApi.getStationPageList({ ...params, ...this.pageInfo }).then(result => {
+        if (result.isSuccess) {
+          this.tableData = result.data.records
+          this.pageTotal = parseInt(result.data.total)
+        }
       })
     },
     // 新增或者修改成功
     onSuccess () {
-      const searchCondition = this.$refs.searchCondition.getCondition()
+      const searchCondition = this.$refs.searchCondition.searchCondition
       this.doSearch(searchCondition)
     },
     // 打开弹窗
     openDialog (type, row) {
       this.type = type
-      this.$refs.editDialog.open(row)
+      this.$refs.editDialog.open(type, row)
     }
   },
   created () {
-    this.doSearch()
+    this.doSearch({})
+    console.log(this.$refs)
+    console.log(this.$refs['searchCondition'])
+    console.log(this.$refs.searchCondition)
   }
 }
 </script>

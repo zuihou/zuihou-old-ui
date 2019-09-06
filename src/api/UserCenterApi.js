@@ -11,7 +11,16 @@ const apiList = {
   authorityOrgPage: '/authority/org/page',
   delDepart: '/authority/org',
   updateDepart: '/authority/org',
-  userPage: '/authority/user/page'
+  userPage: '/authority/user/page',
+  // 分页查询岗位
+  stationPageList: '/authority/station/page',
+  // 新增岗位
+  addStation: '/authority/station',
+  // 更新岗位
+  updateStation: '/authority/station',
+  // 删除岗位
+  delStation: '/authority'
+
 }
 export default {
   getDeptPageList (data = {}) {
@@ -86,5 +95,33 @@ export default {
       url: apiList.updateDepart,
       data
     })
+  },
+  getStationPageList (data = {}) {
+    return axiosApi({
+      method: 'get',
+      url: apiList.stationPageList,
+      data
+    })
+  },
+  addStation (data = {}) {
+    return axiosApi({
+      method: 'post',
+      url: apiList.addStation,
+      data
+    })
+  },
+  delStation (id) {
+    return axiosApi({
+      method: 'delete',
+      url: `${apiList.delStation}/${id}`
+    })
+  },
+  updateStation (data = {}) {
+    return axiosApi({
+      method: 'put',
+      url: apiList.updateStation,
+      data
+    })
   }
+
 }
