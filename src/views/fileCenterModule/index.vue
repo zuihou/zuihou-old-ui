@@ -22,7 +22,14 @@
       @selection-change='handleSelectionChange'
     >
       <el-table-column type='selection' width='55'></el-table-column>
-      <el-table-column label='文件名' prop='submittedFileName' minWidth='250'></el-table-column>
+      <el-table-column label='文件名' prop='submittedFileName' minWidth='250'>
+        <template slot-scope='scope'>
+          <div @click='openFolder(scope.row)'>
+            <i :class='scope.row.icon' class='button-list' />
+            {{scope.row.submittedFileName}}
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label='类型' prop='dataType.desc' width='100'></el-table-column>
       <el-table-column label='大小' width='200' prop='size'></el-table-column>
       <el-table-column label='所在文件夹' prop='folderName' width='200'></el-table-column>
@@ -47,7 +54,7 @@
       @pagination='onSuccess'
       v-show='tableData.total > 0'
     />
-    <folderDialog ref='folderDialog' @onSuccess='onSuccess' :type='type'></folderDialog>
+    <folderDialog ref='folderDialog' :folderId='folderId' @onSuccess='onSuccess' :type='type'></folderDialog>
   </el-card>
 </template>
 <script>
@@ -70,25 +77,42 @@ export default {
   },
   data () {
     return {
+      //已勾选的对象集合
       multipleSelection: [],
+      // 面包屑
       breadcrumbList: [
         {
           submittedFileName: '全部文件',
           folderId: null
         }
       ],
+      //新增修改文件夹弹窗类型
       type: 'create',
+      //分页数据
       pageInfo: {
         pageNo: 1,
         pageSize: 10
       },
-      folderId: 0
+      // 当前层级的文件夹id
+      folderId: '0'
     }
   },
   methods: {
+    //切换文件夹
+    openFolder (row) {
+      let vm = this
+      if ('DIR' === row.dataType.code) {
+        vm.folderId = row.id
+        vm.$refs.folderId = row.id
+        vm.breadcrumbList.push({ submittedFileName: row.submittedFileName, folderId: row.id })
+        vm.pageInit()
+      }
+    },
     pageInit () {
       const vm = this
-      vm.tableData = {}
+      const searchCondition = vm.$refs.searchCondition.getCondition()
+      searchCondition.folderId = vm.folderId
+      this.doSearch(searchCondition)
     },
     preSearch (params) {
       this.pageInfo.pageNo = 1
@@ -126,8 +150,14 @@ export default {
     handleSelectionChange (val) {
       this.multipleSelection = val
     },
+    //切换面包屑
     pageBreadcrumb (folderId) {
+      debugger
+      this.folderId = folderId
+      this.$refs.folderId = folderId
+      this.$refs.searchCondition.folderId = folderId
       let searchCondition = this.$refs.searchCondition.getCondition()
+
       this.doSearch(searchCondition)
       var index = this.breadcrumbList.findIndex(item => item.folderId === folderId)
       this.breadcrumbList.splice(index + 1, this.breadcrumbList.length - index - 1)
@@ -153,7 +183,7 @@ export default {
       // if (row) this.$store.commit('SET_CURRENT_FILE_INFO', row)
       if (!row) {
         row = {
-          parentId: this.folderId
+          folderId: this.folderId
         }
       }
       this.$refs[dialogRef].open(row)

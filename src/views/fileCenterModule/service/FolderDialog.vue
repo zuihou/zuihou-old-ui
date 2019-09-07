@@ -14,6 +14,7 @@
 
 <script>
 import fileCenterApi from '@/api/FileCenterApi.js'
+import { debuglog } from 'util';
 export default {
   props: {
     // 操作类型
@@ -23,6 +24,10 @@ export default {
         return ['create', 'edit'].includes(value)
       },
       default: 'create'
+    },
+    folderId: { // 默认传递过来的图像数据，用于纯粹显示使用
+      type: String,
+      default: '0'
     }
   },
   data () {
@@ -30,7 +35,7 @@ export default {
       visible: false,
       formLabelWidth: '100px',
       form: {
-        parentId: 0
+        folderId: '0'
       },
       rules: {
         submittedFileName: [{ required: true, message: '文件夹名称不能为空', trigger: 'blur' }]
@@ -46,6 +51,7 @@ export default {
     },
     preSave () {
       const vm = this
+      debugger
       vm.$refs.roleForm.validate(valid => {
         if (valid) {
           if (vm.type === 'update') {
