@@ -13,6 +13,7 @@
           placeholder='所属组织'
           :options='departList'
           :show-all-levels='false'
+          :props='optionProps'
           clearable
         ></el-cascader>
       </el-form-item>
@@ -31,7 +32,11 @@ export default {
         name: '',
         orgId: ''
       },
-      departList: []
+      departList: [],
+      optionProps: {
+        value: 'id',
+        label: 'name'
+      }
     }
   },
   methods: {

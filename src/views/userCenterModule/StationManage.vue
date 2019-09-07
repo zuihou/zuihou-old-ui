@@ -3,10 +3,10 @@
     <searchCondition ref='searchCondition' @onSearch='preSearch' @onCreate='openDialog("create")'></searchCondition>
     <el-table :data='tableData' border style='width: 100%'>
       <el-table-column prop='name' label='名称' width='120'></el-table-column>
-      <el-table-column prop='orgId' label='所属机构' width='200'></el-table-column>
+      <el-table-column prop='orgId' label='所属组织' width='200'></el-table-column>
       <el-table-column prop='describe' label='描述' minWidth='200'></el-table-column>
       <el-table-column prop='status' label='状态' width='80'>
-        <template slot-scope='scope'>{{ scope.status === 1 ? '开启' : '关闭' }}</template>
+        <template slot-scope='scope'>{{ scope.row.status === true ? '开启' : '关闭' }}</template>
       </el-table-column>
       <el-table-column prop='updateTime' label='更新时间' width='180'></el-table-column>
       <el-table-column fixed='right' label='操作' width='120'>
@@ -55,11 +55,15 @@ export default {
   methods: {
     preSearch (params) {
       this.pageInfo.pageNo = 1
+      if (params.orgId) {
+        params.orgId = params.orgId[params.orgId.length - 1]
+      }
       this.doSearch(params)
     },
     doSearch (params) {
       userCenterApi.getStationPageList({ ...params, ...this.pageInfo }).then(result => {
         if (result.isSuccess) {
+          // TODO: 列表中的所属组织，目前还是id，等‘最后’把缓存写好之后，再修改此处。特此写下TODO
           this.tableData = result.data.records
           this.pageTotal = parseInt(result.data.total)
         }
@@ -78,9 +82,15 @@ export default {
   },
   created () {
     this.doSearch({})
-    console.log(this.$refs)
-    console.log(this.$refs['searchCondition'])
-    console.log(this.$refs.searchCondition)
+  },
+  mounted () {
+    const vm = this
+    userCenterApi.getAllDepart({}).then(result => {
+      if (result.isSuccess) {
+        vm.$refs['searchCondition'].departList = result.data
+        vm.$refs['editDialog'].departList = result.data
+      }
+    })
   }
 }
 </script>
