@@ -2,7 +2,7 @@
   <div class='home'>
     <el-card>
       <el-collapse v-model='activeList'>
-        <el-collapse-item title='功能疑难' name='1'>
+        <el-collapse-item title='功能一览' name='1'>
           <div>模块化分包、最小化引入依赖、插拔式组件</div>
           <div>nacos 作为注册/配置中心</div>
           <div>负载均衡、熔断机制、监控等SpringCloud自带的特性</div>
@@ -38,7 +38,9 @@
         </el-collapse-item>
         <el-collapse-item title='加入我们' name='2'>
           <div>由于作者能力有限(不会vue基本边学边做，大部分精力放在完善后端微服务项目上)，所以这个前端项目仅作为演示后端接口是否正常而写</div>
-          <div>如果你觉得能帮助完善这个项目，欢迎加入我们</div>
+          <div>如果你觉得能帮助完善这个项目，欢迎加入我们，一展您的身手</div>
+          <div>如果你觉得ui页面太丑，欢迎加入我们，一展您的身手</div>
+          <div>如果你觉得后端不合理、bug多、文档不全，欢迎加入我们，一展您的身手</div>
           <div style='color:red'>
             如果你热爱开源，如果你会 vue 或者 java ， 如果你有自己的想法，想为这个项目加点什么功能， 欢迎加入QQ群： 63202894 联系群主。
             <br />不需要你是大神，也不需要你精通后端或者前端，只要你有热情，想让这个项目更加完善，欢迎加入QQ群： 63202894 联系群主。
