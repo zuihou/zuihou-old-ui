@@ -53,7 +53,6 @@ export default {
   methods: {
     open () {
       this.showModal = true
-      debugger
       if (!this.uploader) {
         this.uploadModel()
       } else {
@@ -67,7 +66,7 @@ export default {
     },
     doUpload () {
       var list = $('#theList >li')
-      for (var i = 0; i < list.length; i++) {
+      for (var i = 0;i < list.length;i++) {
         var id = list[i].id
         var elm = $('#' + id).children('.li-group').children('.itemUpload')
         if (elm.css('display') == 'block') {
@@ -96,46 +95,79 @@ export default {
     },
     uploadModel () {
       const vm = this
-      debugger
       WebUploader.Uploader.register({
         'before-send-file': 'beforeSendFile', // 时间点1：所有分块进行上传之前调用此函数 ，检查文件存不存在
         'before-send': 'beforeSend', // 时间点2：如果有分块上传，则每个分块上传之前调用此函数  ，判断分块存不存在
         'after-send-file': 'afterSendFile' // 时间点3：分片上传完成后，通知后台合成分片
       }, {
-        beforeSendFile: function (file) {
-          // 秒传验证
-          var task = new $.Deferred()
-          var start = new Date().getTime();
-          (new WebUploader.Uploader()).md5File(file, 0, 10 * 1024 * 1024).progress(function (percentage) {
-            console.log(percentage)
-          }).then(function (val) {
-            console.log('总耗时: ' + ((new Date().getTime()) - start) / 1000)
-            // md5Mark = val;
-            userInfo.md5 = val
-            uploader.options.formData['md5'] = val
-            uploader.options.formData['ext'] = file.ext
+          beforeSendFile: function (file) {
+            // 秒传验证
+            var task = new $.Deferred()
+            var start = new Date().getTime()
+              (new WebUploader.Uploader()).md5File(file, 0, 10 * 1024 * 1024).progress(function (percentage) {
+                console.log(percentage)
+              }).then(function (val) {
+                console.log('总耗时: ' + ((new Date().getTime()) - start) / 1000)
+                // md5Mark = val
+                userInfo.md5 = val
+                uploader.options.formData['md5'] = val
+                uploader.options.formData['ext'] = file.ext
+                $.ajax({
+                  type: 'POST',
+                  url: vm.getUrl('md5Check'),
+                  data: {
+                    md5: val,
+                    folderId: vm.folderId || -1
+                  },
+                  headers: vm.getHeaders(),
+                  async: false, // 同步
+                  cache: false,
+                  dataType: 'json'
+                }).then(function (data, textStatus, jqXHR) {
+                  console.log(data)
+                  if (data.isSuccess) {
+                    if (data.data) { // 若存在，这返回失败给WebUploader，表明该文件不需要上传
+                      task.reject() // 分片存在，跳过
+                      uploader.skipFile(file)
+                      vm.UploadComlate(file)
+                    } else {
+                      task.resolve() // 分块不存在或不完整，重新发送该分块内容
+                      // 拿到上传文件的唯一名称，用于断点续传  需要确保前后端的md5算法和参数一致
+                      uniqueFileName = md5('' + file.name + file.type + file.lastModifiedDate + file.size)
+                    }
+                  } else {
+                    task.reject() // 报错， 跳过
+                    alert(data.msg)
+                  }
+                }, function (jqXHR, textStatus, errorThrown) { // 任何形式的验证失败，都触发重新上传
+                  task.resolve()
+                  // 拿到上传文件的唯一名称，用于断点续传
+                  uniqueFileName = md5('' + file.name + file.type + file.lastModifiedDate + file.size)
+                })
+              })
+            return $.when(task)
+          },
+          beforeSend: function (block) {
+            // 分片验证是否已传过，用于断点续传
+            var task = new $.Deferred()
             $.ajax({
               type: 'POST',
-              url: vm.getUrl('md5Check'),
-              data: {
-                md5: val,
-                folderId: vm.folderId || -1
-              },
+              url: vm.getUrl('chunkCheck'),
+              data: JSON.stringify({
+                name: uniqueFileName,
+                chunkIndex: block.chunk,
+                size: block.end - block.start
+              }),
               headers: vm.getHeaders(),
-              async: false, // 同步
               cache: false,
-              dataType: 'json'
+              dataType: 'json',
+              contentType: 'application/json'
             }).then(function (data, textStatus, jqXHR) {
-              console.log(data)
               if (data.isSuccess) {
-                if (data.data) { // 若存在，这返回失败给WebUploader，表明该文件不需要上传
-                  task.reject() // 分片存在，跳过
-                  uploader.skipFile(file)
-                  vm.UploadComlate(file)
+                if (data.data) { // 若存在，返回失败给WebUploader，表明该分块不需要上传
+                  task.reject()
                 } else {
-                  task.resolve() // 分块不存在或不完整，重新发送该分块内容
-                  // 拿到上传文件的唯一名称，用于断点续传  需要确保前后端的md5算法和参数一致
-                  uniqueFileName = md5('' + file.name + file.type + file.lastModifiedDate + file.size)
+                  task.resolve()
                 }
               } else {
                 task.reject() // 报错， 跳过
@@ -143,83 +175,49 @@ export default {
               }
             }, function (jqXHR, textStatus, errorThrown) { // 任何形式的验证失败，都触发重新上传
               task.resolve()
-              // 拿到上传文件的唯一名称，用于断点续传
-              uniqueFileName = md5('' + file.name + file.type + file.lastModifiedDate + file.size)
-            })
-          })
-          return $.when(task)
-        },
-        beforeSend: function (block) {
-          // 分片验证是否已传过，用于断点续传
-          var task = new $.Deferred()
-          $.ajax({
-            type: 'POST',
-            url: vm.getUrl('chunkCheck'),
-            data: JSON.stringify({
-              name: uniqueFileName,
-              chunkIndex: block.chunk,
-              size: block.end - block.start
-            }),
-            headers: vm.getHeaders(),
-            cache: false,
-            dataType: 'json',
-            contentType: 'application/json'
-          }).then(function (data, textStatus, jqXHR) {
-            if (data.isSuccess) {
-              if (data.data) { // 若存在，返回失败给WebUploader，表明该分块不需要上传
-                task.reject()
-              } else {
-                task.resolve()
-              }
-            } else {
-              task.reject() // 报错， 跳过
-              alert(data.msg)
-            }
-          }, function (jqXHR, textStatus, errorThrown) { // 任何形式的验证失败，都触发重新上传
-            task.resolve()
-          })
-          return $.when(task)
-        },
-        afterSendFile: function (file) {
-          var chunksTotal = 0
-          if ((chunksTotal = Math.ceil(file.size / chunkSize)) > 1) {
-            // 合并请求
-            var task = new $.Deferred()
-            $.ajax({
-              type: 'POST',
-              url: vm.getUrl('chunksMerge'),
-              data: JSON.stringify({
-                name: uniqueFileName,
-                chunks: chunksTotal,
-                ext: file.ext,
-                md5: userInfo.md5,
-                submittedFileName: file.name,
-                contextType: file.type,
-                size: file.size,
-                folderId: vm.folderId || -1
-              }),
-              headers: vm.getHeaders(),
-              cache: false,
-              async: false, // 同步
-              dataType: 'json',
-              contentType: 'application/json'
-            }).then(function (data, textStatus, jqXHR) {
-              if (data.isSuccess) {
-                task.resolve()
-                vm.UploadComlate(file)
-              } else {
-                task.reject() // 报错， 跳过
-                vm.$Message.error(data.msg)
-              }
-            }, function (jqXHR, textStatus, errorThrown) {
-              task.reject()
             })
             return $.when(task)
-          } else {
-            vm.UploadComlate(file)
+          },
+          afterSendFile: function (file) {
+            var chunksTotal = 0
+            if ((chunksTotal = Math.ceil(file.size / chunkSize)) > 1) {
+              // 合并请求
+              var task = new $.Deferred()
+              $.ajax({
+                type: 'POST',
+                url: vm.getUrl('chunksMerge'),
+                data: JSON.stringify({
+                  name: uniqueFileName,
+                  chunks: chunksTotal,
+                  ext: file.ext,
+                  md5: userInfo.md5,
+                  submittedFileName: file.name,
+                  contextType: file.type,
+                  size: file.size,
+                  folderId: vm.folderId || -1
+                }),
+                headers: vm.getHeaders(),
+                cache: false,
+                async: false, // 同步
+                dataType: 'json',
+                contentType: 'application/json'
+              }).then(function (data, textStatus, jqXHR) {
+                if (data.isSuccess) {
+                  task.resolve()
+                  vm.UploadComlate(file)
+                } else {
+                  task.reject() // 报错， 跳过
+                  vm.$Message.error(data.msg)
+                }
+              }, function (jqXHR, textStatus, errorThrown) {
+                task.reject()
+              })
+              return $.when(task)
+            } else {
+              vm.UploadComlate(file)
+            }
           }
-        }
-      })
+        })
       var uploader = WebUploader.create({
         swf: 'Uploader.swf',
         server: vm.getUrl('chunkUpload'),
@@ -244,7 +242,7 @@ export default {
         formData: $.extend(true, {
           folderId: vm.folderId || -1
         }, userInfo),
-        // , formData: function(){return $.extend(true, {userId: userId}, userInfo);}
+        // , formData: function(){return $.extend(true, {userId: userId}, userInfo)}
         headers: vm.getHeaders(),
         // , fileNumLimit: 1
         fileSingleSizeLimit: vm.fileSingleSizeLimit != null ? vm.fileSingleSizeLimit * 1024 * 1024 : undefined,
@@ -306,11 +304,11 @@ export default {
         // })
         // console.log(file)
         // if (file) {
-        //     uploader.stop(file);
+        //     uploader.stop(file)
         //     //"暂停"-->"上传"
-        //     $(this).hide();
-        //     var parent = $(this).parent();
-        //     parent.children(".itemUpload").show();
+        //     $(this).hide()
+        //     var parent = $(this).parent()
+        //     parent.children(".itemUpload").show()
         // }
       })
       // todo 如果要删除的文件正在上传（包括暂停），则需要发送给后端一个请求用来清除服务器端的缓存文件

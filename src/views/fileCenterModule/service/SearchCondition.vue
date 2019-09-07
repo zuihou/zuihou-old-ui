@@ -1,6 +1,6 @@
 <template>
   <div class='search-condition'>
-    <!--    <bigUpload ref='bigUpload' :folderId='folderId' v-on:page='onSearch'></bigUpload>-->
+<!--    <bigUpload ref='bigUpload' :folderId='folderId' v-on:page='onSearch'></bigUpload>-->
     <el-form :inline='true' :model='searchCondition' class='demo-form-inline'>
       <el-form-item label='文件类型'>
         <el-select
@@ -82,6 +82,7 @@
 </template>
 <script>
 // import bigUpload from '@/components/BigUpload'
+
 export default {
   components: {
     // bigUpload
@@ -134,9 +135,9 @@ export default {
       this.$emit('onBatchDownload')
     },
     beforeFileUpload (file) {
-      const isLt2M = file.size / 1024 / 1024 < 50
+      const isLt2M = file.size / 1024 / 1024 < 20
       if (!isLt2M) {
-        this.$message.error('超过50MB的文件请使用大文件上传!')
+        this.$message.error('超过20MB的文件请使用大文件上传!')
       }
       return isLt2M
     },
