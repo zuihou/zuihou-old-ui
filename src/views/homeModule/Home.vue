@@ -76,7 +76,7 @@ export default {
   data () {
     return {
       activeList: ['1', '2']
-    };
+    }
   }
 }
 </script>
