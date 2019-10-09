@@ -20,10 +20,10 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item :label-width='formLabelWidth' label='经度'>
+      <el-form-item :label-width='formLabelWidth' label='经度' prop='longitude'>
         <el-input autocomplete='off' v-model='form.longitude'></el-input>
       </el-form-item>
-      <el-form-item :label-width='formLabelWidth' label='纬度'>
+      <el-form-item :label-width='formLabelWidth' label='纬度' prop='latitude'>
         <el-input autocomplete='off' v-model='form.latitude'></el-input>
       </el-form-item>
     </el-form>
@@ -35,6 +35,7 @@
 </template>
 <script>
 import areaApi from '@/api/AreaApi.js'
+import validatorModel from '@/utils/back_validator'
 
 export default {
   data () {
@@ -94,6 +95,18 @@ export default {
       this.$refs['form'].clearValidate()
       this.visible = false
     },
+    getValidator () {
+      const vm = this
+      var apiData = areaApi.addArea({}, true)
+      validatorModel(
+        { api: apiData },
+        {
+          vm: vm,
+          validate: vm.formRule,
+          formName: 'form'
+        }
+      )
+    },
     open (row, type) {
       this.visible = true
       this.resetForm()
@@ -109,6 +122,7 @@ export default {
           this.dialogTitle = '修改'
         }
       }
+      this.getValidator()
     },
     resetForm () {
       this.form = {

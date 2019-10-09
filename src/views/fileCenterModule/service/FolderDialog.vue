@@ -14,7 +14,7 @@
 
 <script>
 import fileCenterApi from '@/api/FileCenterApi.js'
-import { debuglog } from 'util';
+import { debuglog } from 'util'
 export default {
   props: {
     // 操作类型

@@ -1,7 +1,7 @@
 const path = require('path')
 const config = require('./src/config')
 
-function resolve(dir) {
+function resolve (dir) {
   return path.join(__dirname, dir)
 }
 

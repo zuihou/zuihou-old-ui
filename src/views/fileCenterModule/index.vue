@@ -77,7 +77,7 @@ export default {
   },
   data () {
     return {
-      //已勾选的对象集合
+      // 已勾选的对象集合
       multipleSelection: [],
       // 面包屑
       breadcrumbList: [
@@ -86,9 +86,9 @@ export default {
           folderId: null
         }
       ],
-      //新增修改文件夹弹窗类型
+      // 新增修改文件夹弹窗类型
       type: 'create',
-      //分页数据
+      // 分页数据
       pageInfo: {
         pageNo: 1,
         pageSize: 10
@@ -98,10 +98,10 @@ export default {
     }
   },
   methods: {
-    //切换文件夹
+    // 切换文件夹
     openFolder (row) {
       let vm = this
-      if ('DIR' === row.dataType.code) {
+      if (row.dataType.code === 'DIR') {
         vm.folderId = row.id
         vm.$refs.folderId = row.id
         vm.breadcrumbList.push({ submittedFileName: row.submittedFileName, folderId: row.id })
@@ -150,7 +150,7 @@ export default {
     handleSelectionChange (val) {
       this.multipleSelection = val
     },
-    //切换面包屑
+    // 切换面包屑
     pageBreadcrumb (folderId) {
       debugger
       this.folderId = folderId

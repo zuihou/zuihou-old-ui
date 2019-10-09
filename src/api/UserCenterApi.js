@@ -103,7 +103,13 @@ export default {
       data
     })
   },
-  addStation (data = {}) {
+  addStation (data = {}, tag = false) {
+    if (tag) {
+      return {
+        method: 'post',
+        url: apiList.addStation
+      }
+    }
     return axiosApi({
       method: 'post',
       url: apiList.addStation,

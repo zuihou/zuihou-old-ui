@@ -1,6 +1,6 @@
 <template>
   <el-dialog :title='type | dialogTitle' :visible.sync='visible'>
-    <el-form :model='form' :disabled='disabled' :rules='formRule'>
+    <el-form :model='form' ref='form' :disabled='disabled' :rules='formRule'>
       <el-form-item label='名称' :label-width='formLabelWidth' prop='name'>
         <el-input v-model='form.name' autocomplete='off'></el-input>
       </el-form-item>
@@ -14,13 +14,13 @@
           clearable
         ></el-cascader>
       </el-form-item>
-      <el-form-item label='排序' :label-width='formLabelWidth'>
+      <el-form-item label='排序' :label-width='formLabelWidth' prop='sortValue'>
         <el-input-number v-model='form.sortValue' :min='1' :max='1000'></el-input-number>
       </el-form-item>
-      <el-form-item label='启用' :label-width='formLabelWidth'>
+      <el-form-item label='启用' :label-width='formLabelWidth' prop='status'>
         <el-switch v-model='form.status' active-color='#13ce66'></el-switch>
       </el-form-item>
-      <el-form-item label='描述' :label-width='formLabelWidth'>
+      <el-form-item label='描述' :label-width='formLabelWidth' prop='describe'>
         <el-input v-model='form.describe' autocomplete='off'></el-input>
       </el-form-item>
     </el-form>
@@ -32,6 +32,7 @@
 </template>
 <script>
 import userCenterApi from '@/api/UserCenterApi.js'
+import validatorModel from '@/utils/back_validator'
 export default {
   props: {
     onSuccess: Function
@@ -74,7 +75,19 @@ export default {
         this.disabled = true
       } else if (this.type === 'create') {
         this.form = { 'status': true }
+        this.getValidator(userCenterApi.addStation({}, true))
       }
+    },
+    getValidator (apiData) {
+      const vm = this
+      validatorModel(
+        { api: apiData },
+        {
+          vm: vm,
+          validate: vm.formRule,
+          formName: 'form'
+        }
+      )
     },
     onSubmit () {
       const vm = this

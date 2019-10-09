@@ -27,7 +27,13 @@ export default {
       data
     })
   },
-  addArea (data = {}) {
+  addArea (data = {}, tag = false) {
+    if (tag) {
+      return {
+        method: 'post',
+        url: apiList.addArea
+      }
+    }
     return axiosApi({
       method: 'post',
       url: apiList.addArea,

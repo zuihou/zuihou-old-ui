@@ -58,7 +58,13 @@ export default {
       data
     })
   },
-  authRoleAdd (data) {
+  authRoleAdd (data, tag = false) {
+    if (tag) {
+      return {
+        method: 'post',
+        url: apiList.authRoleAdd
+      }
+    }
     return axiosApi({
       method: 'post',
       url: apiList.authRoleAdd,

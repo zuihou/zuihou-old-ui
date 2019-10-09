@@ -37,6 +37,7 @@
 </template>
 <script>
 import authManageApi from '@/api/AuthManageApi.js'
+import validatorModel from '@/utils/back_validator'
 export default {
   props: {
     // 操作类型
@@ -73,6 +74,18 @@ export default {
       if (row) {
         this.form = row
       }
+      this.getValidator(authManageApi.authRoleAdd({}, true))
+    },
+    getValidator (apiData) {
+      const vm = this
+      validatorModel(
+        { api: apiData },
+        {
+          vm: vm,
+          validate: vm.rules,
+          formName: 'roleForm'
+        }
+      )
     },
     preSave () {
       const vm = this

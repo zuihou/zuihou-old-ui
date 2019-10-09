@@ -183,7 +183,9 @@ function setPlaceholder (selectorSetting, msg, key) {
             ? field.$el.getElementsByTagName('textarea')
             : inputTag
         if (inputTag && inputTag.length > 0) {
-          inputTag[0].placeholder = msg
+          if (inputTag[0].placeholder.indexOf(msg) == -1) {
+            inputTag[0].placeholder =  inputTag[0].placeholder.length > 1 ? inputTag[0].placeholder + "," + msg : msg
+          }
         }
       }
     })

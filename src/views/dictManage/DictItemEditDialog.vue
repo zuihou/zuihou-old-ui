@@ -7,7 +7,7 @@
       <el-form-item :label-width="formLabelWidth" label="名称" prop="name">
         <el-input autocomplete="off" v-model="form.name"></el-input>
       </el-form-item>
-      <el-form-item :label-width="formLabelWidth" label="描述">
+      <el-form-item :label-width="formLabelWidth" label="描述" prop="describe">
         <el-input autocomplete="off" v-model="form.describe"></el-input>
       </el-form-item>
       <el-form-item :label-width="formLabelWidth" label="父节点">
@@ -23,6 +23,7 @@
 </template>
 <script>
 import dictApi from '@/api/DictApi.js'
+import validatorModel from '@/utils/back_validator'
 
 export default {
   data () {
@@ -37,11 +38,11 @@ export default {
       opeType: 'detail',
       dialogTitle: '',
       formRules: {
-        code: [{ required: true, message: '不能为空', trigger: 'blur' }],
-        name: [
-          { required: true, message: '不能为空', trigger: 'blur' },
-          { min: 3, max: 10, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-        ]
+        // code: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        // name: [
+        //   { required: true, message: '不能为空', trigger: 'blur' },
+        //   { min: 3, max: 10, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+        // ]
       },
       addRow: {}
     }
@@ -58,6 +59,17 @@ export default {
       this.$refs['form'].clearValidate()
       this.visible = false
     },
+    getValidator (apiData) {
+      const vm = this
+      validatorModel(
+        { api: apiData },
+        {
+          vm: vm,
+          validate: vm.formRules,
+          formName: 'form'
+        }
+      )
+    },
     open (row, type) {
       this.visible = true
       if (row) {
@@ -69,10 +81,12 @@ export default {
           this.form.dictionaryCode = row.code
           this.dialogTitle = '新增'
           this.addRow = row
+          this.getValidator(dictApi.addDictItem({}, true))
         } else {
           this.form = row
           this.form.parentName = row.name
           this.dialogTitle = '修改'
+          this.getValidator(dictApi.updateDictItem({}, true))
         }
       }
     },

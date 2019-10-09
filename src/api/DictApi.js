@@ -23,14 +23,26 @@ export default {
       data
     })
   },
-  addDict (data = {}) {
+  addDict (data = {}, tag = false) {
+    if (tag) {
+      return {
+        method: 'post',
+        url: apiList.addDict
+      }
+    }
     return axiosApi({
       method: 'post',
       url: apiList.addDict,
       data
     })
   },
-  updateDict (data = {}) {
+  updateDict (data = {}, tag = false) {
+    if (tag) {
+      return {
+        method: 'put',
+        url: apiList.updatDict
+      }
+    }
     return axiosApi({
       method: 'put',
       url: apiList.updatDict,
@@ -49,14 +61,26 @@ export default {
       url: `${apiList.getDictItemsPageList}?dictionaryCode=${code}`
     })
   },
-  updateDictItem (data = {}) {
+  updateDictItem (data = {}, tag = false) {
+    if (tag) {
+      return {
+        method: 'post',
+        url: apiList.addDict
+      }
+    }
     return axiosApi({
       method: 'put',
       url: apiList.updateDictItem,
       data
     })
   },
-  addDictItem (data = {}) {
+  addDictItem (data = {}, tag = false) {
+    if (tag) {
+      return {
+        method: 'post',
+        url: apiList.addDict
+      }
+    }
     return axiosApi({
       method: 'post',
       url: apiList.addDictItem,

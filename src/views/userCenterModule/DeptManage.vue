@@ -80,7 +80,7 @@ export default {
   },
   created () {
     this.resetForm()
-    // this.getValidator()
+    this.getValidator()
     this.getAllDepart()
   },
   methods: {
