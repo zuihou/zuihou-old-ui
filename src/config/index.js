@@ -30,7 +30,7 @@ module.exports = {
    */
   apiUrl: {
     //  本地环境接口请求地址
-    development: 'http://42.202.130.216:10000',
+    development: 'http://127.0.0.1:8760',
     //  生产环境接口请求地址
     production: 'http://42.202.130.216:10000'
   },
