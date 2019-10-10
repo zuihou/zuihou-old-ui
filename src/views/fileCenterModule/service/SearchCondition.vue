@@ -1,6 +1,6 @@
 <template>
   <div class='search-condition'>
-<!--    <bigUpload ref='bigUpload' :folderId='folderId' v-on:page='onSearch'></bigUpload>-->
+    <bigUpload ref='bigUpload' :folderId='folderId' v-on:page='onSearch'></bigUpload>
     <el-form :inline='true' :model='searchCondition' class='demo-form-inline'>
       <el-form-item label='文件类型'>
         <el-select
@@ -81,11 +81,11 @@
   </div>
 </template>
 <script>
-// import bigUpload from '@/components/BigUpload'
+import bigUpload from '@/components/BigUpload'
 
 export default {
   components: {
-    // bigUpload
+    bigUpload
   },
   computed: {
     enums () {
@@ -163,7 +163,7 @@ export default {
       return true
     },
     bigUploadModal () {
-      // this.$refs.bigUpload.open()
+      this.$refs.bigUpload.open()
     }
   }
 }

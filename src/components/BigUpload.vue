@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :title='modalTitle' @on-cancel='closeFun' width='70%' :visible.sync='showModal'>
+  <el-dialog :title='modalTitle' @on-cancel='closeFun' width='70%' :visible='showModal'>
     <div id='uploader'>
       <div class='back-tip'>
         <i class='el-icon-upload' size='52' style='color: #3399ff'></i>可拖拽本地文件至此
@@ -54,7 +54,9 @@ export default {
     open () {
       this.showModal = true
       if (!this.uploader) {
-        this.uploadModel()
+        this.$nextTick(function () {
+          this.uploadModel()
+        })
       } else {
         this.uploader.options.formData.folderId = this.folderId
       }
@@ -104,7 +106,8 @@ export default {
           // 秒传验证
           var task = new $.Deferred()
           var start = new Date().getTime()
-          (new WebUploader.Uploader()).md5File(file, 0, 10 * 1024 * 1024).progress(function (percentage) {
+          var a = new WebUploader.Uploader()
+          a.md5File(file, 0, 10 * 1024 * 1024).progress(function (percentage) {
             console.log(percentage)
           }).then(function (val) {
             console.log('总耗时: ' + ((new Date().getTime()) - start) / 1000)
