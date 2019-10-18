@@ -1,18 +1,13 @@
 <template>
   <el-tabs
-    v-model="targetName"
-    type="card"
-    :closable="isClosable"
-    @edit="handleTabsEdit"
-    @tab-click="tabClick"
-    v-show="tabs.length">
-    <el-tab-pane
-      v-for="item in tabs"
-      :label="item.title"
-      :name="item.name"
-      :key="item.title"
-    >
-    </el-tab-pane>
+    v-model='targetName'
+    type='card'
+    :closable='isClosable'
+    @edit='handleTabsEdit'
+    @tab-click='tabClick'
+    v-show='tabs.length'
+  >
+    <el-tab-pane v-for='item in tabs' :label='item.title' :name='item.name' :key='item.title'></el-tab-pane>
   </el-tabs>
 </template>
 <script>
@@ -48,7 +43,9 @@ export default {
       }
     },
     tabClick (obj) {
-      this.$router.push(obj.name)
+      // this.$router.push(obj.name)
+      // 根据路由name跳转，如果有子路由，用name跳转
+      this.$router.push({ name: obj.name })
     }
   },
   watch: {
