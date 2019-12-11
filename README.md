@@ -1,27 +1,22 @@
 # zuihou-admin-ui
-zuihou-admin-cloud 的前端
+zuihou-admin-cloud 的前端， 改版本 不再维护！ 最新代码看下面👇👇👇
 
-## 项目代码地址
-[gitee] https://gitee.com/zuihou111/zuihou-admin-cloud  
+## 最新项目代码地址（持续开发）
+| 项目 | gitee | github |
+|---|---|---|
+| 微服务项目 | https://gitee.com/zuihou111/zuihou-admin-cloud | https://github.com/zuihou/zuihou-admin-cloud |
+| 单体项目 | https://gitee.com/zuihou111/zuihou-admin-boot | https://github.com/zuihou/zuihou-admin-boot |
+| 租户后台 | https://gitee.com/zuihou111/zuihou-ui | https://github.com/zuihou/zuihou-ui |
+| 开发&运营后台 | https://gitee.com/zuihou111/zuihou-admin-ui | https://github.com/zuihou/zuihou-admin-ui |
+| 代码生成器 | 无 | https://github.com/zuihou/zuihou-generator |
 
-[github] https://github.com/zuihou/zuihou-admin-cloud  (由于某种特殊原因，下载代码有时非常慢)
 
-[前端] https://github.com/zuihou/zuihou-admin-ui   
-
-[前端] https://gitee.com/zuihou111/zuihou-admin-ui 
-
-[代码生成器] https://github.com/zuihou/zuihou-generator  (提示缺少 zuihou-generator 包，需要下载该项目，执行编译)
-
-[原型] http://zuihou111.gitee.io/zuihou-admin-rp/
-
-[介绍文档] https://zuihou.github.io/zuihou-admin-cloud/
-
-## 演示地址 (账号密码均为： zuihou/zuihou)       （演示环境部署不易，请勿胡乱删除、修改数据）
-[演示环境] http://42.202.130.216:10000/zuihou-ui                （http://wzroom.cn/zuihou-ui 即将到期）      
+## 当前代码的演示地址 (账号密码均为： zuihou/zuihou)       （演示环境部署不易，请勿胡乱删除、修改数据）
+[演示环境] http://42.202.130.216:10000/zuihou-ui                
 
 [注册中心] http://42.202.130.216:10000/nacos/      
 
-[在线文档] http://42.202.130.216:10000/api/gate/doc.html       （http://wzroom.cn/api/gate/doc.html 即将到期）    
+[在线文档] http://42.202.130.216:10000/api/gate/doc.html       
 
 [定时任务] http://42.202.130.216:10000/zuihou-jobs-server
 
